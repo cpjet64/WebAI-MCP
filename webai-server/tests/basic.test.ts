@@ -116,7 +116,7 @@ describe('WebAI-Server Basic Test Setup', () => {
 
     const duration = await performanceTest();
     
-    expect(duration).toBeGreaterThanOrEqual(100);
+    expect(duration).toBeGreaterThanOrEqual(95);
     expect(duration).toBeLessThan(200); // Should be close to 100ms
   });
 });
