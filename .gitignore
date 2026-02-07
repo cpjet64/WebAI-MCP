@@ -76,6 +76,10 @@ junit.xml
 # Optional npm cache directory
 .npm
 
+# Local-only CI/CD tool and artifact caches
+.ci-tools/
+.ci-artifacts/
+
 # Optional eslint cache
 .eslintcache
 

@@ -1,0 +1,35 @@
+{
+  "name": "webai-mcp-local-only-ci",
+  "version": "1",
+  "policy": {
+    "run_on": "pre-commit",
+    "pre_push_ci": false,
+    "auto_install_dependencies": true,
+    "cloud_ci_enabled": false
+  },
+  "stage_order": [
+    "REPO_HYGIENE",
+    "TOOLCHAIN",
+    "DEPS",
+    "FORMAT",
+    "LINT/STATIC",
+    "BUILD",
+    "TEST",
+    "SECURITY/SUPPLY-CHAIN",
+    "DOCS"
+  ],
+  "workspace_packages": [
+    "webai-mcp",
+    "webai-server"
+  ],
+  "required_docs": [
+    "prompt.md",
+    "plans.md",
+    "architecture.md",
+    "implement.md",
+    "documentation.md",
+    "todo.md",
+    "docs/LOCAL_CICD.md",
+    ".github/LOCAL_ONLY.md"
+  ]
+}

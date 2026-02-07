@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+set -eu
+
+# Local-only policy: no CI pipeline execution at push time.
+# Preserve Git LFS behavior when available.
+if command -v git-lfs >/dev/null 2>&1; then
+  git lfs pre-push "$@"
+fi
+
+exit 0

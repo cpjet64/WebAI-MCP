@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+set -eu
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+echo "[pre-commit] Running full local CI pipeline..."
+
+if command -v bash >/dev/null 2>&1; then
+  bash ./scripts/ci.sh
+elif command -v pwsh >/dev/null 2>&1; then
+  pwsh -NoProfile -ExecutionPolicy Bypass -File ./scripts/ci.ps1
+elif command -v powershell >/dev/null 2>&1; then
+  powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/ci.ps1
+else
+  echo "[pre-commit] Error: neither bash nor PowerShell is available."
+  exit 1
+fi
