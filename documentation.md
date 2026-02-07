@@ -1,0 +1,134 @@
+# Documentation Ledger
+
+Append-only decision and rationale log.
+
+## 2026-02-07 - Durable Memory Bootstrap
+
+- Decision: Establish the six root durable memory files as authoritative operational memory.
+- Why: Existing planning/strategy context is fragmented across root markdown docs, scripts, and legacy workflow docs.
+- Evidence:
+  - Root docs and guides include overlapping planning material (`webai_mcp_complete_guide.md`, `DEV_BRANCH_STRATEGY.md`, `BRANCH_PROTECTION_GUIDE.md`).
+  - Script/tooling drift found in `scripts/` (`browser-tools-*` references).
+
+## 2026-02-07 - Local-Only CI/CD Enforcement
+
+- Decision: Enforce full local pipeline at pre-commit and disable cloud workflow execution.
+- Why: Commit quality gate needs to be local, deterministic, and independent from hosted CI paths.
+- Evidence:
+  - Active workflow YAML files existed in `.github/workflows/` and were archived to `ci/legacy/github-actions-workflows/`.
+  - New local CI source-of-truth files were added (`scripts/ci.ps1`, `scripts/ci.sh`) with hook dispatchers in `.githooks/`.
+
+## 2026-02-07 - Prompt Charter Sync Note
+
+- What changed:
+  - Created `prompt.md` with:
+    - autopilot policy
+    - durable memory methodology
+    - local-only CI/CD commitment-gating policy
+    - repo facts section grounded in this repository
+- Why:
+  - To satisfy durable memory charter requirements and prevent future drift between execution and project intent.
+- Repo evidence used:
+  - `README.md` architecture and compatibility sections
+  - Workspace/package layout (`package.json`, `webai-mcp/package.json`, `webai-server/package.json`)
+  - Existing docs and scripts inventory collected during archaeology
+
+## 2026-02-07 - Current Repository Snapshot
+
+- Code roots:
+  - `webai-mcp/`
+  - `webai-server/`
+  - `chrome-extension/`
+- Operational docs now include:
+  - `docs/LOCAL_CICD.md`
+  - `.github/LOCAL_ONLY.md`
+  - `docs/legacy/README.md`
+- Legacy cloud CI workflows preserved at:
+  - `ci/legacy/github-actions-workflows/`
+
+## 2026-02-07 - CI Runner Hardening and Security Remediation
+
+- Decision: Harden PowerShell CI command execution to fail immediately on non-zero exits.
+- Why: Initial CI run continued after failed commands, producing false-success behavior.
+- Evidence:
+  - `scripts/ci/common.ps1` now checks `$LASTEXITCODE` and throws on failure.
+  - `scripts/ci.ps1` and `scripts/ci.sh` now use workspace-scoped dependency/tool/audit commands.
+
+- Decision: Apply automatic audit fixes in both workspaces to satisfy security gate.
+- Why: Security stage failed on existing high/critical advisories.
+- Evidence:
+  - `npm --prefix webai-mcp audit fix` completed with zero vulnerabilities.
+  - `npm --prefix webai-server audit fix` completed with zero vulnerabilities.
+  - Final `npm run ci` run passed all stages.
+
+## 2026-02-07 - Legacy Script Naming Drift Remediation (Partial)
+
+- Decision: Replace stale `browser-tools-*` identifiers in executable scripts with `webai-*`.
+- Why: Setup/diagnostic/test helper scripts referenced directories and package names that no longer exist in this repo.
+- Evidence:
+  - Updated script references across `scripts/setup.js`, `scripts/diagnose.js`, `scripts/test-all.js`, `scripts/validate-installation.js`, `scripts/platform-setup.js`, and `scripts/README.md`.
+  - Validator now performs local version compatibility checks without importing `../webai-mcp/version-checker.js`.
+- Remaining risk:
+  - ESM CLI entrypoint guards still use brittle path string comparison and are tracked as `T-0010`.
+
+## 2026-02-07 - Roadmap Scope Decision (Resolved)
+
+- Decision: Treat `webai_mcp_complete_guide.md` as a historical planning reference, not active execution scope.
+- Why: Maintainer confirmation received; current actionable plan is governed by durable memory files.
+- Evidence:
+  - Guide now labeled as archived reference at file top.
+  - `plans.md` blocker `B-0001` resolved.
+  - `todo.md` decision item `T-0005` closed.
+
+## 2026-02-07 - Legacy Script Entry Guard Hardening
+
+- Decision: Replace brittle ESM direct-run checks in scripts with normalized file URL comparisons.
+- Why: `import.meta.url === \`file://${process.argv[1]}\`` is path-normalization fragile across environments.
+- Evidence:
+  - Updated in `scripts/setup.js`, `scripts/diagnose.js`, `scripts/validate-installation.js`, `scripts/platform-setup.js`, `scripts/test-all.js`.
+
+## 2026-02-07 - Legacy Docs Reconciliation with Local-Only Policy
+
+- Decision: Keep cloud-era workflow documents, but mark them as historical and point to local-only policy docs.
+- Why: Preserve provenance while preventing operational confusion.
+- Evidence:
+  - Added supersession notices in:
+    - `docs/RELEASE_SETUP.md`
+    - `docs/CHANGELOG_AUTOMATION.md`
+    - `DEV_BRANCH_STRATEGY.md`
+    - `BRANCH_PROTECTION_GUIDE.md`
+
+## 2026-02-07 - Validator Accuracy Improvements
+
+- Decision: Improve `scripts/validate-installation.js` checks for audit invocation, main entrypoint path resolution, and dev-version compatibility mapping.
+- Why: Previous validator produced false failures/warnings in current repo layout.
+- Evidence:
+  - `npm audit` now runs with `cwd` per package.
+  - Build main entry check now resolves from package root.
+  - Version compatibility now accepts `x.y.z-dev.n` mapped extension version `x.y.z.n`.
+
+## 2026-02-07 - Script Module Warning Cleanup Completed
+
+- Decision: Scope script module type to `scripts/` directory to avoid root-package semantic changes.
+- Why: Remove non-fatal `MODULE_TYPELESS_PACKAGE_JSON` noise without impacting root workspace behavior.
+- Evidence:
+  - Added `scripts/package.json` with `"type": "module"`.
+  - Converted `scripts/ci/docs-check.js` and `scripts/ci/smoke-test.js` to ESM imports.
+  - `node scripts/setup.js --help` and `node scripts/test-all.js --help` now run without module-typeless warnings.
+
+## 2026-02-07 - Root Script Interface Alignment
+
+- Decision: Add missing root script aliases that `scripts/README.md` already instructs users to run.
+- Why: Remove docs/runtime mismatch and reduce setup friction.
+- Evidence:
+  - Added root scripts: `diagnose`, `setup`, `setup:verbose`, `setup:quick`, `platform-setup`, `validate`, `full-setup`.
+  - Verified `npm run setup -- --help` and `npm run diagnose` execute correctly.
+  - Updated diagnostic wording to `WebAI-related process(es)` for consistency.
+
+## 2026-02-07 - Windows Process Detection Refinement
+
+- Decision: Use command-line aware process filtering on Windows for diagnostic process listing.
+- Why: Prior behavior counted all `node.exe` processes and inflated WebAI-related process counts.
+- Evidence:
+  - `scripts/diagnose.js` now queries `Win32_Process` via PowerShell and filters by `webai`, `mcp-server`, or `browser-connector`.
+  - Maintains fallback `tasklist` scan if CIM inspection fails.
