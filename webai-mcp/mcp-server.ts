@@ -25,7 +25,7 @@ try {
 
 // Create the MCP server
 const server = new McpServer({
-  name: "Browser Tools MCP",
+  name: "WebAI MCP",
   version: packageVersion,
 });
 
@@ -36,9 +36,10 @@ let serverDiscovered = false;
 
 // Function to get the default port from environment variable or default
 function getDefaultServerPort(): number {
-  // Check environment variable first
-  if (process.env.BROWSER_TOOLS_PORT) {
-    const envPort = parseInt(process.env.BROWSER_TOOLS_PORT, 10);
+  // Prefer current env var name, then fall back to legacy compatibility name
+  const configuredPort = process.env.WEBAI_PORT ?? process.env.BROWSER_TOOLS_PORT;
+  if (configuredPort) {
+    const envPort = parseInt(configuredPort, 10);
     if (!isNaN(envPort) && envPort > 0) {
       return envPort;
     }
@@ -63,7 +64,10 @@ function getDefaultServerPort(): number {
 
 // Function to get default server host from environment variable or default
 function getDefaultServerHost(): string {
-  // Check environment variable first
+  // Prefer current env var name, then fall back to legacy compatibility name
+  if (process.env.WEBAI_HOST) {
+    return process.env.WEBAI_HOST;
+  }
   if (process.env.BROWSER_TOOLS_HOST) {
     return process.env.BROWSER_TOOLS_HOST;
   }

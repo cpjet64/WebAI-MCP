@@ -1,5 +1,5 @@
 /**
- * Enhanced Error Handler for Browser Tools MCP
+ * Enhanced Error Handler for WebAI MCP
  *
  * Provides intelligent error analysis, user-friendly messages,
  * and actionable troubleshooting suggestions.
@@ -143,16 +143,16 @@ export class ErrorHandler {
 
       case 'client':
         if (this.ERROR_PATTERNS.CHROME_NOT_FOUND.test(errorMessage)) {
-          return `Chrome browser not found. Browser Tools requires Chrome or a Chromium-based browser to be installed.`;
+          return `Chrome browser not found. WebAI requires Chrome or a Chromium-based browser to be installed.`;
         }
         if (this.ERROR_PATTERNS.EXTENSION_ERROR.test(errorMessage)) {
-          return `Chrome extension error. The Browser Tools Chrome extension may not be properly installed or configured.`;
+          return `Chrome extension error. The WebAI Chrome extension may not be properly installed or configured.`;
         }
         return `Browser-related error. Please check your Chrome installation and extension setup.`;
 
       case 'configuration':
         if (this.ERROR_PATTERNS.BUILD_FAILED.test(errorMessage)) {
-          return `Build process failed. The Browser Tools packages may not be properly built.`;
+          return `Build process failed. The WebAI packages may not be properly built.`;
         }
         if (this.ERROR_PATTERNS.MISSING_DEPS.test(errorMessage)) {
           return `Missing dependencies. Some required packages are not installed.`;

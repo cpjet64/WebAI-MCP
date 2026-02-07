@@ -163,6 +163,25 @@ Authoritative status source for execution sequencing.
   - Updated package-name detection and identity payload in `webai-server/browser-connector.ts`.
   - Updated version-check tool description in `webai-mcp/mcp-server.ts`.
 
+## Milestone M9 - UI and Config Naming Alignment
+
+- Scope: Align remaining live-code `Browser Tools` naming in extension UI and runtime configuration surfaces with current WebAI naming, without changing compatibility signatures.
+- Tasks:
+  - Update MCP server display name and env var handling in `webai-mcp/mcp-server.ts`.
+  - Update extension UI status strings/comments in `chrome-extension/panel.js`.
+  - Update remaining runtime guidance strings/comments in `webai-mcp/error-handler.ts`, `webai-server/proxy-config.ts`, and `webai-server/auto-paste-manager.ts`.
+- Acceptance criteria:
+  - Extension UI and runtime messages refer to `WebAI`/`webai-server` instead of stale `Browser Tools` names.
+  - MCP runtime accepts `WEBAI_HOST`/`WEBAI_PORT` while retaining backward compatibility for legacy env vars.
+  - Local CI remains green.
+- Validation steps:
+  - `npm run ci`
+- Status: Done
+- Evidence:
+  - Updated `webai-mcp/mcp-server.ts` server name and env var precedence.
+  - Updated extension connection banner/status text in `chrome-extension/panel.js`.
+  - Updated runtime comment/message drift in `webai-mcp/error-handler.ts`, `webai-server/proxy-config.ts`, and `webai-server/auto-paste-manager.ts`.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

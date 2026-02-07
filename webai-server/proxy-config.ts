@@ -1,5 +1,5 @@
 /**
- * Proxy Configuration for Browser Tools Server
+ * Proxy Configuration for WebAI Server
  * 
  * Handles proxy detection, configuration, and network requests
  * through corporate firewalls and proxy servers.
@@ -37,7 +37,7 @@ export class ProxyManager {
     this.config = {
       timeout: 30000,
       retries: 3,
-      userAgent: 'Browser-Tools-MCP/1.3.0',
+      userAgent: 'WebAI-MCP/1.3.0',
       ...config
     };
 

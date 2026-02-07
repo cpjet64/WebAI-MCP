@@ -206,3 +206,22 @@ Format:
 - Notes/Links:
   - Linked milestone: `M8`
   - Updated user-facing runtime references to `webai-server` and `WebAI-MCP`, while preserving compatibility discovery signature `mcp-browser-connector-24x7`.
+
+### T-0015
+- Title: Align remaining extension UI and runtime config naming drift to WebAI
+- Category: Refactor
+- Priority: P2
+- Status: Done
+- Provenance:
+  - `webai-mcp/mcp-server.ts:28`
+  - `webai-mcp/mcp-server.ts:40`
+  - `webai-mcp/mcp-server.ts:68`
+  - `chrome-extension/panel.js:57`
+  - `chrome-extension/panel.js:571`
+  - `chrome-extension/panel.js:1107`
+  - `webai-mcp/error-handler.ts:146`
+  - `webai-server/proxy-config.ts:40`
+  - `webai-server/auto-paste-manager.ts:2`
+- Notes/Links:
+  - Linked milestone: `M9`
+  - Added `WEBAI_HOST`/`WEBAI_PORT` env var support with legacy fallback and updated live UI/runtime naming to WebAI.

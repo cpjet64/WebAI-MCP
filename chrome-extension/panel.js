@@ -54,7 +54,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // Connection was re-established, update UI
         serverConnected = true;
         updateConnectionBanner(true, {
-          name: "Browser Tools Server",
+          name: "WebAI Server",
           version: "reconnected",
           host: settings.serverHost,
           port: settings.serverPort,
@@ -149,7 +149,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (!serverConnected) {
       serverConnected = true;
       updateConnectionBanner(true, {
-        name: "Browser Tools Server",
+        name: "WebAI Server",
         version: "connected via WebSocket",
         host: message.serverHost,
         port: message.serverPort,
@@ -568,7 +568,7 @@ async function testConnection(host, port) {
       // Verify this is actually our server by checking the signature
       if (identity.signature !== "mcp-browser-connector-24x7") {
         statusIcon.className = "status-indicator status-disconnected";
-        statusText.textContent = `Connection failed: Found a server at ${host}:${port} but it's not the Browser Tools server`;
+        statusText.textContent = `Connection failed: Found a server at ${host}:${port} but it's not the WebAI server`;
         serverConnected = false;
         updateConnectionBanner(false, null);
         scheduleReconnectAttempt();
@@ -675,7 +675,7 @@ async function tryServerConnection(host, port) {
         // Verify this is actually our server by checking the signature
         if (identity.signature !== "mcp-browser-connector-24x7") {
           console.log(
-            `Found a server at ${host}:${port} but it's not the Browser Tools server`
+            `Found a server at ${host}:${port} but it's not the WebAI server`
           );
           return false;
         }
@@ -1104,10 +1104,10 @@ async function getServerInfo() {
   }
 }
 
-// Function to check MCP Server connectivity (via browser-tools-server)
+// Function to check MCP Server connectivity (via webai-server)
 async function checkMCPServerConnectivity() {
   try {
-    // Check if the browser-tools-server is running (which hosts the MCP server)
+    // Check if the webai-server is running (which hosts the MCP server)
     const response = await fetch(`http://${settings.serverHost}:${settings.serverPort}/.identity`, {
       signal: AbortSignal.timeout(3000)
     });

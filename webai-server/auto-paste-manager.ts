@@ -1,5 +1,5 @@
 /**
- * Auto-Paste Manager for Browser Tools MCP
+ * Auto-Paste Manager for WebAI MCP
  *
  * Handles automatic pasting of screenshots to various IDEs across different platforms.
  * Supports macOS (AppleScript), Windows (PowerShell), and Linux (xdotool).

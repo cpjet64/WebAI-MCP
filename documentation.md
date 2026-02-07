@@ -141,3 +141,12 @@ Append-only decision and rationale log.
   - `webai-mcp/error-handler.ts` now suggests `npx @cpjet64/webai-server` and links to `https://github.com/cpjet64/WebAI-MCP/...`.
   - `webai-server/browser-connector.ts` now reports `.identity.name` as `webai-server` and accepts both `webai-server` and legacy `browser-tools-server` package names when reading version data.
   - `webai-mcp/mcp-server.ts` version compatibility tool description now refers to `WebAI Server`.
+
+## 2026-02-07 - Extension UI and Env Var Naming Alignment
+
+- Decision: Continue naming-drift cleanup in live runtime surfaces by aligning extension UI/server labels and MCP env var names to WebAI conventions.
+- Why: Post-M8 archaeology still showed stale `Browser Tools` labels in active extension status UX and MCP runtime env var wiring.
+- Evidence:
+  - `webai-mcp/mcp-server.ts` now reports server name `WebAI MCP` and prefers `WEBAI_PORT`/`WEBAI_HOST` with legacy fallback.
+  - `chrome-extension/panel.js` now shows `WebAI Server` in connection status and mismatch messages.
+  - `webai-mcp/error-handler.ts`, `webai-server/proxy-config.ts`, and `webai-server/auto-paste-manager.ts` now use WebAI naming in remaining runtime-facing comments/messages/default user-agent string.
