@@ -14,6 +14,7 @@ import { execSync, spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { pathToFileURL } from 'url';
 import DiagnosticTool from './diagnose.js';
 
 const COLORS = {
@@ -62,7 +63,7 @@ class SetupTool {
   }
 
   async runSetup() {
-    this.log('Browser Tools MCP Setup Tool', 'bright', ICONS.rocket);
+    this.log('WebAI-MCP Setup Tool', 'bright', ICONS.rocket);
     this.log(`Platform: ${this.platform}`, 'blue', ICONS.info);
     console.log();
 
@@ -198,8 +199,8 @@ class SetupTool {
     this.logSection('Building Packages');
 
     const packages = [
-      { name: 'MCP Server', path: 'browser-tools-mcp' },
-      { name: 'Browser Tools Server', path: 'browser-tools-server' }
+      { name: 'MCP Server', path: 'webai-mcp' },
+      { name: 'WebAI Server', path: 'webai-server' }
     ];
 
     for (const pkg of packages) {
@@ -330,7 +331,7 @@ class SetupTool {
     this.logSection('Setup Complete!');
 
     if (this.errors.length === 0 && this.warnings.length === 0) {
-      this.log('🎉 Browser Tools MCP setup completed successfully!', 'green', ICONS.rocket);
+      this.log('🎉 WebAI-MCP setup completed successfully!', 'green', ICONS.rocket);
     } else {
       this.log('Setup completed with some issues:', 'yellow', ICONS.warning);
 
@@ -347,7 +348,7 @@ class SetupTool {
 
     console.log();
     this.log('Next steps:', 'cyan', ICONS.info);
-    this.log('1. Start the server: npx @cpjet64/browser-tools-server', 'blue', '  ');
+    this.log('1. Start the server: npx @cpjet64/webai-server', 'blue', '  ');
     this.log('2. Install the Chrome extension from the chrome-extension folder', 'blue', '  ');
     this.log('3. Configure your MCP client (Cursor, Claude Desktop, etc.)', 'blue', '  ');
     console.log();
@@ -355,8 +356,17 @@ class SetupTool {
   }
 }
 
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    return import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+})();
+
 // CLI interface
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isDirectRun) {
   const args = process.argv.slice(2);
   const options = {
     skipDiagnostics: args.includes('--skip-diagnostics'),
@@ -367,7 +377,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   if (args.includes('--help') || args.includes('-h')) {
     console.log(`
-Browser Tools MCP Setup Tool
+WebAI-MCP Setup Tool
 
 Usage: node scripts/setup.js [options]
 

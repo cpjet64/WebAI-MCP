@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Comprehensive Test Runner for Browser Tools MCP
+ * Comprehensive Test Runner for WebAI-MCP
  *
  * Automates testing of all components including server, MCP, extension,
  * and new diagnostic features across different branches.
@@ -11,6 +11,7 @@ import { execSync, spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { pathToFileURL } from 'url';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -64,7 +65,7 @@ class TestRunner {
   }
 
   async runAllTests() {
-    this.log('Browser Tools MCP - Comprehensive Test Runner', 'bright', ICONS.rocket);
+    this.log('WebAI-MCP - Comprehensive Test Runner', 'bright', ICONS.rocket);
     this.log(`Platform: ${os.platform()} ${os.arch()}`, 'blue', ICONS.info);
     console.log();
 
@@ -212,8 +213,8 @@ class TestRunner {
     }
 
     const packages = [
-      { name: 'MCP Server', path: 'browser-tools-mcp' },
-      { name: 'Browser Tools Server', path: 'browser-tools-server' }
+      { name: 'MCP Server', path: 'webai-mcp' },
+      { name: 'WebAI Server', path: 'webai-server' }
     ];
 
     for (const pkg of packages) {
@@ -256,7 +257,7 @@ class TestRunner {
       return;
     }
 
-    // Test Browser Tools Server
+    // Test WebAI Server
     await this.testBrowserToolsServer();
 
     // Test MCP Server
@@ -265,11 +266,11 @@ class TestRunner {
 
   async testBrowserToolsServer() {
     try {
-      this.log('Starting Browser Tools Server...', 'blue', ICONS.server);
+      this.log('Starting WebAI Server...', 'blue', ICONS.server);
 
       // Start server in background
       this.serverProcess = spawn('node', ['dist/browser-connector.js'], {
-        cwd: path.join(process.cwd(), 'browser-tools-server'),
+        cwd: path.join(process.cwd(), 'webai-server'),
         stdio: this.options.verbose ? 'inherit' : 'pipe'
       });
 
@@ -279,10 +280,10 @@ class TestRunner {
       // Test server endpoints
       await this.testServerEndpoints();
 
-      this.recordResult('pass', 'Browser Tools Server started and responding');
+      this.recordResult('pass', 'WebAI Server started and responding');
 
     } catch (error) {
-      this.recordResult('fail', `Browser Tools Server test failed: ${error.message}`);
+      this.recordResult('fail', `WebAI Server test failed: ${error.message}`);
     }
   }
 
@@ -381,7 +382,7 @@ class TestRunner {
     // Test server-to-server communication
     if (this.serverProcess && this.mcpProcess) {
       try {
-        // Test if MCP server can reach Browser Tools Server
+        // Test if MCP server can reach WebAI Server
         const response = await fetch('http://localhost:3025/.identity', {
           signal: AbortSignal.timeout(5000)
         });
@@ -451,9 +452,9 @@ class TestRunner {
 
       case 'feature/enhanced-error-handling':
         // Test enhanced error handling by building MCP server
-        if (fs.existsSync('browser-tools-mcp/error-handler.ts')) {
+        if (fs.existsSync('webai-mcp/error-handler.ts')) {
           execSync('npm run build', {
-            cwd: 'browser-tools-mcp',
+            cwd: 'webai-mcp',
             stdio: 'pipe'
           });
         }
@@ -461,9 +462,9 @@ class TestRunner {
 
       case 'feature/proxy-support':
         // Test proxy configuration by building server
-        if (fs.existsSync('browser-tools-server/proxy-config.ts')) {
+        if (fs.existsSync('webai-server/proxy-config.ts')) {
           execSync('npm run build', {
-            cwd: 'browser-tools-server',
+            cwd: 'webai-server',
             stdio: 'pipe'
           });
         }
@@ -518,7 +519,7 @@ class TestRunner {
 
     // Stop server processes
     if (this.serverProcess) {
-      this.log('Stopping Browser Tools Server...', 'blue', ICONS.info);
+      this.log('Stopping WebAI Server...', 'blue', ICONS.info);
       this.serverProcess.kill();
       this.serverProcess = null;
     }
@@ -546,7 +547,7 @@ class TestRunner {
     console.log();
 
     if (this.results.failed === 0) {
-      this.log('🎉 All tests passed! Browser Tools MCP is ready for use.', 'green', ICONS.rocket);
+      this.log('🎉 All tests passed! WebAI-MCP is ready for use.', 'green', ICONS.rocket);
     } else {
       this.log(`❌ ${this.results.failed} test(s) failed. Please review the issues above.`, 'red', ICONS.error);
       process.exit(1);
@@ -554,8 +555,17 @@ class TestRunner {
   }
 }
 
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    return import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+})();
+
 // CLI interface
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isDirectRun) {
   const args = process.argv.slice(2);
   const options = {
     skipBuild: args.includes('--skip-build'),
@@ -567,7 +577,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   if (args.includes('--help') || args.includes('-h')) {
     console.log(`
-Browser Tools MCP Test Runner
+WebAI-MCP Test Runner
 
 Usage: node scripts/test-all.js [options]
 

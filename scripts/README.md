@@ -113,7 +113,7 @@ npm run validate
 - `scripts/macos/start-server.sh` - Start server shell script
 
 ### Linux
-- `scripts/linux/browser-tools.service` - Systemd service file
+- `scripts/linux/webai-server.service` - Systemd service file
 
 ## Troubleshooting
 
@@ -207,6 +207,8 @@ Each script follows this pattern:
 
 // Imports
 import { ... } from '...';
+import path from 'path';
+import { pathToFileURL } from 'url';
 
 // Constants and utilities
 const COLORS = { ... };
@@ -222,8 +224,17 @@ class ScriptName {
   private async helperMethod() { ... }
 }
 
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    return import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+})();
+
 // CLI interface
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isDirectRun) {
   const script = new ScriptName();
   script.runScript().catch(console.error);
 }

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 /**
- * Browser Tools MCP Diagnostic Tool
+ * WebAI-MCP Diagnostic Tool
  *
  * Comprehensive diagnostic tool to identify and troubleshoot common issues
- * with browser-tools-mcp setup and connectivity.
+ * with webai-mcp setup and connectivity.
  */
 
 import { execSync, spawn } from 'child_process';
@@ -12,6 +12,7 @@ import fs from 'fs';
 import path from 'path';
 import os from 'os';
 import net from 'net';
+import { pathToFileURL } from 'url';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -60,7 +61,7 @@ class DiagnosticTool {
   }
 
   async runDiagnostics() {
-    this.log('Browser Tools MCP Diagnostics Tool', 'bright', ICONS.search);
+    this.log('WebAI-MCP Diagnostics Tool', 'bright', ICONS.search);
     this.log(`Platform: ${os.platform()} ${os.arch()}`, 'blue', ICONS.info);
     this.log(`Node.js: ${process.version}`, 'blue', ICONS.info);
     console.log();
@@ -112,13 +113,15 @@ class DiagnosticTool {
       // Check global packages
       try {
         const globalPackages = execSync('npm list -g --depth=0', { encoding: 'utf8' });
-        const hasBrowserTools = globalPackages.includes('@cpjet64/browser-tools');
+        const hasWebAiPackages =
+          globalPackages.includes('@cpjet64/webai-mcp') ||
+          globalPackages.includes('@cpjet64/webai-server');
 
-        if (hasBrowserTools) {
-          this.log('Browser Tools packages found globally', 'green', ICONS.success);
+        if (hasWebAiPackages) {
+          this.log('WebAI packages found globally', 'green', ICONS.success);
         } else {
-          this.log('Browser Tools packages not installed globally', 'yellow', ICONS.warning);
-          this.recommendations.push('Consider installing globally: npm install -g @cpjet64/browser-tools-mcp @cpjet64/browser-tools-server');
+          this.log('WebAI packages not installed globally', 'yellow', ICONS.warning);
+          this.recommendations.push('Consider installing globally: npm install -g @cpjet64/webai-mcp @cpjet64/webai-server');
         }
       } catch (error) {
         this.log('Could not check global packages', 'yellow', ICONS.warning);
@@ -140,29 +143,62 @@ class DiagnosticTool {
       if (platform === 'win32') {
         // Windows
         try {
-          const output = execSync('tasklist /FI "IMAGENAME eq node.exe" /FO CSV', { encoding: 'utf8' });
-          const lines = output.split('\n').slice(1); // Skip header
+          const cmd = [
+            'powershell',
+            '-NoProfile',
+            '-Command',
+            `"Get-CimInstance Win32_Process -Filter \\"Name='node.exe'\\" | Select-Object ProcessId,CommandLine | ConvertTo-Json -Compress"`
+          ].join(' ');
 
-          for (const line of lines) {
-            if (line.trim()) {
-              const parts = line.split(',');
-              if (parts.length >= 2) {
-                const pid = parts[1].replace(/"/g, '');
-                processes.push({ pid, name: 'node.exe' });
+          const output = execSync(cmd, { encoding: 'utf8' }).trim();
+
+          if (output) {
+            const parsed = JSON.parse(output);
+            const candidates = Array.isArray(parsed) ? parsed : [parsed];
+            const isRelevant = (commandLine) => {
+              const text = String(commandLine || '').toLowerCase();
+              return (
+                text.includes('webai') ||
+                text.includes('mcp-server') ||
+                text.includes('browser-connector')
+              );
+            };
+
+            for (const proc of candidates) {
+              if (isRelevant(proc.CommandLine)) {
+                processes.push({
+                  pid: String(proc.ProcessId),
+                  command: proc.CommandLine || 'node.exe'
+                });
               }
             }
           }
         } catch (error) {
-          this.log('Could not check Windows processes', 'yellow', ICONS.warning);
+          this.log('Could not inspect Windows process command lines, falling back to basic process scan', 'yellow', ICONS.warning);
+          try {
+            const output = execSync('tasklist /FI "IMAGENAME eq node.exe" /FO CSV', { encoding: 'utf8' });
+            const lines = output.split('\n').slice(1); // Skip header
+            for (const line of lines) {
+              if (line.trim()) {
+                const parts = line.split(',');
+                if (parts.length >= 2) {
+                  const pid = parts[1].replace(/"/g, '');
+                  processes.push({ pid, command: 'node.exe (unfiltered fallback)' });
+                }
+              }
+            }
+          } catch (fallbackError) {
+            this.log('Could not check Windows processes', 'yellow', ICONS.warning);
+          }
         }
       } else {
         // Unix-like systems
         try {
-          const output = execSync('ps aux | grep -E "(browser-tools|node.*mcp-server|node.*browser-connector)"', { encoding: 'utf8' });
+          const output = execSync('ps aux | grep -E "(webai|browser-tools|node.*mcp-server|node.*browser-connector)"', { encoding: 'utf8' });
           const lines = output.split('\n');
 
           for (const line of lines) {
-            if (line.includes('browser-tools') || line.includes('mcp-server') || line.includes('browser-connector')) {
+            if (line.includes('webai') || line.includes('browser-tools') || line.includes('mcp-server') || line.includes('browser-connector')) {
               if (!line.includes('grep')) {
                 const parts = line.trim().split(/\s+/);
                 if (parts.length >= 2) {
@@ -177,15 +213,15 @@ class DiagnosticTool {
       }
 
       if (processes.length > 0) {
-        this.log(`Found ${processes.length} browser-tools related process(es)`, 'green', ICONS.success);
+        this.log(`Found ${processes.length} WebAI-related process(es)`, 'green', ICONS.success);
         processes.forEach(proc => {
           this.log(`  PID: ${proc.pid}`, 'blue', '  →');
         });
         this.results.processes = { status: 'running', count: processes.length, processes };
       } else {
-        this.log('No browser-tools processes found', 'yellow', ICONS.warning);
+        this.log('No WebAI-related processes found', 'yellow', ICONS.warning);
         this.results.processes = { status: 'none', count: 0 };
-        this.recommendations.push('Start the browser-tools-server: npx @cpjet64/browser-tools-server');
+        this.recommendations.push('Start the webai-server: npx @cpjet64/webai-server');
       }
 
     } catch (error) {
@@ -256,8 +292,8 @@ class DiagnosticTool {
 
     try {
       // Check if dist directories exist
-      const mcpDistPath = path.join(process.cwd(), 'browser-tools-mcp', 'dist');
-      const serverDistPath = path.join(process.cwd(), 'browser-tools-server', 'dist');
+      const mcpDistPath = path.join(process.cwd(), 'webai-mcp', 'dist');
+      const serverDistPath = path.join(process.cwd(), 'webai-server', 'dist');
 
       const mcpBuilt = fs.existsSync(mcpDistPath);
       const serverBuilt = fs.existsSync(serverDistPath);
@@ -266,14 +302,14 @@ class DiagnosticTool {
         this.log('MCP Server build artifacts found', 'green', ICONS.success);
       } else {
         this.log('MCP Server not built', 'red', ICONS.error);
-        this.issues.push('MCP Server needs to be built. Run: cd browser-tools-mcp && npm run build');
+        this.issues.push('MCP Server needs to be built. Run: cd webai-mcp && npm run build');
       }
 
       if (serverBuilt) {
-        this.log('Browser Tools Server build artifacts found', 'green', ICONS.success);
+        this.log('WebAI Server build artifacts found', 'green', ICONS.success);
       } else {
-        this.log('Browser Tools Server not built', 'red', ICONS.error);
-        this.issues.push('Browser Tools Server needs to be built. Run: cd browser-tools-server && npm run build');
+        this.log('WebAI Server not built', 'red', ICONS.error);
+        this.issues.push('WebAI Server needs to be built. Run: cd webai-server && npm run build');
       }
 
       this.results.buildStatus = {
@@ -309,7 +345,7 @@ class DiagnosticTool {
             const identity = await response.json();
 
             if (identity.signature === 'mcp-browser-connector-24x7') {
-              this.log(`✓ Browser Tools Server found at ${host}:${port}`, 'green', ICONS.success);
+              this.log(`✓ WebAI Server found at ${host}:${port}`, 'green', ICONS.success);
               this.log(`  Server version: ${identity.version || 'unknown'}`, 'blue', ICONS.info);
               serverFound = true;
               serverDetails = { host, port, identity };
@@ -326,8 +362,8 @@ class DiagnosticTool {
     }
 
     if (!serverFound) {
-      this.log('No Browser Tools Server found', 'red', ICONS.error);
-      this.issues.push('Browser Tools Server is not running. Start it with: npx @cpjet64/browser-tools-server');
+      this.log('No WebAI Server found', 'red', ICONS.error);
+      this.issues.push('WebAI Server is not running. Start it with: npx @cpjet64/webai-server');
       this.results.connectivity = { status: 'no_server' };
     } else {
       this.results.connectivity = { status: 'connected', server: serverDetails };
@@ -412,7 +448,7 @@ class DiagnosticTool {
     const hasRecommendations = this.recommendations.length > 0;
 
     if (!hasErrors && !hasRecommendations) {
-      this.log('All checks passed! Your browser-tools-mcp setup looks good.', 'green', ICONS.success);
+      this.log('All checks passed! Your webai-mcp setup looks good.', 'green', ICONS.success);
     } else if (hasErrors) {
       this.log(`Found ${this.issues.length} issue(s) that need attention:`, 'red', ICONS.error);
       this.issues.forEach((issue, index) => {
@@ -435,13 +471,13 @@ class DiagnosticTool {
 
       if (!this.results.buildStatus?.mcpBuilt || !this.results.buildStatus?.serverBuilt) {
         this.log('1. Build the packages:', 'cyan', ICONS.tools);
-        this.log('   cd browser-tools-mcp && npm install && npm run build', 'blue', '   ');
-        this.log('   cd ../browser-tools-server && npm install && npm run build', 'blue', '   ');
+        this.log('   cd webai-mcp && npm install && npm run build', 'blue', '   ');
+        this.log('   cd ../webai-server && npm install && npm run build', 'blue', '   ');
       }
 
       if (this.results.connectivity?.status === 'no_server') {
         this.log('2. Start the server:', 'cyan', ICONS.tools);
-        this.log('   npx @cpjet64/browser-tools-server', 'blue', '   ');
+        this.log('   npx @cpjet64/webai-server', 'blue', '   ');
       }
 
       if (this.results.chromeExtension?.status === 'ready') {
@@ -457,8 +493,17 @@ class DiagnosticTool {
   }
 }
 
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    return import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+})();
+
 // Run diagnostics if this file is executed directly
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isDirectRun) {
   const diagnostic = new DiagnosticTool();
   diagnostic.runDiagnostics().catch(console.error);
 }

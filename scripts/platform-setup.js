@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Platform-Specific Setup Utilities for Browser Tools MCP
+ * Platform-Specific Setup Utilities for WebAI-MCP
  * 
  * Handles platform-specific configurations, optimizations,
  * and troubleshooting for Windows, macOS, and Linux.
@@ -11,6 +11,7 @@ import { execSync, spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { pathToFileURL } from 'url';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -218,7 +219,7 @@ class PlatformSetup {
       
       // Create start script
       const startScript = `@echo off
-echo Starting Browser Tools MCP Server...
+echo Starting WebAI-MCP Server...
 set MIDDLEWARE_PORT=3025
 
 :: Kill existing processes
@@ -227,7 +228,7 @@ for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%MIDDLEWARE_PORT%"') do (
 )
 
 :: Start middleware server
-start "BrowserTools Server" cmd /c "npx @cpjet64/browser-tools-server"
+start "BrowserTools Server" cmd /c "npx @cpjet64/webai-server"
 
 :: Wait and start MCP server if needed
 timeout /t 3 /nobreak > nul
@@ -239,7 +240,7 @@ pause`;
       
       // Create diagnostic script
       const diagScript = `@echo off
-echo Running Browser Tools MCP Diagnostics...
+echo Running WebAI-MCP Diagnostics...
 node scripts/diagnose.js
 pause`;
 
@@ -355,14 +356,14 @@ pause`;
       
       // Create start script
       const startScript = `#!/bin/bash
-echo "Starting Browser Tools MCP Server..."
+echo "Starting WebAI-MCP Server..."
 export MIDDLEWARE_PORT=3025
 
 # Kill existing processes
 lsof -ti:$MIDDLEWARE_PORT | xargs kill -9 2>/dev/null || true
 
 # Start server
-npx @cpjet64/browser-tools-server &
+npx @cpjet64/webai-server &
 
 echo "Server starting on port $MIDDLEWARE_PORT"
 echo "Check terminal output for status"`;
@@ -454,24 +455,24 @@ echo "Check terminal output for status"`;
       
       // Create systemd service file
       const serviceFile = `[Unit]
-Description=Browser Tools MCP Server
+Description=WebAI-MCP Server
 After=network.target
 
 [Service]
 Type=simple
 User=\${USER}
 WorkingDirectory=\${PWD}
-ExecStart=/usr/bin/npx @cpjet64/browser-tools-server
+ExecStart=/usr/bin/npx @cpjet64/webai-server
 Restart=always
 RestartSec=10
 
 [Install]
 WantedBy=multi-user.target`;
 
-      fs.writeFileSync(path.join(scriptDir, 'browser-tools.service'), serviceFile);
+      fs.writeFileSync(path.join(scriptDir, 'webai-server.service'), serviceFile);
       
       this.log('Created Linux systemd service file', 'green', ICONS.success);
-      this.log('To install: sudo cp scripts/linux/browser-tools.service /etc/systemd/system/', 'blue', '  ');
+      this.log('To install: sudo cp scripts/linux/webai-server.service /etc/systemd/system/', 'blue', '  ');
       
     } catch (error) {
       this.log('Failed to create Linux scripts', 'red', ICONS.error);
@@ -511,8 +512,17 @@ WantedBy=multi-user.target`;
   }
 }
 
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    return import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+})();
+
 // CLI interface
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isDirectRun) {
   const setup = new PlatformSetup();
   setup.runPlatformSetup().catch(console.error);
 }

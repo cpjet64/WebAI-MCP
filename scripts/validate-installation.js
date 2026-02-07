@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * Installation Validation Script for Browser Tools MCP
+ * Installation Validation Script for WebAI-MCP
  *
- * Comprehensive validation of the entire Browser Tools MCP setup
+ * Comprehensive validation of the entire WebAI-MCP setup
  * including dependencies, builds, configuration, and functionality.
  */
 
@@ -11,8 +11,8 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { pathToFileURL } from 'url';
 import DiagnosticTool from './diagnose.js';
-import { VersionChecker } from '../browser-tools-mcp/version-checker.js';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -74,7 +74,7 @@ class InstallationValidator {
   }
 
   async runValidation() {
-    this.log('Browser Tools MCP Installation Validator', 'bright', ICONS.rocket);
+    this.log('WebAI-MCP Installation Validator', 'bright', ICONS.rocket);
     this.log(`Platform: ${os.platform()} ${os.arch()}`, 'blue', ICONS.info);
     this.log(`Node.js: ${process.version}`, 'blue', ICONS.info);
     console.log();
@@ -228,8 +228,8 @@ class InstallationValidator {
 
     // Check for build artifacts
     const buildDirs = [
-      'browser-tools-mcp/dist',
-      'browser-tools-server/dist'
+      'webai-mcp/dist',
+      'webai-server/dist'
     ];
 
     for (const buildDir of buildDirs) {
@@ -272,7 +272,7 @@ class InstallationValidator {
 
       // Check for security vulnerabilities
       try {
-        const auditResult = execSync(`cd ${packagePath} && npm audit --audit-level=high`, {
+        execSync(`npm --prefix ${pkg.path} audit --audit-level=high`, {
           encoding: 'utf8',
           stdio: 'pipe'
         });
@@ -288,8 +288,8 @@ class InstallationValidator {
     this.logSection('Build Validation');
 
     const packages = [
-      { name: 'MCP Server', path: 'browser-tools-mcp' },
-      { name: 'Browser Tools Server', path: 'browser-tools-server' }
+      { name: 'MCP Server', path: 'webai-mcp' },
+      { name: 'WebAI Server', path: 'webai-server' }
     ];
 
     for (const pkg of packages) {
@@ -307,7 +307,9 @@ class InstallationValidator {
           if (fs.existsSync(packageJsonPath)) {
             const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
             const mainFile = packageJson.main || 'index.js';
-            const mainPath = path.join(distPath, mainFile);
+            const mainPath = path.isAbsolute(mainFile)
+              ? mainFile
+              : path.join(packagePath, mainFile);
 
             if (fs.existsSync(mainPath)) {
               this.recordResult('builds', 'pass', `${pkg.name} main entry point exists`);
@@ -359,16 +361,59 @@ class InstallationValidator {
 
     // Check version compatibility
     try {
-      const versionResult = await VersionChecker.checkVersionCompatibility();
+      const versionResult = this.checkLocalVersionCompatibility();
       if (versionResult.isCompatible) {
         this.recordResult('configuration', 'pass', 'All component versions are compatible');
       } else {
         this.recordResult('configuration', 'fail', 'Version compatibility issues detected');
-        this.recommendations.push('Run version compatibility check for details');
+        this.recommendations.push(`Align versions: MCP=${versionResult.mcpVersion}, Server=${versionResult.serverVersion}, Extension=${versionResult.extensionVersion}`);
       }
     } catch (error) {
       this.recordResult('configuration', 'warn', 'Could not check version compatibility');
     }
+  }
+
+  checkLocalVersionCompatibility() {
+    const mcpPackage = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), 'webai-mcp', 'package.json'), 'utf8')
+    );
+    const serverPackage = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), 'webai-server', 'package.json'), 'utf8')
+    );
+    const extensionManifest = JSON.parse(
+      fs.readFileSync(path.join(process.cwd(), 'chrome-extension', 'manifest.json'), 'utf8')
+    );
+
+    const mcpVersion = mcpPackage.version || '0.0.0';
+    const serverVersion = serverPackage.version || '0.0.0';
+    const extensionVersion = extensionManifest.version || '0.0.0';
+
+    const normalizeBase = (version) => version.replace(/-dev\.\d+$/, '');
+    const major = (version) => normalizeBase(version).split('.')[0];
+
+    const mcpBase = normalizeBase(mcpVersion);
+    const serverBase = normalizeBase(serverVersion);
+    const compatibleMajors = major(mcpVersion) === major(serverVersion);
+    const toExtensionDevVersion = (version) => {
+      const match = version.match(/^(\d+\.\d+\.\d+)-dev\.(\d+)$/);
+      if (!match) return normalizeBase(version);
+      return `${match[1]}.${match[2]}`;
+    };
+
+    const allowedExtensionVersions = new Set([
+      mcpBase,
+      serverBase,
+      toExtensionDevVersion(mcpVersion),
+      toExtensionDevVersion(serverVersion)
+    ]);
+    const extensionMatches = allowedExtensionVersions.has(extensionVersion);
+
+    return {
+      isCompatible: compatibleMajors && extensionMatches,
+      mcpVersion,
+      serverVersion,
+      extensionVersion
+    };
   }
 
   async validateFunctionality() {
@@ -405,7 +450,7 @@ class InstallationValidator {
       if (response.ok) {
         const identity = await response.json();
         if (identity.signature === 'mcp-browser-connector-24x7') {
-          this.recordResult('functionality', 'pass', 'Browser Tools Server is running and responding');
+          this.recordResult('functionality', 'pass', 'WebAI Server is running and responding');
         } else {
           this.recordResult('functionality', 'warn', 'Server running but wrong signature');
         }
@@ -413,8 +458,8 @@ class InstallationValidator {
         this.recordResult('functionality', 'warn', 'Server running but not responding correctly');
       }
     } catch (error) {
-      this.recordResult('functionality', 'warn', 'Browser Tools Server not running');
-      this.recommendations.push('Start the server: npx @cpjet64/browser-tools-server');
+      this.recordResult('functionality', 'warn', 'WebAI Server not running');
+      this.recommendations.push('WebAI Server is not running. Start it with: npx @cpjet64/webai-server');
     }
   }
 
@@ -458,9 +503,10 @@ class InstallationValidator {
 
     // Show recommendations
     if (this.recommendations.length > 0) {
+      const uniqueRecommendations = [...new Set(this.recommendations)];
       console.log();
       this.log('Recommendations:', 'cyan', ICONS.info);
-      this.recommendations.forEach((rec, index) => {
+      uniqueRecommendations.forEach((rec, index) => {
         this.log(`${index + 1}. ${rec}`, 'blue', '  ');
       });
     }
@@ -470,8 +516,17 @@ class InstallationValidator {
   }
 }
 
+const isDirectRun = (() => {
+  if (!process.argv[1]) return false;
+  try {
+    return import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href;
+  } catch {
+    return false;
+  }
+})();
+
 // CLI interface
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isDirectRun) {
   const validator = new InstallationValidator();
   validator.runValidation().catch(console.error);
 }
