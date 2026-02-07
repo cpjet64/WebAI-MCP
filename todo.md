@@ -191,3 +191,18 @@ Format:
 - Notes/Links:
   - Linked milestone: `M7`
   - Upgraded from broad `tasklist` counting to command-line aware filtering with fallback.
+
+### T-0014
+- Title: Align runtime server identity and troubleshooting guidance with WebAI naming
+- Category: Bug
+- Priority: P1
+- Status: Done
+- Provenance:
+  - `webai-mcp/error-handler.ts:177`
+  - `webai-mcp/error-handler.ts:304`
+  - `webai-server/browser-connector.ts:583`
+  - `webai-server/browser-connector.ts:597`
+  - `webai-mcp/mcp-server.ts:1804`
+- Notes/Links:
+  - Linked milestone: `M8`
+  - Updated user-facing runtime references to `webai-server` and `WebAI-MCP`, while preserving compatibility discovery signature `mcp-browser-connector-24x7`.

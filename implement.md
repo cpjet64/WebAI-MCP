@@ -35,5 +35,5 @@
 
 ## Current Focus
 
-- Active milestone: none (M1-M7 complete as of 2026-02-07).
-- Next queued work: promote new archaeology findings to `todo.md` and `plans.md` as they appear.
+- Active milestone: none (M1-M8 complete as of 2026-02-07).
+- Next queued work: continue archaeology and promote any remaining stale runtime/docs references into `todo.md` and `plans.md`.

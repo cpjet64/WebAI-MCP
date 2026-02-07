@@ -51,6 +51,7 @@ Derived from current repository evidence on 2026-02-07.
 - Keep workspace boundaries explicit (`webai-mcp`, `webai-server`, extension).
 - Favor additive, backward-compatible changes in scripts/docs when consolidating.
 - Track backlog with provenance in `todo.md`.
+- Keep runtime-facing service names aligned with current package identities (`webai-server`) and reserve legacy names for explicit compatibility checks only.
 
 ## Patterns to Avoid
 

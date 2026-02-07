@@ -132,3 +132,12 @@ Append-only decision and rationale log.
 - Evidence:
   - `scripts/diagnose.js` now queries `Win32_Process` via PowerShell and filters by `webai`, `mcp-server`, or `browser-connector`.
   - Maintains fallback `tasklist` scan if CIM inspection fails.
+
+## 2026-02-07 - Runtime Naming and Identity Consistency
+
+- Decision: Update runtime-facing server guidance and `.identity` metadata to WebAI naming while preserving compatibility-critical discovery signature behavior.
+- Why: Archaeology identified stale `browser-tools-*` references in live error handling and identity responses that can mislead users even though repository/package naming is `webai-*`.
+- Evidence:
+  - `webai-mcp/error-handler.ts` now suggests `npx @cpjet64/webai-server` and links to `https://github.com/cpjet64/WebAI-MCP/...`.
+  - `webai-server/browser-connector.ts` now reports `.identity.name` as `webai-server` and accepts both `webai-server` and legacy `browser-tools-server` package names when reading version data.
+  - `webai-mcp/mcp-server.ts` version compatibility tool description now refers to `WebAI Server`.

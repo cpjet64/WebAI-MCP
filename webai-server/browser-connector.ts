@@ -176,7 +176,7 @@ let currentSettings = {
   networkConfig: {
     timeout: parseInt(process.env.NETWORK_TIMEOUT || "30000"),
     retries: parseInt(process.env.NETWORK_RETRIES || "3"),
-    userAgent: process.env.USER_AGENT || "Browser-Tools-MCP/1.3.0",
+    userAgent: process.env.USER_AGENT || "WebAI-MCP/1.3.0",
   } as NetworkConfig,
 };
 
@@ -578,7 +578,11 @@ app.get("/.identity", (req, res) => {
     for (const packagePath of possiblePaths) {
       if (fs.existsSync(packagePath)) {
         const packageJson = JSON.parse(fs.readFileSync(packagePath, "utf8"));
-        if (packageJson.name && packageJson.name.includes("browser-tools-server")) {
+        if (
+          packageJson.name &&
+          (packageJson.name.includes("webai-server") ||
+            packageJson.name.includes("browser-tools-server"))
+        ) {
           version = packageJson.version;
           break;
         }
@@ -590,7 +594,7 @@ app.get("/.identity", (req, res) => {
 
   res.json({
     port: PORT,
-    name: "browser-tools-server",
+    name: "webai-server",
     version: version,
     signature: "mcp-browser-connector-24x7",
     uptime: process.uptime(),
@@ -2118,7 +2122,7 @@ export class BrowserConnector {
 // Use an async IIFE to allow for async/await in the initial setup
 (async () => {
   try {
-    console.log(`Starting Browser Tools Server...`);
+    console.log(`Starting WebAI Server...`);
     console.log(`Requested port: ${REQUESTED_PORT}`);
 
     // Find an available port
@@ -2138,7 +2142,7 @@ export class BrowserConnector {
 
     // Create the server with the available port
     const server = app.listen(PORT, currentSettings.serverHost, () => {
-      console.log(`\n=== Browser Tools Server Started ===`);
+      console.log(`\n=== WebAI Server Started ===`);
       console.log(
         `Aggregator listening on http://${currentSettings.serverHost}:${PORT}`
       );

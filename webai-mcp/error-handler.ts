@@ -42,7 +42,7 @@ export class ErrorHandler {
 
     // Server errors
     SERVER_NOT_FOUND: /Failed to discover|No server found|server not found/i,
-    WRONG_SIGNATURE: /wrong signature|not the Browser Tools server/i,
+    WRONG_SIGNATURE: /wrong signature|not the (Browser Tools|WebAI) server/i,
     SERVER_ERROR: /Server returned [45]\d\d/i,
 
     // Platform errors
@@ -116,21 +116,21 @@ export class ErrorHandler {
     switch (type) {
       case 'connection':
         if (this.ERROR_PATTERNS.ECONNREFUSED.test(errorMessage)) {
-          return `Cannot connect to Browser Tools Server at ${context.host}:${context.port}. The server appears to be offline or not running.`;
+          return `Cannot connect to WebAI Server at ${context.host}:${context.port}. The server appears to be offline or not running.`;
         }
         if (this.ERROR_PATTERNS.TIMEOUT.test(errorMessage)) {
-          return `Connection to Browser Tools Server timed out. The server may be overloaded or unreachable.`;
+          return `Connection to WebAI Server timed out. The server may be overloaded or unreachable.`;
         }
-        return `Network connection failed while trying to reach the Browser Tools Server.`;
+        return `Network connection failed while trying to reach the WebAI Server.`;
 
       case 'server':
         if (this.ERROR_PATTERNS.SERVER_NOT_FOUND.test(errorMessage)) {
-          return `Browser Tools Server not found. Please start the server before using MCP tools.`;
+          return `WebAI Server not found. Please start the server before using MCP tools.`;
         }
         if (this.ERROR_PATTERNS.WRONG_SIGNATURE.test(errorMessage)) {
-          return `Found a server at ${context.host}:${context.port}, but it's not the Browser Tools Server. Another application may be using this port.`;
+          return `Found a server at ${context.host}:${context.port}, but it's not the WebAI Server. Another application may be using this port.`;
         }
-        return `Browser Tools Server encountered an error while processing your request.`;
+        return `WebAI Server encountered an error while processing your request.`;
 
       case 'platform':
         if (this.ERROR_PATTERNS.SPAWN_ENOENT.test(errorMessage)) {
@@ -157,7 +157,7 @@ export class ErrorHandler {
         if (this.ERROR_PATTERNS.MISSING_DEPS.test(errorMessage)) {
           return `Missing dependencies. Some required packages are not installed.`;
         }
-        return `Configuration error. Please check your Browser Tools setup.`;
+        return `Configuration error. Please check your WebAI setup.`;
 
       default:
         return `An unexpected error occurred: ${errorMessage}`;
@@ -174,9 +174,9 @@ export class ErrorHandler {
     switch (type) {
       case 'connection':
         solutions.push({
-          title: 'Start Browser Tools Server',
+          title: 'Start WebAI Server',
           description: 'The most common cause is that the server is not running.',
-          commands: ['npx @cpjet64/browser-tools-server'],
+          commands: ['npx @cpjet64/webai-server'],
           priority: 'high'
         });
 
@@ -199,11 +199,11 @@ export class ErrorHandler {
 
       case 'server':
         solutions.push({
-          title: 'Restart Browser Tools Server',
+          title: 'Restart WebAI Server',
           description: 'Stop any running instances and start fresh.',
           commands: [
-            'pkill -f browser-tools',
-            'npx @cpjet64/browser-tools-server'
+            'pkill -f webai-server',
+            'npx @cpjet64/webai-server'
           ],
           priority: 'high'
         });
@@ -258,7 +258,7 @@ export class ErrorHandler {
 
         solutions.push({
           title: 'Install Chrome Extension',
-          description: 'Load the Browser Tools extension in Chrome Developer mode.',
+          description: 'Load the WebAI extension in Chrome Developer mode.',
           commands: [
             'Open Chrome → chrome://extensions/',
             'Enable "Developer mode"',
@@ -301,8 +301,8 @@ export class ErrorHandler {
       title: 'Get Help',
       description: 'If the issue persists, check the documentation or report the issue.',
       links: [
-        'https://github.com/cpjet64/browser-tools-mcp/issues',
-        'https://github.com/cpjet64/browser-tools-mcp/blob/main/README.md'
+        'https://github.com/cpjet64/WebAI-MCP/issues',
+        'https://github.com/cpjet64/WebAI-MCP/blob/main/README.md'
       ],
       priority: 'low'
     });

@@ -1801,7 +1801,7 @@ server.tool(
 // Add version compatibility check tool
 server.tool(
   "checkVersionCompatibility",
-  "Check version compatibility between MCP server, Browser Tools server, and Chrome extension",
+  "Check version compatibility between MCP server, WebAI Server, and Chrome extension",
   {},
   async () => {
     try {

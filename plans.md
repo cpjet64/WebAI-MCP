@@ -144,6 +144,25 @@ Authoritative status source for execution sequencing.
   - `scripts/diagnose.js` now queries `Win32_Process` command lines and filters on `webai`/`mcp-server`/`browser-connector`.
   - Fallback to basic `tasklist` scan retained when command-line inspection fails.
 
+## Milestone M8 - Runtime Rebrand Consistency Cleanup
+
+- Scope: Remove stale `browser-tools-*` runtime guidance in user-facing error/help paths while preserving compatibility-sensitive discovery signatures.
+- Tasks:
+  - Update WebAI server guidance and command suggestions in `webai-mcp/error-handler.ts`.
+  - Update `.identity` name/version detection and startup banner text in `webai-server/browser-connector.ts`.
+  - Update stale tool description text in `webai-mcp/mcp-server.ts`.
+- Acceptance criteria:
+  - Runtime guidance references `webai-server` package and current WebAI repository links.
+  - `.identity` endpoint returns `name: "webai-server"` while still exposing the existing signature used by discovery clients.
+  - TypeScript build/test pipeline remains green under local CI.
+- Validation steps:
+  - `npm run ci`
+- Status: Done
+- Evidence:
+  - Updated command and help-link strings in `webai-mcp/error-handler.ts`.
+  - Updated package-name detection and identity payload in `webai-server/browser-connector.ts`.
+  - Updated version-check tool description in `webai-mcp/mcp-server.ts`.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |
