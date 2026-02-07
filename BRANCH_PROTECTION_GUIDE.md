@@ -1,5 +1,8 @@
 # Branch Protection Rules Setup Guide
 
+> Historical hosted-CI branch-protection guide.
+> Current repository commit-gating policy is local-only and documented in `docs/LOCAL_CICD.md`.
+
 ## 🛡️ Overview
 
 Branch protection rules ensure code quality and prevent accidental changes to important branches. This guide walks you through setting up protection for both `main` and `dev` branches.

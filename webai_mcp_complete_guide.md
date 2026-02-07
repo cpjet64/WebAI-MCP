@@ -1,5 +1,8 @@
 # WebAI-MCP: Technical Implementation Reference
 
+> Archived planning reference (2026-02-07): this document is preserved for provenance and historical context.
+> Active execution planning now lives in `plans.md` and `todo.md`.
+
 > **AI Coding Agent Reference Document**
 > Technical specifications for enhancing the existing WebAI-MCP browser analysis platform
 

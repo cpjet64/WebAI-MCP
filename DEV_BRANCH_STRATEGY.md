@@ -1,5 +1,8 @@
 # Development Branch Strategy
 
+> Historical branch/workflow strategy reference.
+> Local-only CI/CD policy supersedes hosted workflow assumptions in this document; see `docs/LOCAL_CICD.md`.
+
 ## 🌿 Branch Structure
 
 ### **Main Branches**

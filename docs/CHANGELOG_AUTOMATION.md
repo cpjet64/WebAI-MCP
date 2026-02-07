@@ -1,5 +1,8 @@
 # Changelog Automation System
 
+> Legacy cloud-workflow notes: preserved for provenance.
+> For active commit gating and CI flow, use local-only policy in `docs/LOCAL_CICD.md`.
+
 ## 🤖 **Overview**
 
 WebAI-MCP now features a fully automated changelog system that updates `CHANGELOG.md` automatically during releases. This ensures the changelog is always current and follows consistent formatting.
