@@ -260,9 +260,9 @@ export class ErrorHandler {
           title: 'Install Chrome Extension',
           description: 'Load the WebAI extension in Chrome Developer mode.',
           commands: [
-            'Open Chrome → chrome://extensions/',
+            'Open Chrome â†’ chrome://extensions/',
             'Enable "Developer mode"',
-            'Click "Load unpacked" → Select chrome-extension folder'
+            'Click "Load unpacked" â†’ Select chrome-extension folder'
           ],
           priority: 'high'
         });
@@ -326,17 +326,17 @@ export class ErrorHandler {
   }
 
   static formatErrorForUser(enhancedError: EnhancedError): string {
-    let output = `❌ ${enhancedError.userMessage}\n\n`;
+    let output = `ERROR: ${enhancedError.userMessage}\n\n`;
 
     if (enhancedError.solutions.length > 0) {
-      output += '🔧 **Suggested Solutions:**\n\n';
+      output += 'Suggested Solutions:\n\n';
 
       const highPriority = enhancedError.solutions.filter(s => s.priority === 'high');
       const mediumPriority = enhancedError.solutions.filter(s => s.priority === 'medium');
       const lowPriority = enhancedError.solutions.filter(s => s.priority === 'low');
 
-      [...highPriority, ...mediumPriority, ...lowPriority].forEach((solution, index) => {
-        const priority = solution.priority === 'high' ? '🔥' : solution.priority === 'medium' ? '⚠️' : 'ℹ️';
+      [...highPriority, ...mediumPriority, ...lowPriority].forEach(solution => {
+        const priority = solution.priority === 'high' ? '[HIGH]' : solution.priority === 'medium' ? '[MEDIUM]' : '[LOW]';
         output += `${priority} **${solution.title}**\n`;
         output += `   ${solution.description}\n`;
 
@@ -350,7 +350,7 @@ export class ErrorHandler {
 
         if (solution.links && solution.links.length > 0) {
           solution.links.forEach(link => {
-            output += `   📎 ${link}\n`;
+            output += `   Link: ${link}\n`;
           });
         }
 
@@ -359,7 +359,7 @@ export class ErrorHandler {
     }
 
     if (enhancedError.isRetryable) {
-      output += '🔄 This error may be temporary. You can try the operation again after applying the suggested solutions.\n';
+      output += 'RETRY: This error may be temporary. You can try the operation again after applying the suggested solutions.\n';
     }
 
     return output;

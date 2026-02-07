@@ -150,3 +150,11 @@ Append-only decision and rationale log.
   - `webai-mcp/mcp-server.ts` now reports server name `WebAI MCP` and prefers `WEBAI_PORT`/`WEBAI_HOST` with legacy fallback.
   - `chrome-extension/panel.js` now shows `WebAI Server` in connection status and mismatch messages.
   - `webai-mcp/error-handler.ts`, `webai-server/proxy-config.ts`, and `webai-server/auto-paste-manager.ts` now use WebAI naming in remaining runtime-facing comments/messages/default user-agent string.
+
+## 2026-02-07 - ASCII-Safe Runtime Report Formatting
+
+- Decision: Replace mojibake-prone symbols in MCP-facing reports with explicit ASCII labels.
+- Why: Error and compatibility report output contained corrupted symbol sequences in terminal rendering, reducing readability for troubleshooting.
+- Evidence:
+  - `webai-mcp/error-handler.ts` now formats with `ERROR`, `Suggested Solutions`, `[HIGH]/[MEDIUM]/[LOW]`, and `RETRY`.
+  - `webai-mcp/version-checker.ts` now formats with ASCII status markers (`[OK]`, `[FAIL]`, `[COMPATIBLE]`, `[ISSUES FOUND]`).

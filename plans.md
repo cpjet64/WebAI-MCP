@@ -182,6 +182,22 @@ Authoritative status source for execution sequencing.
   - Updated extension connection banner/status text in `chrome-extension/panel.js`.
   - Updated runtime comment/message drift in `webai-mcp/error-handler.ts`, `webai-server/proxy-config.ts`, and `webai-server/auto-paste-manager.ts`.
 
+## Milestone M10 - CLI Output Encoding Hardening
+
+- Scope: Remove mojibake characters from user-facing MCP diagnostic/error output and replace with ASCII-safe formatting.
+- Tasks:
+  - Update `ErrorHandler.formatErrorForUser` output tokens in `webai-mcp/error-handler.ts`.
+  - Update `VersionChecker.formatCompatibilityReport` output tokens in `webai-mcp/version-checker.ts`.
+- Acceptance criteria:
+  - Error and compatibility reports contain readable ASCII-safe labels.
+  - No behavioral regression in build/test pipeline.
+- Validation steps:
+  - `npm run ci`
+- Status: Done
+- Evidence:
+  - Replaced mojibake-prefixed output tokens with explicit labels (`ERROR`, `Suggested Solutions`, `[HIGH]/[MEDIUM]/[LOW]`, `RETRY`) in `webai-mcp/error-handler.ts`.
+  - Replaced mojibake report markers with ASCII-safe sections and status tags (`[OK]`, `[FAIL]`, `[COMPATIBLE]`) in `webai-mcp/version-checker.ts`.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

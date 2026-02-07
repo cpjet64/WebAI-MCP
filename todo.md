@@ -225,3 +225,19 @@ Format:
 - Notes/Links:
   - Linked milestone: `M9`
   - Added `WEBAI_HOST`/`WEBAI_PORT` env var support with legacy fallback and updated live UI/runtime naming to WebAI.
+
+### T-0016
+- Title: Replace mojibake characters in MCP user-facing report formatting
+- Category: Bug
+- Priority: P1
+- Status: Done
+- Provenance:
+  - `webai-mcp/error-handler.ts:329`
+  - `webai-mcp/error-handler.ts:339`
+  - `webai-mcp/error-handler.ts:362`
+  - `webai-mcp/version-checker.ts:259`
+  - `webai-mcp/version-checker.ts:263`
+  - `webai-mcp/version-checker.ts:282`
+- Notes/Links:
+  - Linked milestone: `M10`
+  - Output formatting now uses ASCII-safe labels to avoid terminal/codepage rendering corruption.

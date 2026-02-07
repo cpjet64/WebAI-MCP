@@ -256,30 +256,30 @@ export class VersionChecker {
    * Format compatibility results as a string report
    */
   static formatCompatibilityReport(result: CompatibilityResult): string {
-    let report = '🔍 WebAI-MCP Version Compatibility Check\n';
+    let report = 'WebAI-MCP Version Compatibility Check\n';
     report += '==========================================\n\n';
 
-    report += '📦 Component Versions:\n';
-    report += `  • MCP Server: ${result.mcpServer.version} ${result.mcpServer.isValid ? '✅' : '❌'}\n`;
-    report += `  • WebAI Server: ${result.webaiServer.version} ${result.webaiServer.isValid ? '✅' : '❌'}\n`;
-    report += `  • Chrome Extension: ${result.chromeExtension.version} ${result.chromeExtension.isValid ? '✅' : '❌'}\n`;
+    report += 'Component Versions:\n';
+    report += `  - MCP Server: ${result.mcpServer.version} ${result.mcpServer.isValid ? '[OK]' : '[FAIL]'}\n`;
+    report += `  - WebAI Server: ${result.webaiServer.version} ${result.webaiServer.isValid ? '[OK]' : '[FAIL]'}\n`;
+    report += `  - Chrome Extension: ${result.chromeExtension.version} ${result.chromeExtension.isValid ? '[OK]' : '[FAIL]'}\n`;
 
     if (result.errors.length > 0) {
-      report += '\n❌ Errors:\n';
-      result.errors.forEach(error => report += `  • ${error}\n`);
+      report += '\nErrors:\n';
+      result.errors.forEach(error => report += `  - ${error}\n`);
     }
 
     if (result.warnings.length > 0) {
-      report += '\n⚠️  Warnings:\n';
-      result.warnings.forEach(warning => report += `  • ${warning}\n`);
+      report += '\nWarnings:\n';
+      result.warnings.forEach(warning => report += `  - ${warning}\n`);
     }
 
     if (result.recommendations.length > 0) {
-      report += '\n💡 Recommendations:\n';
-      result.recommendations.forEach(rec => report += `  • ${rec}\n`);
+      report += '\nRecommendations:\n';
+      result.recommendations.forEach(rec => report += `  - ${rec}\n`);
     }
 
-    report += `\n🎯 Overall Compatibility: ${result.isCompatible ? '✅ Compatible' : '❌ Issues Found'}\n`;
+    report += `\nOverall Compatibility: ${result.isCompatible ? '[COMPATIBLE]' : '[ISSUES FOUND]'}\n`;
     report += '==========================================\n';
 
     return report;
