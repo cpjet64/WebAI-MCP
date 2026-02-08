@@ -421,8 +421,12 @@ Once installed, you can use natural language commands with your MCP client:
 
 ## 📚 Documentation
 
-- **Setup Guide**: [Release Setup Documentation](./docs/RELEASE_SETUP.md)
+- **Setup and Local CI/CD Policy**: [Local-Only CI/CD](./docs/LOCAL_CICD.md)
+- **Extension Troubleshooting**: [Chrome Extension Troubleshooting Guide](./EXTENSION_TROUBLESHOOTING.md)
 - **Chinese Documentation**: [简体中文文档](./docs/i18n/README_CN.md)
+- **Historical Docs Index**: [Legacy Artifacts Index](./docs/legacy/README.md)
+- **Legacy Release Automation (Historical)**: [Release Setup Documentation](./docs/RELEASE_SETUP.md)
+- **Legacy Changelog Automation (Historical)**: [Changelog Automation System](./docs/CHANGELOG_AUTOMATION.md)
 - **Original Docs**: [Original BrowserTools MCP Docs](https://browsertools.agentdesk.ai/)
 
 ## 🔄 Migration from Browser Tools MCP

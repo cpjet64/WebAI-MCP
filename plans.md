@@ -292,6 +292,26 @@ Authoritative status source for execution sequencing.
   - Updated TEST stage commands in `scripts/ci.ps1` and `scripts/ci.sh`.
   - `npm run ci` passed with `[server-config] host/port selection checks passed`.
 
+## Milestone M16 - Historical Docs Index and Supersession Cleanup
+
+- Scope: Continue historical-doc cleanup by clarifying active-vs-legacy documentation boundaries and normalizing historical cross-references.
+- Tasks:
+  - Fix legacy index links in `docs/legacy/README.md` so they resolve to actual archived references.
+  - Add consistent historical-index notice lines to known superseded docs.
+  - Update root `README.md` documentation links to prioritize active docs and explicitly label legacy references.
+- Acceptance criteria:
+  - `docs/legacy/README.md` links resolve correctly for root and docs-path legacy files.
+  - Superseded docs include a direct pointer to the historical index.
+  - Root docs section distinguishes active guides from historical references.
+- Validation steps:
+  - `npm run validate:docs`
+- Status: Done
+- Evidence:
+  - Updated historical index links and replacement mapping in `docs/legacy/README.md`.
+  - Added `docs/legacy/README.md` cross-reference notices in `webai_mcp_complete_guide.md`, `DEV_BRANCH_STRATEGY.md`, `BRANCH_PROTECTION_GUIDE.md`, `docs/RELEASE_SETUP.md`, and `docs/CHANGELOG_AUTOMATION.md`.
+  - Updated `README.md` documentation links to surface active docs (`docs/LOCAL_CICD.md`, `EXTENSION_TROUBLESHOOTING.md`) and label legacy docs as historical.
+  - `npm run validate:docs` passed.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

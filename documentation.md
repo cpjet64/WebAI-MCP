@@ -207,3 +207,13 @@ Append-only decision and rationale log.
   - Added `scripts/ci/server-config-test.js` covering env precedence and file fallback scenarios.
   - Wired new test into CI TEST stage in both `scripts/ci.ps1` and `scripts/ci.sh`.
   - Verified via `npm run ci` with passing line `[server-config] host/port selection checks passed`.
+
+## 2026-02-08 - Historical Docs Index and Supersession Cleanup
+
+- Decision: Continue historical-doc cleanup by normalizing superseded-document notices and clarifying which documentation is active.
+- Why: Archaeology showed the legacy index used non-resolving relative links and README docs links still foregrounded a historical release-automation guide.
+- Evidence:
+  - Reworked `docs/legacy/README.md` with resolvable links and authoritative-source mapping.
+  - Added consistent historical-index pointers in `webai_mcp_complete_guide.md`, `DEV_BRANCH_STRATEGY.md`, `BRANCH_PROTECTION_GUIDE.md`, `docs/RELEASE_SETUP.md`, and `docs/CHANGELOG_AUTOMATION.md`.
+  - Updated `README.md` documentation section to prioritize active docs (`docs/LOCAL_CICD.md`, `EXTENSION_TROUBLESHOOTING.md`) and explicitly label legacy guides as historical.
+  - Verified via `npm run validate:docs`.

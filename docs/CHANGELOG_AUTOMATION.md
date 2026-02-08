@@ -2,6 +2,7 @@
 
 > Legacy cloud-workflow notes: preserved for provenance.
 > For active commit gating and CI flow, use local-only policy in `docs/LOCAL_CICD.md`.
+> Historical index: `docs/legacy/README.md`.
 
 ## 🤖 **Overview**
 

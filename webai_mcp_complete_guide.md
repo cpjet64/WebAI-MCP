@@ -2,6 +2,7 @@
 
 > Archived planning reference (2026-02-07): this document is preserved for provenance and historical context.
 > Active execution planning now lives in `plans.md` and `todo.md`.
+> Historical index: `docs/legacy/README.md`.
 
 > **AI Coding Agent Reference Document**
 > Technical specifications for enhancing the existing WebAI-MCP browser analysis platform

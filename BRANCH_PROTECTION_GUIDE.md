@@ -2,6 +2,7 @@
 
 > Historical hosted-CI branch-protection guide.
 > Current repository commit-gating policy is local-only and documented in `docs/LOCAL_CICD.md`.
+> Historical index: `docs/legacy/README.md`.
 
 ## 🛡️ Overview
 

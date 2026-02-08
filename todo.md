@@ -317,3 +317,20 @@ Format:
 - Notes/Links:
   - Linked milestone: `M15`
   - Verifies `WEBAI_*` env-var precedence plus legacy and `.port` fallback behavior.
+
+### T-0022
+- Title: Continue historical-doc cleanup with corrected legacy index links and supersession references
+- Category: Docs
+- Priority: P2
+- Status: Done
+- Provenance:
+  - `docs/legacy/README.md` section `Historical Planning and Policy References`
+  - `README.md` section `Documentation`
+  - `DEV_BRANCH_STRATEGY.md` top historical notice block
+  - `BRANCH_PROTECTION_GUIDE.md` top historical notice block
+  - `docs/RELEASE_SETUP.md` top historical notice block
+  - `docs/CHANGELOG_AUTOMATION.md` top historical notice block
+  - `webai_mcp_complete_guide.md` top archival notice block
+- Notes/Links:
+  - Linked milestone: `M16`
+  - Clarifies active-vs-historical documentation boundaries and ensures legacy index references are navigable.
