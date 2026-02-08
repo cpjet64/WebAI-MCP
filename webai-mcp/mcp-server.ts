@@ -10,6 +10,7 @@ import os from "os";
 import { z } from "zod";
 import { ErrorHandler, type ErrorContext } from "./error-handler.js";
 import { VersionChecker } from "./version-checker.js";
+import { getDefaultServerHost, getDefaultServerPort } from "./server-config.js";
 
 // Get version from package.json
 let packageVersion = "1.4.0"; // fallback version
@@ -34,48 +35,6 @@ let discoveredHost = "127.0.0.1";
 let discoveredPort = 3025;
 let serverDiscovered = false;
 
-// Function to get the default port from environment variable or default
-function getDefaultServerPort(): number {
-  // Prefer current env var name, then fall back to legacy compatibility name
-  const configuredPort = process.env.WEBAI_PORT ?? process.env.BROWSER_TOOLS_PORT;
-  if (configuredPort) {
-    const envPort = parseInt(configuredPort, 10);
-    if (!isNaN(envPort) && envPort > 0) {
-      return envPort;
-    }
-  }
-
-  // Try to read from .port file
-  try {
-    const portFilePath = path.join(__dirname, ".port");
-    if (fs.existsSync(portFilePath)) {
-      const port = parseInt(fs.readFileSync(portFilePath, "utf8").trim(), 10);
-      if (!isNaN(port) && port > 0) {
-        return port;
-      }
-    }
-  } catch (err) {
-    console.error("Error reading port file:", err);
-  }
-
-  // Default port if no configuration found
-  return 3025;
-}
-
-// Function to get default server host from environment variable or default
-function getDefaultServerHost(): string {
-  // Prefer current env var name, then fall back to legacy compatibility name
-  if (process.env.WEBAI_HOST) {
-    return process.env.WEBAI_HOST;
-  }
-  if (process.env.BROWSER_TOOLS_HOST) {
-    return process.env.BROWSER_TOOLS_HOST;
-  }
-
-  // Default to localhost
-  return "127.0.0.1";
-}
-
 // Server discovery function - similar to what you have in the Chrome extension
 async function discoverServer(): Promise<boolean> {
   console.log("Starting server discovery process");
@@ -84,7 +43,7 @@ async function discoverServer(): Promise<boolean> {
   const hosts = [getDefaultServerHost(), "127.0.0.1", "localhost"];
 
   // Ports to try (start with default, then try others)
-  const defaultPort = getDefaultServerPort();
+  const defaultPort = getDefaultServerPort({ portFileDir: __dirname });
   const ports = [defaultPort];
 
   // Add additional ports (fallback range)

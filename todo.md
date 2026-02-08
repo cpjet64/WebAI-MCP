@@ -301,3 +301,19 @@ Format:
 - Notes/Links:
   - Linked milestone: `M14`
   - Renamed stale helper symbol and added CI guard assertions to prevent regression.
+
+### T-0021
+- Title: Add regression tests for MCP server default host/port resolution
+- Category: Test
+- Priority: P1
+- Status: Done
+- Provenance:
+  - `webai-mcp/server-config.ts`
+  - `webai-mcp/mcp-server.ts`
+  - `scripts/ci/server-config-test.js`
+  - `scripts/ci.ps1` TEST stage command list
+  - `scripts/ci.sh` TEST stage command list
+  - `npm run ci` output (`[server-config] host/port selection checks passed`)
+- Notes/Links:
+  - Linked milestone: `M15`
+  - Verifies `WEBAI_*` env-var precedence plus legacy and `.port` fallback behavior.

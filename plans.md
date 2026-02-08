@@ -272,6 +272,26 @@ Authoritative status source for execution sequencing.
   - Updated forbidden/required token checks in `scripts/ci/naming-check.js`.
   - `npm run ci` passed with `[naming-check] Active naming checks passed`.
 
+## Milestone M15 - Server Config Precedence Regression Tests
+
+- Scope: Add regression coverage for MCP server host/port default resolution logic, including WebAI env-var precedence and `.port` fallback behavior.
+- Tasks:
+  - Extract host/port default resolution into a dedicated module in `webai-mcp`.
+  - Add CI test coverage for host/port selection behavior.
+  - Wire new server-config tests into both CI entrypoints.
+- Acceptance criteria:
+  - `webai-mcp/mcp-server.ts` uses shared config helpers for default host/port resolution.
+  - CI TEST stage validates `WEBAI_*` precedence, legacy fallback, and `.port` fallback behavior.
+  - Local CI remains green.
+- Validation steps:
+  - `npm run ci`
+- Status: Done
+- Evidence:
+  - Added `webai-mcp/server-config.ts` and integrated it into `webai-mcp/mcp-server.ts`.
+  - Added `scripts/ci/server-config-test.js`.
+  - Updated TEST stage commands in `scripts/ci.ps1` and `scripts/ci.sh`.
+  - `npm run ci` passed with `[server-config] host/port selection checks passed`.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

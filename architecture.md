@@ -41,6 +41,7 @@ Derived from current repository evidence on 2026-02-07.
 - TEST stage convention:
   - `scripts/ci/smoke-test.js` for runtime startup smoke checks
   - `scripts/ci/report-format-test.js` for MCP formatting regressions
+  - `scripts/ci/server-config-test.js` for MCP host/port default resolution regressions
 - DOCS stage convention:
   - `scripts/ci/docs-check.js` for durable-memory/local-only CI policy structure
   - `scripts/ci/naming-check.js` for active WebAI naming regression checks

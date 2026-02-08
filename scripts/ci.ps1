@@ -82,6 +82,7 @@ function Invoke-BuildStage {
 function Invoke-TestStage {
   Invoke-Step "node scripts/ci/smoke-test.js"
   Invoke-Step "node scripts/ci/report-format-test.js"
+  Invoke-Step "node scripts/ci/server-config-test.js"
 }
 
 function Invoke-SecuritySupplyChain {

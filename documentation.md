@@ -197,3 +197,13 @@ Append-only decision and rationale log.
   - Renamed helper `testBrowserToolsServer` to `testWebAIServer` in `scripts/test-all.js`.
   - Extended `scripts/ci/naming-check.js` forbidden/required token checks for this symbol path.
   - Verified via `npm run ci` with passing line `[naming-check] Active naming checks passed`.
+
+## 2026-02-08 - Server Config Precedence Regression Coverage
+
+- Decision: Extract and test MCP host/port default resolution as a dedicated config module.
+- Why: WebAI/legacy env var precedence and `.port` fallback logic are core startup behavior and previously lacked direct regression coverage.
+- Evidence:
+  - Added `webai-mcp/server-config.ts` and routed `webai-mcp/mcp-server.ts` to shared helpers.
+  - Added `scripts/ci/server-config-test.js` covering env precedence and file fallback scenarios.
+  - Wired new test into CI TEST stage in both `scripts/ci.ps1` and `scripts/ci.sh`.
+  - Verified via `npm run ci` with passing line `[server-config] host/port selection checks passed`.
