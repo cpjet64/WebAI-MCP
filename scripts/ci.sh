@@ -64,6 +64,7 @@ stage_build() {
 
 stage_test() {
   run_cmd node scripts/ci/smoke-test.js
+  run_cmd node scripts/ci/report-format-test.js
 }
 
 stage_security_supply_chain() {

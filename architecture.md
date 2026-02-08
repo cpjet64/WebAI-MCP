@@ -38,6 +38,9 @@ Derived from current repository evidence on 2026-02-07.
   - `scripts/ci.ps1`
   - `scripts/ci.sh`
   - `.githooks/pre-commit`
+- TEST stage convention:
+  - `scripts/ci/smoke-test.js` for runtime startup smoke checks
+  - `scripts/ci/report-format-test.js` for MCP formatting regressions
 
 ## Security and Quality Constraints
 

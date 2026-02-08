@@ -35,5 +35,5 @@
 
 ## Current Focus
 
-- Active milestone: none (M1-M11 complete as of 2026-02-08).
+- Active milestone: none (M1-M12 complete as of 2026-02-08).
 - Next queued work: continue archaeology and promote any newly discovered parity/runtime drift into `todo.md` and `plans.md`.

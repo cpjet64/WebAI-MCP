@@ -168,3 +168,14 @@ Append-only decision and rationale log.
   - Updated extension panel labels in `chrome-extension/devtools.js` and `chrome-extension/devtools.html`.
   - Updated Windows batch-template title in `scripts/platform-setup.js`.
   - Preserved explicit “Original BrowserTools MCP Docs” labeling for historical reference links.
+
+## 2026-02-08 - Formatting Regression Test Coverage
+
+- Decision: Add explicit CI regression coverage for user-facing MCP formatting output.
+- Why: Recent runtime formatting hardening addressed mojibake/readability issues; targeted tests are needed to prevent silent regressions.
+- Evidence:
+  - Added `scripts/ci/report-format-test.js` with assertions for:
+    - `ErrorHandler.formatErrorForUser`
+    - `VersionChecker.formatCompatibilityReport`
+  - Wired test into CI TEST stage in `scripts/ci.ps1` and `scripts/ci.sh`.
+  - Verified via `npm run ci` with passing line `[report-format] formatting checks passed`.

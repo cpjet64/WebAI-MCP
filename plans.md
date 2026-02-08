@@ -218,6 +218,24 @@ Authoritative status source for execution sequencing.
   - Updated setup/guide references in `README.md`, `AUTO_PASTE_GUIDE.md`, `WINDOWS_AUTO_PASTE_GUIDE.md`, and `docs/i18n/README_CN.md`.
   - Updated batch-template window title in `scripts/platform-setup.js`.
 
+## Milestone M12 - Formatting Output Regression Tests
+
+- Scope: Add focused CI test coverage for MCP user-facing formatting paths that were recently hardened.
+- Tasks:
+  - Add a report-format regression test script for `ErrorHandler.formatErrorForUser` and `VersionChecker.formatCompatibilityReport`.
+  - Wire the new formatting test into both CI entrypoints (`scripts/ci.ps1` and `scripts/ci.sh`) in the TEST stage.
+- Acceptance criteria:
+  - CI TEST stage runs smoke tests and formatting regression tests.
+  - Formatting regression test fails on mojibake-like tokens and missing expected labels.
+  - Local CI remains green.
+- Validation steps:
+  - `npm run ci`
+- Status: Done
+- Evidence:
+  - Added `scripts/ci/report-format-test.js`.
+  - Updated TEST stage commands in `scripts/ci.ps1` and `scripts/ci.sh`.
+  - `npm run ci` passed with `[report-format] formatting checks passed`.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

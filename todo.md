@@ -259,3 +259,17 @@ Format:
 - Notes/Links:
   - Linked milestone: `M11`
   - Updated WebAI-facing labels while preserving explicitly-marked original BrowserTools docs references.
+
+### T-0018
+- Title: Add CI regression tests for MCP formatting output
+- Category: Test
+- Priority: P1
+- Status: Done
+- Provenance:
+  - `scripts/ci/report-format-test.js`
+  - `scripts/ci.ps1:79`
+  - `scripts/ci.sh:66`
+  - `npm run ci` output (`[report-format] formatting checks passed`)
+- Notes/Links:
+  - Linked milestone: `M12`
+  - Added assertions for expected labels and mojibake token absence in MCP formatting output.
