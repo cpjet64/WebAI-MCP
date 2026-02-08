@@ -91,6 +91,7 @@ function Invoke-SecuritySupplyChain {
 
 function Invoke-DocsStage {
   Invoke-Step "node scripts/ci/docs-check.js"
+  Invoke-Step "node scripts/ci/naming-check.js"
 }
 
 Write-Stage "REPO_HYGIENE"

@@ -74,6 +74,7 @@ stage_security_supply_chain() {
 
 stage_docs() {
   run_cmd node scripts/ci/docs-check.js
+  run_cmd node scripts/ci/naming-check.js
 }
 
 run_stage "REPO_HYGIENE" stage_repo_hygiene

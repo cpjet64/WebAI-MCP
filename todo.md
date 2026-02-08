@@ -273,3 +273,17 @@ Format:
 - Notes/Links:
   - Linked milestone: `M12`
   - Added assertions for expected labels and mojibake token absence in MCP formatting output.
+
+### T-0019
+- Title: Enforce active WebAI naming via CI DOCS-stage regression checks
+- Category: CI
+- Priority: P1
+- Status: Done
+- Provenance:
+  - `scripts/ci/naming-check.js`
+  - `scripts/ci.ps1` DOCS stage command list
+  - `scripts/ci.sh` DOCS stage command list
+  - `npm run ci` output (`[naming-check] Active naming checks passed`)
+- Notes/Links:
+  - Linked milestone: `M13`
+  - Protects active docs/UI labels from reintroducing known stale BrowserTools naming tokens.

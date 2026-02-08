@@ -236,6 +236,24 @@ Authoritative status source for execution sequencing.
   - Updated TEST stage commands in `scripts/ci.ps1` and `scripts/ci.sh`.
   - `npm run ci` passed with `[report-format] formatting checks passed`.
 
+## Milestone M13 - Active Naming Regression Guard
+
+- Scope: Prevent regressions of stale BrowserTools naming in active docs/labels that were already migrated to WebAI naming.
+- Tasks:
+  - Add a dedicated naming regression script targeting active docs/UI-label files.
+  - Wire naming regression checks into the DOCS stage for both CI entrypoints.
+- Acceptance criteria:
+  - DOCS stage fails if forbidden legacy label tokens reappear in active files.
+  - DOCS stage verifies required WebAI label tokens in key files.
+  - Local CI remains green.
+- Validation steps:
+  - `npm run ci`
+- Status: Done
+- Evidence:
+  - Added `scripts/ci/naming-check.js`.
+  - Updated DOCS stage commands in `scripts/ci.ps1` and `scripts/ci.sh`.
+  - `npm run ci` passed with `[naming-check] Active naming checks passed`.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

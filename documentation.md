@@ -179,3 +179,12 @@ Append-only decision and rationale log.
     - `VersionChecker.formatCompatibilityReport`
   - Wired test into CI TEST stage in `scripts/ci.ps1` and `scripts/ci.sh`.
   - Verified via `npm run ci` with passing line `[report-format] formatting checks passed`.
+
+## 2026-02-08 - Active Naming Regression Guard Coverage
+
+- Decision: Add CI-enforced guardrails for active WebAI naming in docs/UI labels.
+- Why: Rebrand cleanup is now broad enough that accidental reintroduction of stale labels is likely without automated checks.
+- Evidence:
+  - Added `scripts/ci/naming-check.js` with file-scoped forbidden and required token checks.
+  - Wired naming checks into DOCS stage for both `scripts/ci.ps1` and `scripts/ci.sh`.
+  - Verified via `npm run ci` with passing line `[naming-check] Active naming checks passed`.
