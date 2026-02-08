@@ -254,6 +254,24 @@ Authoritative status source for execution sequencing.
   - Updated DOCS stage commands in `scripts/ci.ps1` and `scripts/ci.sh`.
   - `npm run ci` passed with `[naming-check] Active naming checks passed`.
 
+## Milestone M14 - Script Naming Consistency Follow-Through
+
+- Scope: Remove remaining stale BrowserTools naming from active script internals and extend CI guard coverage for that path.
+- Tasks:
+  - Rename `testBrowserToolsServer` helper in `scripts/test-all.js` to `testWebAIServer`.
+  - Extend `scripts/ci/naming-check.js` checks for the updated script symbol.
+- Acceptance criteria:
+  - `scripts/test-all.js` uses WebAI-consistent helper naming.
+  - Naming guard fails if stale helper symbol is reintroduced.
+  - Local CI remains green.
+- Validation steps:
+  - `npm run ci`
+- Status: Done
+- Evidence:
+  - Updated helper call and function name in `scripts/test-all.js`.
+  - Updated forbidden/required token checks in `scripts/ci/naming-check.js`.
+  - `npm run ci` passed with `[naming-check] Active naming checks passed`.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

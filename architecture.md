@@ -61,6 +61,7 @@ Derived from current repository evidence on 2026-02-07.
 - Prefer current `WEBAI_*` environment variables for runtime config, with legacy `BROWSER_TOOLS_*` fallbacks only for compatibility.
 - Prefer ASCII-safe user-facing CLI/report formatting unless Unicode is intentionally required and verified across target terminals.
 - Keep user-facing docs and panel labels on current WebAI naming; use BrowserTools terms only in explicitly historical/migration context.
+- Keep active script/API helper names aligned with WebAI naming; avoid introducing new BrowserTools-prefixed symbols in maintained code paths.
 
 ## Patterns to Avoid
 

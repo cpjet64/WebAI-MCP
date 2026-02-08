@@ -188,3 +188,12 @@ Append-only decision and rationale log.
   - Added `scripts/ci/naming-check.js` with file-scoped forbidden and required token checks.
   - Wired naming checks into DOCS stage for both `scripts/ci.ps1` and `scripts/ci.sh`.
   - Verified via `npm run ci` with passing line `[naming-check] Active naming checks passed`.
+
+## 2026-02-08 - Script Helper Naming Consistency Completion
+
+- Decision: Remove remaining stale BrowserTools helper naming in active script internals and enforce via existing naming guard.
+- Why: One active utility method name still used legacy BrowserTools wording despite runtime/docs rebrand completion.
+- Evidence:
+  - Renamed helper `testBrowserToolsServer` to `testWebAIServer` in `scripts/test-all.js`.
+  - Extended `scripts/ci/naming-check.js` forbidden/required token checks for this symbol path.
+  - Verified via `npm run ci` with passing line `[naming-check] Active naming checks passed`.

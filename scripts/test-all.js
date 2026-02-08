@@ -258,13 +258,13 @@ class TestRunner {
     }
 
     // Test WebAI Server
-    await this.testBrowserToolsServer();
+    await this.testWebAIServer();
 
     // Test MCP Server
     await this.testMcpServer();
   }
 
-  async testBrowserToolsServer() {
+  async testWebAIServer() {
     try {
       this.log('Starting WebAI Server...', 'blue', ICONS.server);
 

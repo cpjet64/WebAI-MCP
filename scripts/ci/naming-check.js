@@ -31,6 +31,10 @@ const forbiddenChecks = [
     file: "scripts/platform-setup.js",
     tokens: ['start "BrowserTools Server"'],
   },
+  {
+    file: "scripts/test-all.js",
+    tokens: ["testBrowserToolsServer"],
+  },
 ];
 
 const requiredChecks = [
@@ -49,6 +53,10 @@ const requiredChecks = [
   {
     file: "scripts/platform-setup.js",
     tokens: ['start "WebAI Server"'],
+  },
+  {
+    file: "scripts/test-all.js",
+    tokens: ["testWebAIServer"],
   },
 ];
 

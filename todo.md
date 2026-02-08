@@ -287,3 +287,17 @@ Format:
 - Notes/Links:
   - Linked milestone: `M13`
   - Protects active docs/UI labels from reintroducing known stale BrowserTools naming tokens.
+
+### T-0020
+- Title: Align remaining script helper naming with WebAI conventions
+- Category: Refactor
+- Priority: P2
+- Status: Done
+- Provenance:
+  - `scripts/test-all.js:261`
+  - `scripts/test-all.js:267`
+  - `scripts/ci/naming-check.js`
+  - `npm run ci` output (`[naming-check] Active naming checks passed`)
+- Notes/Links:
+  - Linked milestone: `M14`
+  - Renamed stale helper symbol and added CI guard assertions to prevent regression.
