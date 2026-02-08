@@ -831,7 +831,7 @@ const consoleMessageListener = (source, method, params) => {
 };
 
 // 2) Use DevTools Protocol to capture console logs
-chrome.devtools.panels.create("BrowserToolsMCP", "", "panel.html", (panel) => {
+chrome.devtools.panels.create("WebAI-MCP", "", "panel.html", (panel) => {
   // Initial attach - we'll keep the debugger attached as long as DevTools is open
   attachDebugger();
 

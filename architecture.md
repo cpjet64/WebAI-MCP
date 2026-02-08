@@ -54,6 +54,7 @@ Derived from current repository evidence on 2026-02-07.
 - Keep runtime-facing service names aligned with current package identities (`webai-server`) and reserve legacy names for explicit compatibility checks only.
 - Prefer current `WEBAI_*` environment variables for runtime config, with legacy `BROWSER_TOOLS_*` fallbacks only for compatibility.
 - Prefer ASCII-safe user-facing CLI/report formatting unless Unicode is intentionally required and verified across target terminals.
+- Keep user-facing docs and panel labels on current WebAI naming; use BrowserTools terms only in explicitly historical/migration context.
 
 ## Patterns to Avoid
 

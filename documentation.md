@@ -158,3 +158,13 @@ Append-only decision and rationale log.
 - Evidence:
   - `webai-mcp/error-handler.ts` now formats with `ERROR`, `Suggested Solutions`, `[HIGH]/[MEDIUM]/[LOW]`, and `RETRY`.
   - `webai-mcp/version-checker.ts` now formats with ASCII status markers (`[OK]`, `[FAIL]`, `[COMPATIBLE]`, `[ISSUES FOUND]`).
+
+## 2026-02-08 - Legacy Naming Cleanup in Active Docs and Labels
+
+- Decision: Continue rebrand cleanup in non-authoritative active docs/UI labels/comments while preserving explicit historical BrowserTools references.
+- Why: Archaeology still showed mixed naming in setup guides and panel labels that can create onboarding confusion despite runtime naming being aligned.
+- Evidence:
+  - Updated setup/guide labels in `README.md`, `AUTO_PASTE_GUIDE.md`, `WINDOWS_AUTO_PASTE_GUIDE.md`, and `docs/i18n/README_CN.md`.
+  - Updated extension panel labels in `chrome-extension/devtools.js` and `chrome-extension/devtools.html`.
+  - Updated Windows batch-template title in `scripts/platform-setup.js`.
+  - Preserved explicit “Original BrowserTools MCP Docs” labeling for historical reference links.

@@ -90,7 +90,7 @@ npx @cpjet64/webai-server@latest
    - Open a new terminal and run: `npx @cpjet64/webai-server@latest`
 
 4. **Open DevTools**:
-   - Open Chrome DevTools → BrowserToolsMCP panel
+   - Open Chrome DevTools → WebAI-MCP panel
    - Ensure connection is established
 
 5. **Test the Setup**:
@@ -218,7 +218,7 @@ WebAI-MCP provides **20+ MCP tools** for comprehensive browser automation:
 Ensure you have:
 
 - An **active tab** in your browser
-- The **BrowserTools extension enabled**
+- The **WebAI extension enabled**
 
 ### ▶️ **Running Audits**
 
@@ -423,7 +423,7 @@ Once installed, you can use natural language commands with your MCP client:
 
 - **Setup Guide**: [Release Setup Documentation](./docs/RELEASE_SETUP.md)
 - **Chinese Documentation**: [简体中文文档](./docs/i18n/README_CN.md)
-- **Original Docs**: [BrowserTools MCP Docs](https://browsertools.agentdesk.ai/)
+- **Original Docs**: [Original BrowserTools MCP Docs](https://browsertools.agentdesk.ai/)
 
 ## 🔄 Migration from Browser Tools MCP
 

@@ -6,7 +6,7 @@ Auto-paste automatically copies screenshots to your clipboard and pastes them di
 
 ## 🔧 **How It Works**
 
-Browser Tools MCP provides comprehensive auto-paste functionality with:
+WebAI-MCP provides comprehensive auto-paste functionality with:
 - ✅ **Cross-platform** - macOS, Windows, Linux
 - ✅ **Multi-IDE** - Cursor, VS Code, Zed, Claude Desktop, Custom apps
 - ✅ **Configurable** - User selects target IDE

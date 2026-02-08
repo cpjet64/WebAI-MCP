@@ -241,3 +241,21 @@ Format:
 - Notes/Links:
   - Linked milestone: `M10`
   - Output formatting now uses ASCII-safe labels to avoid terminal/codepage rendering corruption.
+
+### T-0017
+- Title: Clean remaining non-authoritative BrowserTools naming in active docs and labels
+- Category: Docs
+- Priority: P2
+- Status: Done
+- Provenance:
+  - `README.md:93`
+  - `README.md:221`
+  - `AUTO_PASTE_GUIDE.md:9`
+  - `WINDOWS_AUTO_PASTE_GUIDE.md:5`
+  - `chrome-extension/devtools.js:834`
+  - `chrome-extension/devtools.html:5`
+  - `docs/i18n/README_CN.md:66`
+  - `scripts/platform-setup.js:231`
+- Notes/Links:
+  - Linked milestone: `M11`
+  - Updated WebAI-facing labels while preserving explicitly-marked original BrowserTools docs references.

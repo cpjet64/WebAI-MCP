@@ -198,6 +198,26 @@ Authoritative status source for execution sequencing.
   - Replaced mojibake-prefixed output tokens with explicit labels (`ERROR`, `Suggested Solutions`, `[HIGH]/[MEDIUM]/[LOW]`, `RETRY`) in `webai-mcp/error-handler.ts`.
   - Replaced mojibake report markers with ASCII-safe sections and status tags (`[OK]`, `[FAIL]`, `[COMPATIBLE]`) in `webai-mcp/version-checker.ts`.
 
+## Milestone M11 - Legacy Docs and Label Naming Cleanup
+
+- Scope: Clean remaining non-authoritative legacy naming in docs/UI labels/comments to consistently reference WebAI while preserving explicit historical references.
+- Tasks:
+  - Update panel naming references in `README.md`, `docs/i18n/README_CN.md`, and extension DevTools label files.
+  - Update legacy guide wording in auto-paste docs.
+  - Update stale helper script window-title text in platform setup batch template.
+  - Keep historical-origin links clearly labeled as original BrowserTools references.
+- Acceptance criteria:
+  - Active setup docs and extension panel labels use `WebAI-MCP`/`WebAI`.
+  - Historical-origin links remain accurate and explicitly marked as original.
+  - Local CI remains green.
+- Validation steps:
+  - `npm run ci`
+- Status: Done
+- Evidence:
+  - Updated DevTools panel labels in `chrome-extension/devtools.js` and `chrome-extension/devtools.html`.
+  - Updated setup/guide references in `README.md`, `AUTO_PASTE_GUIDE.md`, `WINDOWS_AUTO_PASTE_GUIDE.md`, and `docs/i18n/README_CN.md`.
+  - Updated batch-template window title in `scripts/platform-setup.js`.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

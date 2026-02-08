@@ -228,7 +228,7 @@ for /f "tokens=5" %%a in ('netstat -ano ^| findstr ":%MIDDLEWARE_PORT%"') do (
 )
 
 :: Start middleware server
-start "BrowserTools Server" cmd /c "npx @cpjet64/webai-server"
+start "WebAI Server" cmd /c "npx @cpjet64/webai-server"
 
 :: Wait and start MCP server if needed
 timeout /t 3 /nobreak > nul

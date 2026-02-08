@@ -2,7 +2,7 @@
 
 ## 🎯 **Windows Auto-Paste Overview**
 
-Browser Tools MCP provides comprehensive Windows auto-paste functionality using PowerShell automation. This guide covers setup, testing, and troubleshooting for Windows users.
+WebAI-MCP provides comprehensive Windows auto-paste functionality using PowerShell automation. This guide covers setup, testing, and troubleshooting for Windows users.
 
 ## ✅ **Windows Requirements**
 
