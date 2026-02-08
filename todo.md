@@ -346,3 +346,19 @@ Format:
 - Notes/Links:
   - Linked milestone: `M17`
   - Added explicit context note that hosted-CI/dev-branch references in changelog entries are historical and superseded by `docs/LOCAL_CICD.md`.
+
+### T-0024
+- Title: Add explicit historical-snapshot qualifiers to archived workflow/planning guides
+- Category: Docs
+- Priority: P3
+- Status: Done
+- Provenance:
+  - `BRANCH_PROTECTION_GUIDE.md` top notice block
+  - `DEV_BRANCH_STRATEGY.md` top notice block
+  - `docs/RELEASE_SETUP.md` top notice block
+  - `docs/CHANGELOG_AUTOMATION.md` top notice block
+  - `webai_mcp_complete_guide.md` top archival block
+  - `docs/legacy/README.md` historical references section
+- Notes/Links:
+  - Linked milestone: `M18`
+  - Clarifies that legacy URLs/workflow names/package identifiers are intentionally retained as historical snapshot content.

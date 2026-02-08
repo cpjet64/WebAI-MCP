@@ -225,3 +225,12 @@ Append-only decision and rationale log.
 - Evidence:
   - Added historical context note block in `CHANGELOG.md` pointing to `docs/LOCAL_CICD.md`.
   - Verified via `npm run validate:docs`.
+
+## 2026-02-08 - Historical Snapshot Qualifier Pass
+
+- Decision: Add explicit qualifier lines in archived guides to clarify that legacy BrowserTools-era URLs/workflow names/package identifiers are preserved historical snapshot content.
+- Why: Even with existing superseded headers, some archived docs still appeared operational because they immediately present actionable legacy commands/URLs.
+- Evidence:
+  - Added qualifier notices in `BRANCH_PROTECTION_GUIDE.md`, `DEV_BRANCH_STRATEGY.md`, `docs/RELEASE_SETUP.md`, `docs/CHANGELOG_AUTOMATION.md`, and `webai_mcp_complete_guide.md`.
+  - Added explicit preservation guidance in `docs/legacy/README.md`.
+  - Verified via `npm run validate:docs`.

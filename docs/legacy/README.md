@@ -9,6 +9,7 @@ This folder tracks legacy planning and automation artifacts that are preserved f
 ## Historical Planning and Policy References
 
 These sources are historical and superseded. They are preserved for provenance only.
+Content in these files may intentionally retain original `browser-tools-*` names, branch models, and hosted-workflow steps as historical snapshots.
 
 | Historical document | Current authoritative source |
 |---|---|

@@ -328,6 +328,23 @@ Authoritative status source for execution sequencing.
   - Added historical-context note block at top of `CHANGELOG.md`.
   - `npm run validate:docs` passed.
 
+## Milestone M18 - Historical Snapshot Qualifier Pass
+
+- Scope: Reduce ambiguity in archived guides by explicitly stating that old URLs, workflow names, and package identifiers are preserved historical snapshot content.
+- Tasks:
+  - Add concise snapshot/provenance qualifier lines to major historical docs.
+  - Update legacy index guidance to state that BrowserTools-era terms are intentionally preserved in archived files.
+- Acceptance criteria:
+  - Historical docs include explicit qualifier lines clarifying preserved BrowserTools-era examples.
+  - `docs/legacy/README.md` documents that historical content intentionally retains legacy terms/workflows.
+- Validation steps:
+  - `npm run validate:docs`
+- Status: Done
+- Evidence:
+  - Added qualifier notices in `BRANCH_PROTECTION_GUIDE.md`, `DEV_BRANCH_STRATEGY.md`, `docs/RELEASE_SETUP.md`, `docs/CHANGELOG_AUTOMATION.md`, and `webai_mcp_complete_guide.md`.
+  - Added preservation guidance line in `docs/legacy/README.md`.
+  - `npm run validate:docs` passed.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

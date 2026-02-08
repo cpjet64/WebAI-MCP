@@ -3,6 +3,7 @@
 > Historical branch/workflow strategy reference.
 > Local-only CI/CD policy supersedes hosted workflow assumptions in this document; see `docs/LOCAL_CICD.md`.
 > Historical index: `docs/legacy/README.md`.
+> Note: branch/release flow examples are preserved from the original BrowserTools-era model.
 
 ## 🌿 Branch Structure
 

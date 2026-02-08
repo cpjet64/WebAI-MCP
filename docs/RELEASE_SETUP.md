@@ -3,6 +3,7 @@
 > Legacy cloud-CI document: preserved for historical reference.
 > Current repository policy is local-only CI/CD; see `docs/LOCAL_CICD.md` and `.github/LOCAL_ONLY.md`.
 > Historical index: `docs/legacy/README.md`.
+> Note: package names, workflow names, and token examples are preserved from the BrowserTools-era release setup.
 
 This guide explains how to set up automated releases for your browser-tools-mcp fork.
 
