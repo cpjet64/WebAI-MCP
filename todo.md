@@ -334,3 +334,15 @@ Format:
 - Notes/Links:
   - Linked milestone: `M16`
   - Clarifies active-vs-historical documentation boundaries and ensures legacy index references are navigable.
+
+### T-0023
+- Title: Clarify changelog historical cloud-workflow references
+- Category: Docs
+- Priority: P3
+- Status: Done
+- Provenance:
+  - `CHANGELOG.md` header section
+  - Follow-up historical-doc scan on 2026-02-08
+- Notes/Links:
+  - Linked milestone: `M17`
+  - Added explicit context note that hosted-CI/dev-branch references in changelog entries are historical and superseded by `docs/LOCAL_CICD.md`.

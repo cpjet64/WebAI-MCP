@@ -312,6 +312,22 @@ Authoritative status source for execution sequencing.
   - Updated `README.md` documentation links to surface active docs (`docs/LOCAL_CICD.md`, `EXTENSION_TROUBLESHOOTING.md`) and label legacy docs as historical.
   - `npm run validate:docs` passed.
 
+## Milestone M17 - Changelog Historical Context Clarification
+
+- Scope: Clarify that legacy cloud-workflow references in changelog history are historical context, not current operating policy.
+- Tasks:
+  - Add a top-level historical-context note in `CHANGELOG.md`.
+  - Point readers to current local-only CI policy documentation.
+- Acceptance criteria:
+  - `CHANGELOG.md` includes a visible note clarifying historical hosted-CI references.
+  - Note points to `docs/LOCAL_CICD.md` as current policy.
+- Validation steps:
+  - `npm run validate:docs`
+- Status: Done
+- Evidence:
+  - Added historical-context note block at top of `CHANGELOG.md`.
+  - `npm run validate:docs` passed.
+
 ## Blockers
 
 | Blocker ID | Related milestone/task | What is blocked | Unblock question | Date noted |

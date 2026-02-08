@@ -217,3 +217,11 @@ Append-only decision and rationale log.
   - Added consistent historical-index pointers in `webai_mcp_complete_guide.md`, `DEV_BRANCH_STRATEGY.md`, `BRANCH_PROTECTION_GUIDE.md`, `docs/RELEASE_SETUP.md`, and `docs/CHANGELOG_AUTOMATION.md`.
   - Updated `README.md` documentation section to prioritize active docs (`docs/LOCAL_CICD.md`, `EXTENSION_TROUBLESHOOTING.md`) and explicitly label legacy guides as historical.
   - Verified via `npm run validate:docs`.
+
+## 2026-02-08 - Changelog Historical Context Note
+
+- Decision: Add an explicit top-level note in `CHANGELOG.md` clarifying that older hosted-CI/dev-branch references are historical context.
+- Why: Follow-up archaeology scan found changelog historical references without a direct pointer to current local-only policy, which can cause process confusion.
+- Evidence:
+  - Added historical context note block in `CHANGELOG.md` pointing to `docs/LOCAL_CICD.md`.
+  - Verified via `npm run validate:docs`.
