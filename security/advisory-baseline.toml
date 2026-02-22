@@ -1,0 +1,12 @@
+# Advisory Baseline — managed security exceptions with expiry dates
+# Each entry documents a known advisory that has been reviewed and accepted.
+# Entries MUST have an expiry date. Expired entries fail CI.
+#
+# Example:
+# [[advisory]]
+# id = "RUSTSEC-2024-XXXX"
+# reason = "No exploitable path in our usage; upstream fix expected Q1 2025"
+# expires = "2025-03-31"
+# reviewed_by = "cpjet64"
+
+# No current exceptions — all advisories must be resolved.
