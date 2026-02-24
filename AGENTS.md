@@ -12,7 +12,7 @@ Notes
 ## Environment
 
 ### Cache Locations
-All package manager caches are consolidated under `C:\Dev\cache\`:
+All caches are centralized under `C:\Dev\cache\`. These environment variables are set system-wide — do not override them in project config or scripts.
 
 | Cache | Path | Env Variable |
 |---|---|---|
@@ -21,10 +21,21 @@ All package manager caches are consolidated under `C:\Dev\cache\`:
 | sccache | `C:\Dev\cache\sccache` | `SCCACHE_DIR` |
 | npm | `C:\Dev\cache\npm` | `npm_config_cache` |
 | pnpm store | `C:\Dev\cache\pnpm-store` | pnpm config |
-| pip | `C:\Dev\cache\pip` | `PIP_CACHE_DIR` |
-| uv | `C:\Dev\cache\uv` | `UV_CACHE_DIR` |
-| NuGet | `C:\Dev\cache\nuget` | `NUGET_PACKAGES` |
 | Yarn | `C:\Dev\cache\yarn` | `YARN_CACHE_FOLDER` |
+
+
+#### Cargo Cache Rules
+- **sccache is enabled globally** via `$CARGO_HOME/config.toml` (`[build] rustc-wrapper = "sccache"`). All projects inherit this through Cargo's hierarchical config — do not duplicate it.
+- **Do NOT** add `rustc-wrapper = "sccache"` to per-project `.cargo/config.toml` — it is inherited from the global config.
+- **Do NOT** set `SCCACHE_DIR`, `RUSTC_WRAPPER`, or `CARGO_INCREMENTAL` in `.cargo/config.toml` `[env]` — these are set via system environment variables.
+- **Do NOT** set `target-dir` to a shared path (e.g. `C:\Dev\cache\target`) — this causes cross-project build artifact collisions. Use the default per-project `./target/`.
+- **Do NOT** create a local `.cargo-home/` directory — the global `CARGO_HOME` provides the registry, git checkouts, and installed binaries.
+- Per-project `.cargo/config.toml` **is appropriate** for: linker flags, cargo aliases, build targets, source replacement, rustflags, and profile overrides.
+
+#### Node Cache Rules
+- **Do NOT** override `npm_config_cache` in `.npmrc` or scripts — the global env var handles this.
+- **Do NOT** create local `.npm-cache/`, `.pnpm-store/`, or `.yarn-cache/` directories.
+- `node_modules/` is per-project as expected — only the download cache is centralized.
 
 ### Agent Temp Directory
 If you need a temporary working directory, use `C:\Dev\agent-temp`. Do NOT use system temp or create temp dirs inside the project.
