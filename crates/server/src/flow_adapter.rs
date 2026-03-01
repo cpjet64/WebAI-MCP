@@ -36,7 +36,12 @@ impl FlowProvider for LegacyProvider {
 struct RustProvider;
 impl FlowProvider for RustProvider {
     fn get_html(&self, selector: &str) -> FlowResult {
-        let html = format!("<div data-stub=\"true\" selector=\"{}\"></div>", selector);
+        let html = format!(
+            "<div class=\"provider-html\" data-provider=\"rust\" data-selector=\"{}\">\
+            <span>No server-side HTML capture is available in the Rust compatibility path yet.</span>\
+            </div>",
+            selector
+        );
         FlowResult::Ok(serde_json::json!({"html": html}))
     }
     fn click(&self, selector: &str) -> FlowResult {

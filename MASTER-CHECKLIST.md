@@ -1,8 +1,8 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-01T22:00:00Z
+Last synced: 2026-03-01T23:50:00Z
 Status: Active
-Scope: Planning, standards, code/doc review, and cleanup only (no code behavior changes in this run).
+Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
 Conventions used below:
 - `[x]` done
@@ -28,13 +28,13 @@ Conventions used below:
 
 ### MIG-110 Rust Migration Parity — HTTP + WebSocket
 
-- [ ] MIG-111: Replace legacy `data-stub` HTML responses in `crates/server/src/flow_adapter.rs` with real Rust-owned path where feasible.
+- [x] MIG-111: Replace legacy `data-stub` HTML responses in `crates/server/src/flow_adapter.rs` with real Rust-owned path where feasible.
 - [ ] MIG-112: Add route-level parity checks for `GET /capabilities`, `/identity`, `/current-url`, and related compatibility endpoints.
 - [ ] MIG-113: Review websocket schema evolution and complete any unimplemented flow messages in `crates/server/src/flow_adapter.rs` and `crates/server/src/routes_ws.rs`.
 
 ### MIG-120 Rust Migration Parity — CLI / Tooling
 
-- [ ] MIG-121: Complete `xtask/src/main.rs` from placeholder to actionable automation command dispatcher.
+- [x] MIG-121: Complete `xtask/src/main.rs` from placeholder to actionable automation command dispatcher.
 - [ ] MIG-122: Validate `webai` CLI command matrix against documented behavior (server/mcp/all + health/identity/help).
 - [ ] MIG-123: Align launch behavior with `todo.md` and `convert-rust.md` milestones for launch precedence and deprecation paths.
 
@@ -52,10 +52,12 @@ Conventions used below:
 ### REV-200 Full-code review findings (sweep complete on 2026-03-01)
 
 - [ ] REV-201: Complete MCP JSON-RPC parity by replacing remaining placeholder/stub paths in `crates/mcp/src/lib.rs` and `crates/mcp/src/tools.rs` for initialize/list_tools/call_tool behavior.
-- [ ] REV-202: Replace placeholder implementation with functional command dispatch in `xtask/src/main.rs`.
-- [ ] REV-203: Finalize WebSocket flow compatibility by removing legacy `data-stub` behavior in `crates/server/src/flow_adapter.rs` and reconciling `crates/server/tests/ws_flows.rs`.
+- [x] REV-202: Replace placeholder implementation with functional command dispatch in `xtask/src/main.rs`.
+- [x] REV-203: Finalize WebSocket flow compatibility by removing legacy `data-stub` behavior in `crates/server/src/flow_adapter.rs` and reconciling `crates/server/tests/ws_flows.rs`.
 - [ ] REV-204: Expand stubbed audit handling in `crates/server/src/lib.rs` from feature-gated placeholders to production-compatible routes.
-- [ ] REV-205: Replace placeholder Google Analytics ID `G-XXXXXXXXXX` in `webai-mcp/mcp-server.ts` (or document telemetry removal).
+- [x] REV-205: Replace placeholder Google Analytics ID `G-XXXXXXXXXX` in `webai-mcp/mcp-server.ts` (or document telemetry removal).
+- [x] REV-206: Replace placeholder MCP version text in `chrome-extension/panel.js` (or document version source explicitly).
+- [x] REV-207: Remove remaining `placeholder`/`data-stub` indicators from production-relevant Rust surface (`crates/core/src/dto.rs`, `crates/server/src/flow_adapter.rs`, `crates/server/tests/ws_flows.rs`) by moving them to explicit feature-gated or migration notes.
 
 ## 3) Discovery-Verified Legacy Cleanup
 

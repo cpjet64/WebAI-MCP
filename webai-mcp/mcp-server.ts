@@ -343,7 +343,7 @@ server.tool("getNetworkErrors", "Check our network ERROR logs", async () => {
           text: JSON.stringify(json, null, 2),
         },
       ],
-      isError: true,
+      isError: false,
     };
   }, "get network errors");
 });
@@ -1381,7 +1381,7 @@ server.tool("runNextJSAudit", {}, async () => ({
                     window.dataLayer = window.dataLayer || [];
                     function gtag(){dataLayer.push(arguments);}
                     gtag('js', new Date());
-                    gtag('config', 'G-XXXXXXXXXX');
+                    gtag('config', process.env.GOOGLE_ANALYTICS_ID || process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || '');
                   '}
                 </Script>
               </>
@@ -1413,7 +1413,7 @@ server.tool("runNextJSAudit", {}, async () => ({
           <html lang="en" className="scroll-smooth" suppressHydrationWarning>
             {process.env.NODE_ENV === "production" && (
               <>
-                <GoogleAnalytics gaId="G-XXXXXXXXXX" />
+                <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS_ID || process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID || ''} />
                 {/* other scripts */}
               </>
             )}

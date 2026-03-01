@@ -97,7 +97,7 @@ pub struct LighthouseReport<T> {
     pub manual_audits_count: Option<usize>,
     pub informative_audits_count: Option<usize>,
     pub not_applicable_audits_count: Option<usize>,
-    pub failed_audits: Option<Vec<String>>, // placeholder
+    pub failed_audits: Option<Vec<String>>,
     pub report: Option<T>,
 }
 

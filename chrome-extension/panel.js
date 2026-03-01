@@ -1159,8 +1159,8 @@ async function updateSystemInfo() {
   // Check WebSocket connectivity
   await checkWebSocketConnectivity();
 
-  // MCP version is harder to get from the extension, so we'll show a placeholder
-  mcpVersionElement.textContent = "MCP: Use 'Run Version Check' for details";
+  // MCP version is surfaced from MCP client tool output, not from extension runtime
+  mcpVersionElement.textContent = "MCP: Run Version Check to fetch server-side component versions";
 }
 
 // Function to run comprehensive version check

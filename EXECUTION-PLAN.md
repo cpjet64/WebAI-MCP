@@ -1,6 +1,6 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-01T22:00:00Z
+Last synchronized: 2026-03-01T23:50:00Z
 Branch context: `main`
 Status: Single-pass cleanup + full review synchronization
 
@@ -8,11 +8,12 @@ Status: Single-pass cleanup + full review synchronization
 
 Create one coherent planning source of truth for active and historical work while cleaning historical artifacts into `./legacy`.
 
-This pass does not implement feature behavior changes. It:
+This pass implements the discovered cleanup items and closes the targeted backlog findings:
 1. synchronizes `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` with the discovered work state,
 2. performs a full code/docs review for unfinished work markers (TODO/placeholder/stub),
-3. archives old planning artifacts, and
-4. updates active references to moved legacy assets.
+3. applies the scoped production-facing cleanup fixes (`REV-202`, `REV-203`, `REV-205`, `REV-206`, `REV-207`),
+4. archives old planning artifacts, and
+5. updates active references to moved legacy assets.
 
 ## 2) Inputs and constraints
 
@@ -24,7 +25,7 @@ This pass does not implement feature behavior changes. It:
   - `docs/ARCHIVE.md`
   - discovered source inspection (`AGENTS`, planning docs, legacy outputs, code references)
 - Scope limit:
-  - no production code changes,
+  - scoped production behavior fixes only for placeholder/compatibility markers,
   - no external services,
   - no versioned dependency shifts.
 
@@ -38,7 +39,8 @@ Goal: establish stable input set and scope for this pass.
 2. Extract discovery findings:
    - unfinished implementation surface in Rust crates (`crates/mcp`, `crates/server`, `xtask`),
    - placeholder/stub/TODO footprint in active source and docs,
-   - absence/presence of `mutant` files/identifiers,
+   - include extension runtime placeholders (`chrome-extension/panel.js`) as deferred backlog actions,
+   - absence/presence of temporary legacy markers and historical filenames,
    - legacy planning artifacts under `.AGENTS/plans` and `docs/archive`,
    - docs references to archived assets.
 3. Publish IDs in `MASTER-CHECKLIST.md` linking planning and execution tasks.
@@ -84,7 +86,7 @@ Goal: avoid stale references after archive migration.
    - Recorded archival of `RUN-THIS-PROMPT.md` and `commands.txt` to `legacy/notes/`.
 4. Run targeted verification queries and record outputs in `docs/standardization-report.md`:
    - `rg -n "RUN-THIS-PROMPT.md"`
-   - `rg -n "data-stub|placeholder|TODO|stub|mutant" crates webai-mcp xtask`
+   - `rg -n "data-stub|placeholder|TODO|stub"` crates webai-mcp xtask chrome-extension
 
 ### Phase 5 — Verification and handoff
 

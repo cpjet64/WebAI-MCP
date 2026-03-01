@@ -123,7 +123,7 @@ fn get_html_selector_present_but_no_clients_error() {
 }
 
 #[test]
-fn get_html_provider_rust_returns_stub() {
+fn get_html_provider_rust_returns_structured_payload() {
     std::env::set_var("WEBAI_BROWSER_PROVIDER", "rust");
     std::env::set_var("WEBAI_WS_MAX_INFLIGHT", "16");
     let req = serde_json::json!({
@@ -134,14 +134,11 @@ fn get_html_provider_rust_returns_stub() {
     let out = process_text_message(&req.to_string());
     let v: serde_json::Value = serde_json::from_str(&out).unwrap();
     let t = v["type"].as_str().unwrap();
-    if t == "get-html-by-selector-response" {
-        assert_eq!(v["status"], "ok");
-        assert!(v["payload"]["html"].as_str().unwrap().contains("data-stub"));
-    } else {
-        // In case of parallel env races, accept error envelope too.
-        assert!(t.ends_with("-error"));
-        assert_eq!(v["status"], "error");
-    }
+    assert_eq!(t, "get-html-by-selector-response");
+    assert_eq!(v["status"], "ok");
+    let html = v["payload"]["html"].as_str().unwrap();
+    assert!(html.contains("provider-html"));
+    assert!(html.contains("selector=\"#main\""));
     std::env::remove_var("WEBAI_BROWSER_PROVIDER");
     std::env::remove_var("WEBAI_WS_MAX_INFLIGHT");
 }
