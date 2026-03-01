@@ -1,0 +1,17 @@
+[package]
+name = "webai-mcp"
+version = "0.0.1"
+edition = "2021"
+description = "MCP stdio server crate (skeleton)"
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+webai-core = { path = "../core" }
+serde_json = "1"
+
+[features]
+default = []
+with-rmcp = []

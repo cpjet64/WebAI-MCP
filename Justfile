@@ -17,7 +17,7 @@ fmt:
     cargo fmt --check
 
 lint:
-    cargo clippy --all-targets --all-features -D warnings
+    cargo clippy --all-targets --all-features -- -D warnings
     cargo machete
 
 build:

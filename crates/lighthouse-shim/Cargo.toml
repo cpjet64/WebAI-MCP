@@ -1,0 +1,16 @@
+[package]
+name = "webai-lighthouse-shim"
+version = "0.0.1"
+edition = "2021"
+description = "Lighthouse Node shim (skeleton)"
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+
+[features]
+default = []
+audit = []
+
+[dependencies]
+webai-core = { path = "../core" }

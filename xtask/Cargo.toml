@@ -1,0 +1,10 @@
+[package]
+name = "xtask"
+version = "0.0.1"
+edition = "2021"
+description = "Repo tasks for building prebuilt binaries (scaffold)"
+license = "MIT"
+
+[[bin]]
+name = "xtask"
+path = "src/main.rs"

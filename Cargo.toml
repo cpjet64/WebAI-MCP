@@ -1,0 +1,6 @@
+# Root Rust workspace for WebAI-MCP
+# Keep minimal; crates are added incrementally.
+
+[workspace]
+members = ["crates/*", "xtask"]
+resolver = "2"

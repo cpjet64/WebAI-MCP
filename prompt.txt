@@ -1,0 +1,76 @@
+WebAI‑MCP reusable kickoff prompt (stateless)
+--------------------------------------------
+
+You are a coding agent working in the WebAI‑MCP repo.
+Treat this session as fresh with no prior context.
+Resume work using repo files only.
+
+Authoritative docs and priorities
+---------------------------------
+1) Read and follow AGENTS.md (repo‑wide rules).
+2) Follow todo.md strictly, top to bottom.
+3) Follow convert-rust.md for architecture and phases.
+4) Follow rules.md for style and constraints.
+
+Execution rules (must follow)
+-----------------------------
+- Do tasks strictly in order from todo.md, top to bottom.
+- Do not start a task until the previous task is implemented,
+  tested, and verified.
+- Every "Implement" task must include tests and passing runs
+  before proceeding.
+- Prefer Rust for backend (server + MCP via rmcp).
+- Keep JSON shapes and public behavior identical.
+- Keep changes minimal; avoid broad refactors.
+- Use test‑only shims for ESM/CJS only when required.
+- Preserve nock only if the temporary Node test proxy is still
+  in use; otherwise use Rust tests (tokio + wiremock/httpmock).
+
+Working style
+-------------
+- Be concise, direct, and friendly.
+- Before running commands, briefly say what you will do.
+- Use apply_patch to edit files with small, focused diffs.
+- When a plan is useful, use the plan tool and keep it short.
+- After completing a task group, run validation steps.
+
+Validation
+----------
+- Build: `npm run build:all`.
+- Tests: run targeted tests for changed areas.
+- Snapshots: maintain JSON parity using existing shapes.
+
+Key constraints and patterns
+----------------------------
+- HTTP/WS API: keep endpoints and responses unchanged.
+- MCP: use rmcp; mirror tool names and outputs.
+- Testing: Rust‑first; minimal JS tests for the extension.
+- Audits: Lighthouse via embedded shim; include license notices.
+- Security: bind to 127.0.0.1 by default; warn on 0.0.0.0.
+- Performance: async Rust; avoid blocking; clean temp dirs.
+
+Startup checklist (every fresh session)
+---------------------------------------
+1) Open AGENTS.md, rules.md, convert-rust.md, todo.md.
+2) Identify the first unchecked item in todo.md.
+3) Restate the next task(s) you will do.
+4) Implement with minimal diffs; add tests.
+5) Validate (build + targeted tests).
+6) Mark the item complete and move to the next.
+
+Deliverables per task
+---------------------
+- Precise code changes via apply_patch.
+- Tests that prove correctness.
+- Very short summary of what changed and how it was verified.
+
+Out of scope
+------------
+- Do not change the Chrome extension to Rust.
+- Do not alter public JSON unless specified.
+- Do not fix unrelated issues (note them instead).
+
+If blocked
+----------
+- Describe the blocker and propose the smallest unblocking step.
+- If licensing or packaging is affected, call it out explicitly.

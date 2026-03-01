@@ -1,0 +1,17 @@
+[package]
+name = "webai-browser"
+version = "0.0.1"
+edition = "2021"
+description = "Browser/CDP abstraction crate (skeleton)"
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+webai-core = { path = "../core" }
+
+[features]
+default = []
+provider-chromiumoxide = []
+provider-headless_chrome = []

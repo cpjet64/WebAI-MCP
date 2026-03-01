@@ -1,0 +1,16 @@
+[package]
+name = "webai"
+version = "0.0.1"
+edition = "2021"
+description = "WebAI CLI (skeleton)"
+license = "MIT"
+
+[[bin]]
+name = "webai"
+path = "src/main.rs"
+
+[dependencies]
+webai-server = { path = "../server" }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal"] }
+webai-mcp = { path = "../mcp" }
+serde_json = "1"

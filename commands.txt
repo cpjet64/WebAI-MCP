@@ -1,0 +1,76 @@
+# WebAI-MCP: Local build, test, and security verification commands
+
+# Recommended Node/npm
+# - Node.js 22.x (use .nvmrc if using nvm)
+# - npm 10/11
+
+====================
+Linux/macOS (bash/zsh)
+====================
+
+# 0) Optional: use Node from .nvmrc
+nvm use || true
+node -v
+npm -v
+
+# 1) Clean, install deps (uses overrides for form-data 4.0.4)
+npm ci
+
+# 2) Verify form-data vulnerability is patched
+npm ls form-data --all
+npm audit
+
+# 3) Build both packages
+npm run build:all
+
+# 4) Run tests (workspace-specific then all)
+npm run test --workspace=webai-mcp
+npm run test --workspace=webai-server
+npm run test
+
+# 5) Troubleshooting tests (single-process + open-handle detection)
+npm run test --workspace=webai-mcp -- --runInBand --detectOpenHandles
+npm run test --workspace=webai-server -- --runInBand --detectOpenHandles
+
+# 6) Developer workflow helpers
+# Start both servers in parallel (if needed for manual checks)
+npm run dev
+
+# 7) Optional: verify the built outputs exist
+test -f webai-mcp/dist/mcp-server.js && echo "MCP build OK"
+test -f webai-server/dist/browser-connector.js && echo "Server build OK"
+
+
+====================
+Windows (PowerShell)
+====================
+
+# 0) Optional: use Node 22.x; then verify versions
+node -v
+npm -v
+
+# 1) Clean, install deps (uses overrides for form-data 4.0.4)
+npm ci
+
+# 2) Verify form-data vulnerability is patched
+npm ls form-data --all
+npm audit
+
+# 3) Build both packages
+npm run build:all
+
+# 4) Run tests (workspace-specific then all)
+npm run test --workspace=webai-mcp
+npm run test --workspace=webai-server
+npm run test
+
+# 5) Troubleshooting tests
+npm run test --workspace=webai-mcp -- --runInBand --detectOpenHandles
+npm run test --workspace=webai-server -- --runInBand --detectOpenHandles
+
+# 6) Developer workflow helpers
+npm run dev
+
+# 7) Optional: verify the built outputs exist
+if (Test-Path webai-mcp/dist/mcp-server.js) { Write-Host "MCP build OK" }
+if (Test-Path webai-server/dist/browser-connector.js) { Write-Host "Server build OK" }

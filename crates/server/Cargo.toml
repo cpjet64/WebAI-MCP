@@ -1,0 +1,34 @@
+[package]
+name = "webai-server"
+version = "0.0.1"
+edition = "2021"
+description = "HTTP/WS server crate for WebAI-MCP (skeleton)"
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+webai-core = { path = "../core" }
+axum = { version = "0.7", default-features = false, features = [
+  "json", "http1", "http2", "ws"
+] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+tower = { version = "0.4", features = ["timeout", "util"] }
+reqwest = { version = "0.12", default-features = false, features = [
+  "rustls-tls", "socks"
+] }
+
+[features]
+default = ["audit-lighthouse"]
+macos-native = []
+windows-native = []
+audit-lighthouse = []
+
+[dev-dependencies]
+tower = { version = "0.4", features = ["util"] }
+http = "1"
+httpmock = "0.7"
