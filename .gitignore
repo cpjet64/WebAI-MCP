@@ -64,6 +64,7 @@ coverage/
 *.lcov
 .jest/
 test-results/
+lcov.info
 junit.xml
 
 # Chrome Extension development

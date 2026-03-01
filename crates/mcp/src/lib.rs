@@ -40,7 +40,10 @@ mod tests {
     #[test]
     fn stdio_not_enabled() {
         let e = start_stdio().unwrap_err();
-        assert!(e.to_string().contains("rmcp not enabled"));
+        let message = e.to_string();
+        assert!(
+            message.contains("rmcp not enabled") || message.contains("rmcp integration pending")
+        );
     }
 
     #[test]

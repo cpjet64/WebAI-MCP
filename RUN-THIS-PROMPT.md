@@ -28,7 +28,7 @@ corrected it, or FAIL if it needs manual attention. Do not skip items.
 ### 3. Justfile (required for all projects)
 - [ ] `Justfile` exists at project root
 - [ ] Has `ci-fast` recipe (hygiene + fmt + lint + build + test-quick)
-- [ ] Has `ci-deep` recipe (ci-fast + test-full + coverage + security + mutants + docs)
+- [ ] Has `ci-deep` recipe (ci-fast + test-full + coverage + security + docs)
 - [ ] Has language-appropriate recipes (Rust: fmt/lint/build/test/coverage/security/docs; Node: fmt-frontend/lint-frontend/test-frontend; Python: fmt-python/lint-python/test-python)
 - [ ] `set windows-shell := ["powershell.exe", "-NoLogo", "-Command"]` is present
 

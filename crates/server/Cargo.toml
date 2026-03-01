@@ -31,4 +31,5 @@ audit-lighthouse = []
 [dev-dependencies]
 tower = { version = "0.4", features = ["util"] }
 http = "1"
-httpmock = "0.7"
+httpmock = "0.8"
+

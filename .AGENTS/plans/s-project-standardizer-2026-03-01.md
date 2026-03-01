@@ -1,1 +1,9 @@
-# Standardization Plan`n`n## s-project-standardizer Execution Plan (2026-03-01)`n`n1. Confirm repository context and baseline state`n2. Detect active project technologies and governance inputs`n3. Generate/update `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md``n4. Record execution decisions in `docs/standardization-report.md``n5. Commit changes with conventional message and `[s-project-standardizer]` suffix`n
+# Standardization Plan
+
+## s-project-standardizer Execution Plan (2026-03-01)
+
+1. Confirm repository context and baseline state
+2. Detect active project technologies and governance inputs
+3. Generate/update `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`
+4. Record execution decisions in `docs/standardization-report.md`
+5. Commit changes with conventional message and `[s-project-standardizer]` suffix
