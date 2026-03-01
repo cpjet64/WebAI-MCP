@@ -1,3 +1,1 @@
-# TODO / Plan
-
-(Write task plans with checkable items here.)
+# TODO / Plan`n`n- [ ] Initialize standardizer session and confirm repository context`n- [ ] Stage `.agent-state/last-head.txt` and baseline audit info`n- [ ] Detect project type and collect governance inputs`n- [ ] Generate `MASTER-CHECKLIST.md``n- [ ] Generate `EXECUTION-PLAN.md``n- [ ] Create/update `docs/standardization-report.md` with audit timestamps`n- [ ] Commit generated standardization outputs`n
