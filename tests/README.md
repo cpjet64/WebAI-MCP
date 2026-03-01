@@ -16,7 +16,7 @@ This directory contains all test files and testing resources for the WebAI-MCP p
 
 **Usage**:
 ```bash
-node tests/test-all.js
+npm run test:all
 ```
 
 ### **🌐 `test-element-interaction.html`**
@@ -62,11 +62,17 @@ Copy and paste the prompts from this file to systematically test all WebAI-MCP f
 
 ### **1. Automated Testing**
 ```bash
-# Run all automated tests
-node tests/test-all.js
+# Run all automated tests (JS runner)
+npm run test:all
 
 # Check system compatibility
 npm run diagnose
+
+# Restricted env: run safe subset
+npm run test:restricted
+
+# Optional: server tests (may require elevated perms)
+npm run test:restricted:server
 ```
 
 ### **2. Interactive Testing**
