@@ -22,7 +22,7 @@ fi
 
 ## Validation
 - Ran: `npm run build:all`
-- Result: failed in local environment because `tsc` is not available in PATH (`'tsc' is not recognized`).
+- Result (as of this environment): passed (TypeScript compiler is available; build command completed successfully).
 
 ## Recommended Follow-Up
 1. Re-run affected Dependabot PR checks (`npm ci` dependent) to confirm install failures are resolved.
