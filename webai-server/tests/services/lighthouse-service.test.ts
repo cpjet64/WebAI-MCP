@@ -40,7 +40,7 @@ describe('Lighthouse Service', () => {
           'uses-https': auditResultsFixture['best-practices'].audits['uses-https'],
           'meta-description': auditResultsFixture.seo.audits['meta-description']
         },
-        finalUrl: 'https://example.com',
+        requestedUrl: 'https://example.com',
         fetchTime: '2024-01-01T12:00:00.000Z',
         userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36'
       },

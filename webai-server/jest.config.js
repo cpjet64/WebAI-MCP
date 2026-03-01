@@ -1,5 +1,4 @@
 export default {
-  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
   roots: ['<rootDir>/tests'],
   testMatch: [
@@ -7,9 +6,12 @@ export default {
     '**/?(*.)+(spec|test).ts'
   ],
   transform: {
-    '^.+\\.ts$': ['ts-jest', {
-      useESM: true
-    }],
+    '^.+\\.(ts|tsx)$': ['babel-jest', {
+      presets: [
+        ['@babel/preset-env', { targets: { node: 'current' } }],
+        '@babel/preset-typescript'
+      ]
+    }]
   },
   collectCoverageFrom: [
     '*.ts',
@@ -31,8 +33,9 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   verbose: true,
-  extensionsToTreatAsEsm: ['.ts'],
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1'
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^lighthouse$': '<rootDir>/__mocks__/lighthouse.js',
+    '^chrome-launcher$': '<rootDir>/__mocks__/chrome-launcher.js'
   }
 };

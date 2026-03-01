@@ -77,6 +77,8 @@ describe('Browser Connector', () => {
     });
 
     it('should include server capabilities in identity', async () => {
+      app = express();
+      app.use(express.json());
       app.get('/.identity', (req: express.Request, res: express.Response): void => {
         res.json({
           name: 'WebAI Server',
@@ -148,6 +150,8 @@ describe('Browser Connector', () => {
     });
 
     it('should handle empty console logs', async () => {
+      app = express();
+      app.use(express.json());
       app.get('/console-logs', (req: express.Request, res: express.Response): void => {
         res.json([]);
       });
@@ -213,6 +217,8 @@ describe('Browser Connector', () => {
     });
 
     it('should handle screenshot failure when no extension connected', async () => {
+      app = express();
+      app.use(express.json());
       app.post('/capture-screenshot', (req: express.Request, res: express.Response): void => {
         res.status(503).json({
           error: 'No active WebSocket connections',
@@ -229,6 +235,8 @@ describe('Browser Connector', () => {
     });
 
     it('should handle screenshot timeout', async () => {
+      app = express();
+      app.use(express.json());
       app.post('/capture-screenshot', (req: express.Request, res: express.Response): void => {
         setTimeout(() => {
           res.status(408).json({
@@ -512,6 +520,8 @@ describe('Browser Connector', () => {
     });
 
     it('should handle server errors gracefully', async () => {
+      app = express();
+      app.use(express.json());
       app.get('/console-logs', (req: express.Request, res: express.Response): void => {
         throw new Error('Internal server error');
       });
@@ -534,11 +544,17 @@ describe('Browser Connector', () => {
 
   describe('CORS and Headers', () => {
     it('should include CORS headers', async () => {
+      app = express();
+      app.use(express.json());
       app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         next();
+      });
+      // Re-add identity route to include CORS headers
+      app.get('/.identity', (req: express.Request, res: express.Response): void => {
+        res.json({ name: 'WebAI Server', version: '1.5.0', status: 'running' });
       });
 
       const response = await request(app)
@@ -549,7 +565,9 @@ describe('Browser Connector', () => {
     });
 
     it('should handle OPTIONS requests', async () => {
-      app.options('*', (req: express.Request, res: express.Response): void => {
+      app = express();
+      app.use(express.json());
+      app.options('/capture-screenshot', (req: express.Request, res: express.Response): void => {
         res.header('Access-Control-Allow-Origin', '*');
         res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
         res.sendStatus(200);

@@ -84,7 +84,9 @@ webai-server --help
 | Endpoint | Method | Description |
 |----------|--------|-------------|
 | `/.identity` | GET | Server identity and version |
+| `/capabilities` | GET | Report provider mode and supported flows |
 | `/screenshot` | POST | Capture browser screenshot |
+| `/extension-ws` | GET | WebSocket upgrade endpoint for extension flows |
 | `/console-logs` | GET | Retrieve console logs |
 | `/network-logs` | GET | Get network request logs |
 | `/cookies` | GET | Access browser cookies |
@@ -93,6 +95,8 @@ webai-server --help
 | `/audit/accessibility` | POST | Run accessibility audit |
 | `/audit/performance` | POST | Run performance audit |
 | `/audit/seo` | POST | Run SEO audit |
+| `/extension-ws` | GET | WebSocket upgrade for flows |
+| `/capabilities` | GET | Provider + flows support matrix |
 
 ## 🔧 Requirements
 
@@ -181,3 +185,49 @@ MIT License - see [LICENSE](https://github.com/cpjet64/WebAI-MCP/blob/main/LICEN
 ---
 
 **Made with ❤️ by cpjet64** | **v1.5.1-dev.3** | **Independent Project**
+### Environment Flags
+
+- `WEBAI_BROWSER_PROVIDER` = `legacy` | `rust` (defaults to `legacy`)
+- `WEBAI_BROWSER_LEGACY` = `1|true|yes` forces legacy path
+- `WEBAI_WS_MAX_INFLIGHT` = max concurrent WS requests (default 16)
+## 🔄 WebSocket API
+
+Messages use a common envelope.
+
+Request:
+
+```
+{
+  "requestId": "r1",
+  "type": "ping",
+  "payload": { }
+}
+```
+
+Response:
+
+```
+{
+  "requestId": "r1",
+  "type": "ping-response",
+  "status": "ok",
+  "payload": { }
+}
+```
+
+Supported types (subset):
+
+- `ping` → `ping-response`
+- `save-screenshot` → `save-screenshot-response|error`
+  - payload: `dir?`, `title?`, `data` (base64 PNG)
+- `refresh-browser` → `refresh-browser-response`
+- `get-html-by-selector` → `...-response|error`
+  - payload: `selector`
+- `click-element` → `...-error` (requires client)
+- `fill-input` → `...-error` (requires client)
+- `select-option` → `...-error` (requires client)
+- `submit-form` → `...-error` (requires client)
+
+Note: some flows require the Chrome extension connection.
+When not connected, an `...-error` with
+`{"error":"No clients connected"}` is returned.

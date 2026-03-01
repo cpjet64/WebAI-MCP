@@ -13,13 +13,19 @@ describe('Chrome Extension Integration', () => {
     mockConnection = createMockWebSocketConnection();
     
     // Mock WebSocket Server
+    const listeners: Record<string, Function[]> = {};
     mockWebSocketServer = {
       clients: new Set([mockConnection]),
-      on: jest.fn(),
+      on: jest.fn((event: string, handler: Function) => {
+        listeners[event] = listeners[event] || [];
+        listeners[event].push(handler);
+      }),
       handleUpgrade: jest.fn(),
-      emit: jest.fn(),
+      emit: jest.fn((event: string, ...args: any[]) => {
+        (listeners[event] || []).forEach(fn => fn(...args));
+      }),
       close: jest.fn()
-    };
+    } as any;
   });
 
   afterEach(() => {
