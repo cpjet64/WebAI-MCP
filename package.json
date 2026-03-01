@@ -7,9 +7,13 @@
     "changelog": "auto-changelog --config .auto-changelog",
     "changelog:update": "auto-changelog --config .auto-changelog --unreleased",
     "version:bump": "npm run changelog && git add CHANGELOG.md",
+    "diagnose": "node scripts/diagnose.js",
+    "test:all": "node tests/test-all.js",
     "build": "npm run build --workspace=webai-mcp && npm run build --workspace=webai-server",
     "build:all": "cd webai-mcp && npm run build && cd ../webai-server && npm run build",
     "test": "npm run test --workspace=webai-mcp && npm run test --workspace=webai-server",
+    "test:restricted": "npm run test:inband --workspace=webai-mcp",
+    "test:restricted:server": "npm run test:inband --workspace=webai-server",
     "dev": "concurrently \"npm run start --workspace=webai-server\" \"npm run start --workspace=webai-mcp\"",
     "clean": "npm run clean --workspace=webai-mcp && npm run clean --workspace=webai-server",
     "install:all": "npm install && cd webai-mcp && npm install && cd ../webai-server && npm install",
@@ -20,11 +24,14 @@
     "webai-mcp",
     "webai-server"
   ],
+  "overrides": {
+    "form-data": "4.0.4"
+  },
   "devDependencies": {
     "auto-changelog": "^2.5.0",
-    "concurrently": "^9.1.2",
+    "concurrently": "^9.2.1",
     "conventional-changelog-cli": "^5.0.0",
-    "conventional-changelog-conventionalcommits": "^9.0.0"
+    "conventional-changelog-conventionalcommits": "^9.1.0"
   },
   "repository": {
     "type": "git",

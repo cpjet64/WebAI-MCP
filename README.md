@@ -11,6 +11,13 @@ English | [简体中文](./docs/i18n/README_CN.md)
 
 WebAI-MCP is a comprehensive browser automation and monitoring solution that enables AI applications to capture and analyze browser data through a Chrome extension. It provides 20+ tools for screenshots, console logs, network monitoring, storage access, audits, and cross-platform auto-paste functionality.
 
+Note on migration and docs
+--------------------------
+- Active migration to a single Rust backend is tracked in
+  `convert-rust.md` and executed via `todo.md` (top‑to‑bottom).
+- Legacy or superseded documents are moved to `docs/archive/`.
+  See `docs/ARCHIVE.md` for a list of archived items.
+
 ## ✨ Key Features
 
 - 📸 **Screenshot Capture** - High-quality screenshots with auto-paste to any IDE
@@ -138,6 +145,37 @@ npx webai-server
 ## 🧪 Development Version
 
 Want to try the latest features before they're released?
+
+### Rust CLI (experimental)
+
+You can run the Rust server directly during development:
+
+```
+# Run HTTP/WS server (flags override env)
+cargo run -p webai -- server --host 127.0.0.1 --port 3025 --provider rust --ws-max-inflight 32 --string-limit 500 --query-limit 30000 --screenshot-dir /tmp/screens --data-dir /tmp/webai
+
+# Run server and attempt MCP (stdio)
+# MCP prints a clear error until rmcp is enabled
+cargo run -p webai -- all
+
+# List MCP tools (names only; rmcp not required)
+cargo run -p webai -- mcp --list-tools
+
+# MCP identity (no rmcp required)
+cargo run -p webai -- mcp identity
+
+# Show effective capabilities (respects WEBAI_BROWSER_PROVIDER)
+cargo run -p webai -- capabilities
+
+# JSON-RPC stubs (no rmcp required)
+cargo run -p webai -- mcp rpc initialize 1
+cargo run -p webai -- mcp rpc call getConsoleLogs 2
+
+# Useful env flags
+#   HOST=127.0.0.1 PORT=3025
+#   WEBAI_BROWSER_PROVIDER=legacy|rust
+#   WEBAI_WS_MAX_INFLIGHT=number
+```
 
 ### **Temporary Download & Run (Dev)**
 ```bash

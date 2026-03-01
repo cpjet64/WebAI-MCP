@@ -12,6 +12,7 @@ lerna-debug.log*
 dist/
 build/
 out/
+target/
 *.tsbuildinfo
 *.d.ts.map
 
@@ -27,6 +28,7 @@ config.json
 
 # IDE and Editor files
 .vscode/
+.vs/
 .idea/
 *.swp
 *.swo
