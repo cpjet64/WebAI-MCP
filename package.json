@@ -25,7 +25,8 @@
     "webai-server"
   ],
   "overrides": {
-    "form-data": "4.0.4"
+    "form-data": "4.0.4",
+    "@conventional-changelog/git-client": "2.0.0"
   },
   "devDependencies": {
     "auto-changelog": "^2.5.0",
@@ -55,5 +56,6 @@
     "handlebarsHelpers": {
       "formatCommitType": "function(type) { const types = { feat: '✨ Added', fix: '🐛 Fixed', docs: '📚 Documentation', style: '💄 Style', refactor: '♻️ Refactor', perf: '⚡ Performance', test: '✅ Tests', chore: '🔧 Chore', ci: '👷 CI/CD', build: '📦 Build' }; return types[type] || '🔄 Changed'; }"
     }
-  }
+  },
+  "packageManager": "pnpm@10.30.2+sha512.36cdc707e7b7940a988c9c1ecf88d084f8514b5c3f085f53a2e244c2921d3b2545bc20dd4ebe1fc245feec463bb298aecea7a63ed1f7680b877dc6379d8d0cb4"
 }
