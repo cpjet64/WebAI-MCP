@@ -307,6 +307,19 @@ app.use(cors());
 // Increase JSON body parser limit to 50MB to handle large screenshots
 app.use(bodyParser.json({ limit: "50mb" }));
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+app.use(
+  (err: any, _req: express.Request, res: express.Response, next: express.NextFunction): void => {
+    if (err instanceof SyntaxError && (err as any).status === 400 && "body" in err) {
+      res.status(400).json({
+        error: "Invalid JSON payload",
+        success: false,
+      });
+      return;
+    }
+
+    next(err);
+  }
+);
 
 // Helper to recursively truncate strings in any data structure
 function truncateStringsInData(data: any, maxLength: number): any {
