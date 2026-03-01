@@ -15,8 +15,8 @@ Note on migration and docs
 --------------------------
 - Active migration to a single Rust backend is tracked in
   `convert-rust.md` and executed via `todo.md` (top‑to‑bottom).
-- Legacy or superseded documents are moved to `docs/archive/`.
-  See `docs/ARCHIVE.md` for a list of archived items.
+- Legacy or superseded documents are moved to `legacy/docs/archive/`.
+  See `docs/ARCHIVE.md` for a list of archived items and their legacy locations.
 
 ## ✨ Key Features
 
@@ -517,7 +517,7 @@ Once installed, you can use natural language commands with your MCP client:
 - **📖 Complete User Guide**: [COMPLETE_USER_GUIDE.md](./COMPLETE_USER_GUIDE.md) - Installation, setup, troubleshooting, and usage
 - **🔧 Developer Guide**: [DEVELOPER_GUIDE.md](./DEVELOPER_GUIDE.md) - Development workflows, project structure, and contribution guidelines
 - **🌐 Chinese Documentation**: [简体中文文档](./docs/i18n/README_CN.md)
-- **📋 MCP Protocol Reference**: [docs/mcp.md](./docs/mcp.md)
+- **📋 MCP Protocol Reference**: [legacy MCP protocol notes](./legacy/docs/archive/mcp-ts-sdk.md)
 
 ## 🔄 Migration from Browser Tools MCP
 

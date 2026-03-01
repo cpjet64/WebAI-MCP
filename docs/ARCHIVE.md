@@ -10,10 +10,10 @@ Purpose
 
 Items
 -----
-- 3tierconversion.md
+- legacy/docs/archive/3tierconversion.md
   - Reason: superseded by the Rust conversion plan.
   - See: convert-rust.md.
-- docs/mcp.md (renamed: mcp-ts-sdk.md)
+- legacy/docs/archive/mcp-ts-sdk.md (renamed from docs/mcp.md)
   - Reason: TS SDK tutorial; project is moving MCP to Rust with
     rmcp. Keep for historical reference only.
   - See: convert-rust.md and todo.md for rmcp.

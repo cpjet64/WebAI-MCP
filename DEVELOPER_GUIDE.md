@@ -74,9 +74,9 @@ webai-mcp/
 │   └── 📄 WORKFLOW_SUMMARY.md         # Workflow documentation
 │
 ├── 📁 docs/                           # Documentation
-│   ├── 📄 mcp.md                      # MCP protocol reference
-│   └── 📁 i18n/                       # Internationalization
-│       └── 📄 README_CN.md            # Chinese documentation
+│   ├── 📁 i18n/                       # Internationalization
+│   │   └── 📄 README_CN.md            # Chinese documentation
+│   └── 📎 MCP protocol docs moved to `legacy/docs/archive/mcp-ts-sdk.md`
 │
 ├── � scripts/                        # Utility scripts
 │   ├── �📄 README.md                   # Scripts documentation
@@ -107,7 +107,7 @@ webai-mcp/
 ├── 📄 COMPLETE_USER_GUIDE.md          # Comprehensive user guide
 ├── 📄 DEVELOPER_GUIDE.md              # This developer guide
 ├── 📄 CHANGELOG.md                    # Auto-generated changelog
-├── 📄 3tierconversion.md              # Architecture planning document
+├── 📄 legacy/docs/archive/3tierconversion.md  # Legacy architecture planning document
 └── 📄 LICENSE                         # MIT license
 ```
 

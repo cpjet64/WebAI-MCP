@@ -1,64 +1,93 @@
----
-title: EXECUTION PLAN
-author: autonomous standardizer
-version: 1.0.0
-scope: project standardization
-stack:
-  - workspace: Node.js (npm/pnpm)
-  - tooling: cargo, jest, chrome extension tooling
-created: 2026-03-01
-status: active
----
+# EXECUTION PLAN (authoritative workflow for this pass)
 
-# Execution Plan
+Last synchronized: 2026-03-01 00:00:00Z
+Branch context: `main`
+Status: Single-pass cleanup + backlog synchronization
 
-## 1) Purpose
-Produce a stable, reusable execution scaffold for this repository by creating/updating:
+## 1) Objective
 
-- `MASTER-CHECKLIST.md`
-- `EXECUTION-PLAN.md`
+Create one coherent planning source of truth for active and historical work while cleaning historical artifacts into `./legacy`.
 
-Keep docs minimal, clear, and actionable.
+This pass does not implement feature behavior changes. It:
+1. synchronizes `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` with the discovered work state,
+2. archives old planning artifacts, and
+3. updates active references to moved legacy assets.
 
-## 2) Inputs and Constraints
+## 2) Inputs and constraints
 
-- Scope: `C:\\Dev\\repos\\active\\WebAI-MCP`
-- Root instructions: `AGENTS.md`, `CLAUDE.md`, and any repository-specific docs in this tree.
-- This repository is a multi-package Node workspace (`package.json` defines workspaces: `webai-mcp`, `webai-server`) with additional Rust-oriented CI tasks in `Justfile`.
-- Existing quality controls include `npm run build:all` (per repo instructions), workspace builds/tests, and a `ci-fast`/`ci-deep` path in `Justfile`.
+- Repository: `C:\Dev\repos\active\WebAI-MCP`
+- Governance inputs: `AGENTS.md`, `CLAUDE.md`, `rules.md`.
+- Source-of-truth scope for backlog:
+  - `convert-rust.md`
+  - `todo.md`
+  - `docs/ARCHIVE.md`
+  - discovered source inspection (`AGENTS`, planning docs, legacy outputs, code references)
+- Scope limit:
+  - no production code changes,
+  - no external services,
+  - no versioned dependency shifts.
 
-## 3) Plan of Work
+## 3) Phases
 
-### Phase A — Discovery and Baseline
+### Phase 1 — Canonical baseline capture
 
-1. Verify project root and branch.
-2. Record baseline `HEAD` in `.agent-state/last-head.txt`.
-3. Enumerate critical docs (`README.md`, this AGENTS file, `Justfile`, and any `SPEC*.md`).
-4. Detect stack shape using manifest files (`package.json`, `webai-mcp/package.json`, `webai-server/package.json`).
+Goal: establish stable input set and scope for this pass.
 
-### Phase B — Canonical Standards Creation
+1. Confirm current repo state and target artifacts.
+2. Extract discovery findings:
+   - unfinished implementation surface in Rust crates (`crates/mcp`, `crates/server`, `xtask`),
+   - legacy planning artifacts under `.AGENTS/plans` and `docs/archive`,
+   - docs references to archived assets.
+3. Publish IDs in `MASTER-CHECKLIST.md` linking planning and execution tasks.
 
-1. Generate/update `MASTER-CHECKLIST.md` as a reusable checklist template.
-2. Generate/update `EXECUTION-PLAN.md` with:
-   - stack-specific build/test commands,
-   - responsibilities and agent handoff guidance,
-   - completion criteria and sequencing.
+### Phase 2 — Update canonical planning files
 
-### Phase C — Tracking and Reporting
+Goal: make `MASTER-CHECKLIST.md` + `EXECUTION-PLAN.md` authoritative.
 
-1. Create `docs/standardization-report.md` and append progress entries with timestamps.
-2. Record completion status and changed files.
+1. Update `MASTER-CHECKLIST.md` with:
+   - canonical source-of-truth statement,
+   - synchronized status IDs,
+   - migration + legacy cleanup workstreams,
+   - definition of done.
+2. Update this file (`EXECUTION-PLAN.md`) with the same IDs and deterministic sequencing.
 
-## 4) Validation Commands
+### Phase 3 — Legacy cleanup and migration to `/legacy`
 
-- `npm run build:all`
-- `git status --short` (post-change check)
-- `git diff --check` (for whitespace/format noise)
+Goal: remove active root clutter from historical planning artifacts.
 
-> Notes: This pass focuses on docs-only standardization; broader build/test execution should be run by implementation owners.
+1. Move historical planning outputs to:
+   - `legacy/plans/autonomous-full-development-pipeline-2026-02-26.md`
+   - `legacy/plans/s-project-standardizer-2026-03-01.md`
+2. Move historical docs to:
+   - `legacy/docs/archive/3tierconversion.md`
+   - `legacy/docs/archive/mcp-ts-sdk.md`
+3. Move auxiliary session note:
+   - `legacy/notes/prompt.txt`
+4. Add `legacy/README.md` with archive mapping and rationale.
 
-## 5) Completion Criteria
+### Phase 4 — Reference alignment and drift closeout
 
-- `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` exist with clear phase-based structure.
-- `docs/standardization-report.md` contains dated progress log.
-- Changes committed with conventional commit message including `[s-project-standardizer]`.
+Goal: avoid stale references after archive migration.
+
+1. Update `README.md` and `DEVELOPER_GUIDE.md` MCP protocol reference links to legacy doc path.
+2. Update `docs/ARCHIVE.md` to match the new legacy storage paths.
+3. Log completion in this plan and ensure checklist entry `No unresolved references ...` is validated.
+
+### Phase 5 — Verification and handoff
+
+Goal: confirm this planning pass is internally consistent.
+
+1. Run repository checks to validate working tree and references:
+   - `rg -n "legacy/(plans|docs/archive|notes)|MASTER-CHECKLIST|EXECUTION-PLAN" README.md DEVELOPER_GUIDE.md docs/ARCHIVE.md`
+   - `git status --short`
+   - `git diff --check`
+2. Verify no unresolved links to old archive paths remain in edited reference files.
+3. Record the changes in `docs/standardization-report.md`.
+
+## 4) Exit criteria
+
+- `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` reflect exactly the same task IDs and sequencing.
+- Legacy artifacts are moved, discoverable, and indexed under `legacy/`.
+- Active documentation references were updated to match moved legacy assets.
+- Working tree diffs are docs-only and include a clear standardization trail.
+- No pending unresolved references to moved files in edited docs.

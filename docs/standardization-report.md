@@ -14,3 +14,4 @@
 - 2026-03-01T12:10:00Z: generated `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`.
 - 2026-03-01T12:10:00Z: generating final verification summary and preparing commit.
 - 2026-03-01T14:00:00Z: finalized standardization docs as valid markdown and marked completion status.
+- 2026-03-01T20:00:00Z: completed legacy cleanup pass, moved historical artifacts into `legacy/`, updated README/DEVELOPER_GUIDE/docs archive references, and updated `MASTER-CHECKLIST.md` plus this log with closure.
