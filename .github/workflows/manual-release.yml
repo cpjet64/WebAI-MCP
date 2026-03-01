@@ -64,7 +64,12 @@ jobs:
           git config --local user.name "GitHub Action"
 
       - name: 🔧 Install dependencies (workspace setup)
-        run: npm ci --prefer-offline || (rm -f package-lock.json && npm install)
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci --prefer-offline
+          else
+            npm install --prefer-offline
+          fi
 
       - name: 🏗️ Build packages
         run: |
@@ -405,3 +410,4 @@ jobs:
             echo "- [\`@cpjet64/webai-mcp@$NEW_VERSION\`](https://www.npmjs.com/package/@cpjet64/webai-mcp)" >> $GITHUB_STEP_SUMMARY
             echo "- [\`@cpjet64/webai-server@$NEW_VERSION\`](https://www.npmjs.com/package/@cpjet64/webai-server)" >> $GITHUB_STEP_SUMMARY
           fi
+

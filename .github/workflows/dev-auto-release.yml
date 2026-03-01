@@ -98,7 +98,12 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: 🔧 Install dependencies (workspace setup)
-        run: npm ci --prefer-offline || (rm -f package-lock.json && npm install)
+        run: |
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci --prefer-offline
+          else
+            npm install --prefer-offline
+          fi
 
       - name: 🏗️ Build packages
         run: |
@@ -344,3 +349,4 @@ jobs:
           echo "npx @cpjet64/webai-mcp@dev" >> $GITHUB_STEP_SUMMARY
           echo "npx @cpjet64/webai-server@dev" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+

@@ -61,7 +61,11 @@ jobs:
           echo "🧪 Running standard tests on Node.js ${{ matrix.node-version }}"
 
           # Install root dependencies (workspace setup)
-          npm ci --prefer-offline || (rm -f package-lock.json && npm install)
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci --prefer-offline
+          else
+            npm install --prefer-offline
+          fi
 
           # Build MCP
           cd webai-mcp
@@ -93,7 +97,11 @@ jobs:
 
           # Install dependencies for cross-platform tests
           echo "📦 Installing dependencies for cross-platform tests..."
-          npm ci --prefer-offline || (rm -f package-lock.json && npm install)
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci --prefer-offline
+          else
+            npm install --prefer-offline
+          fi
 
           # Ensure we have npm context
           echo "📦 Setting up test environment..."
@@ -233,7 +241,11 @@ jobs:
 
           # Install dependencies for Windows compatibility tests
           echo "📦 Installing dependencies for Windows tests..."
-          npm ci --prefer-offline || (rm -f package-lock.json && npm install)
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci --prefer-offline
+          else
+            npm install --prefer-offline
+          fi
 
           # Test 1: Process spawning (child_process)
           echo "⚙️ Testing process spawning..."
@@ -308,7 +320,11 @@ jobs:
 
           # Install dependencies first (needed for this test type)
           echo "📦 Installing dependencies for browser tests..."
-          npm ci --prefer-offline || (rm -f package-lock.json && npm install)
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci --prefer-offline
+          else
+            npm install --prefer-offline
+          fi
 
           # Test Chrome in headless mode
           echo "🔍 Testing Chrome headless mode..."
@@ -423,7 +439,11 @@ jobs:
       - name: 🔧 Install dependencies and lint
         run: |
           # Install root dependencies (workspace setup)
-          npm ci --prefer-offline || (rm -f package-lock.json && npm install)
+          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
+            npm ci --prefer-offline
+          else
+            npm install --prefer-offline
+          fi
 
           # Build MCP
           cd webai-mcp
@@ -440,3 +460,4 @@ jobs:
           echo "## 🧹 Code Quality Results" >> $GITHUB_STEP_SUMMARY
           echo "**Platform:** Self-Hosted Linux Container" >> $GITHUB_STEP_SUMMARY
           echo "**Status:** ✅ All quality checks passed" >> $GITHUB_STEP_SUMMARY
+
