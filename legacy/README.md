@@ -12,5 +12,7 @@ Current archived items:
 - `docs/archive/3tierconversion.md` (archived here as `legacy/docs/archive/3tierconversion.md`)
 - `docs/archive/mcp-ts-sdk.md` (archived here as `legacy/docs/archive/mcp-ts-sdk.md`)
 - `prompt.txt` (archived here as `legacy/notes/prompt.txt`)
+- `RUN-THIS-PROMPT.md` (archived here as `legacy/notes/run-this-prompt.md`)
+- `commands.txt` (archived here as `legacy/notes/commands.txt`)
 
 Use `docs/ARCHIVE.md` as the authoritative index for what is archived and why.

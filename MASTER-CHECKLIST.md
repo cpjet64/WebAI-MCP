@@ -1,8 +1,8 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-01 00:00:00Z
+Last synced: 2026-03-01T22:00:00Z
 Status: Active
-Scope: Planning, standards, and cleanup only (no code behavior changes in this run).
+Scope: Planning, standards, code/doc review, and cleanup only (no code behavior changes in this run).
 
 Conventions used below:
 - `[x]` done
@@ -49,6 +49,14 @@ Conventions used below:
 - [ ] MIG-141: Verify code coverage/test status for Rust crates updated by items above before opening the workstream.
 - [ ] MIG-142: Keep `todo.md` and `convert-rust.md` headings tracked (not duplicated) and refer to them as backlog context for longer-term work.
 
+### REV-200 Full-code review findings (sweep complete on 2026-03-01)
+
+- [ ] REV-201: Complete MCP JSON-RPC parity by replacing remaining placeholder/stub paths in `crates/mcp/src/lib.rs` and `crates/mcp/src/tools.rs` for initialize/list_tools/call_tool behavior.
+- [ ] REV-202: Replace placeholder implementation with functional command dispatch in `xtask/src/main.rs`.
+- [ ] REV-203: Finalize WebSocket flow compatibility by removing legacy `data-stub` behavior in `crates/server/src/flow_adapter.rs` and reconciling `crates/server/tests/ws_flows.rs`.
+- [ ] REV-204: Expand stubbed audit handling in `crates/server/src/lib.rs` from feature-gated placeholders to production-compatible routes.
+- [ ] REV-205: Replace placeholder Google Analytics ID `G-XXXXXXXXXX` in `webai-mcp/mcp-server.ts` (or document telemetry removal).
+
 ## 3) Discovery-Verified Legacy Cleanup
 
 - [x] LEG-001: Move `autonomous-full-development-pipeline-2026-02-26.md` out of active planning roots into `legacy/plans/`.
@@ -57,6 +65,8 @@ Conventions used below:
 - [x] LEG-004: Move `mcp-ts-sdk.md` artifact into `legacy/docs/archive/`.
 - [x] LEG-005: Move session prompt note file (`prompt.txt`) into `legacy/notes/prompt.txt`.
 - [x] LEG-006: Add `legacy/README.md` inventory for archived item rationale.
+- [x] LEG-007: Move `RUN-THIS-PROMPT.md` into `legacy/notes/run-this-prompt.md`.
+- [x] LEG-008: Move `commands.txt` into `legacy/notes/commands.txt`.
 
 ## 4) Definition of Done (for this pass)
 
@@ -64,4 +74,5 @@ Conventions used below:
 - [x] `EXECUTION-PLAN.md` documents sequencing, outputs, and verification.
 - [x] All legacy moves are reflected by actual path updates in active docs.
 - [x] No unresolved references to moved files remain in README or developer docs.
+- [x] No orphaned legacy maintenance artifacts remain at root; moved items are indexed under `legacy/`.
 - [x] Working tree only contains expected updates for planning + archival cleanup.

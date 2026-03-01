@@ -17,16 +17,15 @@ Items
   - Reason: TS SDK tutorial; project is moving MCP to Rust with
     rmcp. Keep for historical reference only.
   - See: convert-rust.md and todo.md for rmcp.
-- linuxoutput.txt
-  - Reason: transient build/test terminal logs.
-  - Action: archived to avoid noise.
-- windowsoutput.txt
-  - Reason: transient build/test terminal logs.
-  - Action: archived to avoid noise.
-- security2.txt, security3.txt
-  - Reason: pasted Dependabot pages. We already pin
-    form-data to 4.0.4 in overrides.
-  - See: package.json overrides and commands.txt for audits.
+- legacy/notes/prompt.txt
+  - Reason: legacy session planning note.
+  - See: this file has historical context for earlier conversion work.
+- legacy/notes/run-this-prompt.md
+  - Reason: verification prompt used during standards cleanup.
+  - See: moved from root as part of legacy cleanup.
+- legacy/notes/commands.txt
+  - Reason: command-and-workflow notes that were superseded by the standardized CI/checklist flow.
+  - See: moved into legacy for historical context.
 
 Notes
 -----
