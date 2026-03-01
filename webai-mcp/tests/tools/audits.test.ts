@@ -341,7 +341,7 @@ describe('Audit Tools', () => {
         .reply(200, mockAuditResult);
 
       const controller = new AbortController();
-      setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      setTimeout(() => controller.abort(), 5000); // Abort earlier than test timeout
       
       try {
         await fetch('http://127.0.0.1:3025/run-performance-audit', {

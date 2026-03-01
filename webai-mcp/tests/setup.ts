@@ -1,8 +1,11 @@
 import nock from 'nock';
 import './jest.d.ts';
+import testFetch from './test-fetch';
 
-// Mock fetch globally
-global.fetch = jest.fn();
+// Mock fetch globally with an HTTP(S)-based shim so nock can intercept.
+// Do NOT override global Headers/Request/Response to keep compatibility with
+// libraries (nock/msw interceptors) that rely on WHATWG Fetch classes.
+global.fetch = jest.fn((input: any, init?: any) => (testFetch as any)(input, init)) as any;
 
 // Mock console methods to reduce noise in tests
 const originalConsole = global.console;

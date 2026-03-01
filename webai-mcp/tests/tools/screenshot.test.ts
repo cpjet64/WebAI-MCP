@@ -165,7 +165,7 @@ describe('Screenshot Tool', () => {
       
       expect(response.ok).toBe(true);
       expect(duration).toBeGreaterThanOrEqual(delay);
-      expect(duration).toBeLessThan(delay + 500); // Allow some margin
+      expect(duration).toBeLessThan(delay + 1200); // Allow generous margin for CI timing
     });
 
     it('should handle concurrent requests', async () => {

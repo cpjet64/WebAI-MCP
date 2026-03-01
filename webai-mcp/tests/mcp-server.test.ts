@@ -11,14 +11,7 @@ import nock from 'nock';
 import fs from 'fs';
 import path from 'path';
 
-// Mock the actual MCP server file
-jest.mock('../mcp-server.ts', () => {
-  const actualModule = jest.requireActual('../mcp-server.ts');
-  return {
-    ...actualModule,
-    // We'll mock specific functions as needed
-  };
-});
+// Ensure the server module can be loaded in isolated modules when needed.
 
 describe('MCP Server', () => {
   let server: McpServer;
@@ -41,7 +34,9 @@ describe('MCP Server', () => {
   describe('Server Initialization', () => {
     it('should create server with correct name and version', () => {
       expect(server).toBeDefined();
-      expect(server.name).toBe('Browser Tools MCP');
+      const info = (server as any).server?._serverInfo || (server as any)._serverInfo || {};
+      expect(info.name).toBe('Browser Tools MCP');
+      expect(info.version).toBe('1.5.0');
     });
 
     it('should read version from package.json', () => {
@@ -50,7 +45,10 @@ describe('MCP Server', () => {
       (fs.readFileSync as jest.Mock).mockReturnValue(JSON.stringify(mockPackageJson));
       (path.join as jest.Mock).mockReturnValue('/mock/package.json');
       
-      // Test version reading logic
+      // Re-require server module after setting mocks to trigger version read at import time
+      jest.isolateModules(() => {
+        require('../mcp-server.ts');
+      });
       expect(fs.readFileSync).toHaveBeenCalledWith('/mock/package.json', 'utf8');
     });
 
@@ -95,6 +93,7 @@ describe('MCP Server', () => {
     });
 
     it('should handle server discovery failure', async () => {
+      nock.cleanAll();
       nock('http://127.0.0.1:3025')
         .get('/.identity')
         .reply(500, { error: 'Server error' });
@@ -106,6 +105,7 @@ describe('MCP Server', () => {
     });
 
     it('should try alternative ports when default fails', async () => {
+      nock.cleanAll();
       // Mock failure on default port
       nock('http://127.0.0.1:3025')
         .get('/.identity')

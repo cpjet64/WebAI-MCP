@@ -13,6 +13,9 @@ export interface ErrorContext {
   httpStatus?: number;
   originalError?: Error;
   platform?: string;
+  // Optional fields used in tests and by callers
+  tool?: string;
+  details?: any;
 }
 
 export interface ErrorSolution {
@@ -363,5 +366,38 @@ export class ErrorHandler {
     }
 
     return output;
+  }
+
+  // Lightweight helpers expected by tests
+  static formatError(error: unknown): string {
+    if (error instanceof Error) return error.message;
+    if (error === null) return 'null';
+    if (error === undefined) return 'undefined';
+    try {
+      return String(error);
+    } catch {
+      return 'unknown error';
+    }
+  }
+
+  static createErrorResponse(message: string) {
+    return {
+      content: [
+        { type: 'text', text: message }
+      ],
+      isError: true as const,
+    };
+  }
+
+  static handleError(error: unknown, context: ErrorContext) {
+    const message = this.formatError(error);
+    // Structured log for tests and diagnostics
+    // eslint-disable-next-line no-console
+    console.error(
+      `Error in ${context.operation} (${context.tool}):`,
+      message,
+      context.details
+    );
+    return this.createErrorResponse(`Error in ${context.operation}: ${message}`);
   }
 }
