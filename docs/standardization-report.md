@@ -54,3 +54,7 @@
     `windows-sys@0.52.0 -> ring@0.17.14 -> rustls@0.23.31 -> ...` and
     `windows-sys@0.59.0 -> mio@1.0.4 -> tokio@1.47.1 -> webai-server`.
   - Residual status updated as accepted and non-blocking until upstream alignment path is practical.
+
+- 2026-03-02T06:39:04Z: completed a targeted `SEC-303c` residual visibility refresh:
+  - `cargo tree -i windows-sys@0.52.0`: no matching path emitted in this environment.
+  - `cargo tree -i windows-sys@0.59.0`: confirmed path through `windows-sys -> mio@1.0.4 -> tokio@1.47.1 -> webai-server` (and dependent branches) in active workspace dependency graph.
