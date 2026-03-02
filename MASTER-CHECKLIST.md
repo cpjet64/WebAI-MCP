@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-01T23:50:00Z
+Last synced: 2026-03-02T09:12:00Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -20,22 +20,23 @@ Conventions used below:
 
 ### MIG-100 Rust Migration Parity — MCP
 
-- [ ] MIG-101: Implement full JSON-RPC dispatch path in `crates/mcp/src/lib.rs` (initialize, list_tools, call_tool, notifications, schema exposure).
-- [ ] MIG-102: Implement tool execution path in `crates/mcp/src/tools.rs` for all defined tool families (logs, network, storage, screenshot, audits).
-- [ ] MIG-103: Remove remaining stub branches that return placeholder strings in `crates/mcp/src/lib.rs` once real dispatch is wired.
-- [ ] MIG-104: Ensure error responses use existing Rust error model (typed mapping and consistent messages).
-- [ ] MIG-105: Add MCP parity test coverage for tool-level JSON input/output and malformed-call behavior.
+- [x] MIG-101: Implement full JSON-RPC dispatch path in `crates/mcp/src/lib.rs` (initialize, list_tools, call_tool, notifications, schema exposure).
+- [x] MIG-102: Implement tool execution path in `crates/mcp/src/tools.rs` for all defined tool families (logs, network, storage, screenshot, audits).
+- [x] MIG-103: Remove remaining stub branches that return placeholder strings in `crates/mcp/src/lib.rs` once real dispatch is wired.
+- [x] MIG-104: Ensure error responses use existing Rust error model (typed mapping and consistent messages).
+- [x] MIG-105: Add MCP parity test coverage for tool-level JSON input/output and malformed-call behavior.
+- [x] MIG-106: Add `POST /capture-screenshot` parity endpoint in Rust HTTP router and keep parity metadata aligned.
 
 ### MIG-110 Rust Migration Parity — HTTP + WebSocket
 
 - [x] MIG-111: Replace legacy `data-stub` HTML responses in `crates/server/src/flow_adapter.rs` with real Rust-owned path where feasible.
-- [ ] MIG-112: Add route-level parity checks for `GET /capabilities`, `/identity`, `/current-url`, and related compatibility endpoints.
+- [x] MIG-112: Add route-level parity checks for `GET /capabilities`, `/identity`, `/current-url`, and related compatibility endpoints.
 - [ ] MIG-113: Review websocket schema evolution and complete any unimplemented flow messages in `crates/server/src/flow_adapter.rs` and `crates/server/src/routes_ws.rs`.
 
 ### MIG-120 Rust Migration Parity — CLI / Tooling
 
 - [x] MIG-121: Complete `xtask/src/main.rs` from placeholder to actionable automation command dispatcher.
-- [ ] MIG-122: Validate `webai` CLI command matrix against documented behavior (server/mcp/all + health/identity/help).
+- [x] MIG-122: Validate `webai` CLI command matrix against documented behavior (server/mcp/all + health/identity/help).
 - [ ] MIG-123: Align launch behavior with `todo.md` and `convert-rust.md` milestones for launch precedence and deprecation paths.
 
 ### MIG-130 Legacy cleanup and documentation accuracy
@@ -51,7 +52,7 @@ Conventions used below:
 
 ### REV-200 Full-code review findings (sweep complete on 2026-03-01)
 
-- [ ] REV-201: Complete MCP JSON-RPC parity by replacing remaining placeholder/stub paths in `crates/mcp/src/lib.rs` and `crates/mcp/src/tools.rs` for initialize/list_tools/call_tool behavior.
+- [x] REV-201: Complete MCP JSON-RPC parity by replacing remaining placeholder/stub paths in `crates/mcp/src/lib.rs` and `crates/mcp/src/tools.rs` for initialize/list_tools/call_tool behavior.
 - [x] REV-202: Replace placeholder implementation with functional command dispatch in `xtask/src/main.rs`.
 - [x] REV-203: Finalize WebSocket flow compatibility by removing legacy `data-stub` behavior in `crates/server/src/flow_adapter.rs` and reconciling `crates/server/tests/ws_flows.rs`.
 - [ ] REV-204: Expand stubbed audit handling in `crates/server/src/lib.rs` from feature-gated placeholders to production-compatible routes.
@@ -77,4 +78,4 @@ Conventions used below:
 - [x] All legacy moves are reflected by actual path updates in active docs.
 - [x] No unresolved references to moved files remain in README or developer docs.
 - [x] No orphaned legacy maintenance artifacts remain at root; moved items are indexed under `legacy/`.
-- [x] Working tree only contains expected updates for planning + archival cleanup.
+- [x] Working tree includes only the expected MCP parity code updates and planning + archival cleanup changes.

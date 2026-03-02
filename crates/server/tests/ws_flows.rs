@@ -1,7 +1,19 @@
+use std::sync::{Mutex, MutexGuard, OnceLock};
+
 use webai_server::process_text_message;
+
+static WS_TEST_ENV_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+
+fn lock_ws_env() -> MutexGuard<'static, ()> {
+    WS_TEST_ENV_LOCK
+        .get_or_init(|| Mutex::new(()))
+        .lock()
+        .expect("ws env lock poisoned")
+}
 
 #[test]
 fn click_element_missing_selector() {
+    let _guard = lock_ws_env();
     let req = serde_json::json!({
         "requestId": "c1",
         "type": "click-element",
@@ -15,6 +27,7 @@ fn click_element_missing_selector() {
 
 #[test]
 fn fill_input_missing_text() {
+    let _guard = lock_ws_env();
     let req = serde_json::json!({
         "requestId": "f1",
         "type": "fill-input",
@@ -28,6 +41,7 @@ fn fill_input_missing_text() {
 
 #[test]
 fn click_element_no_clients_error() {
+    let _guard = lock_ws_env();
     let req = serde_json::json!({
         "requestId": "c2",
         "type": "click-element",
@@ -41,6 +55,7 @@ fn click_element_no_clients_error() {
 
 #[test]
 fn fill_input_no_clients_error() {
+    let _guard = lock_ws_env();
     let req = serde_json::json!({
         "requestId": "f2",
         "type": "fill-input",
@@ -54,6 +69,7 @@ fn fill_input_no_clients_error() {
 
 #[test]
 fn select_option_missing_value() {
+    let _guard = lock_ws_env();
     let req = serde_json::json!({
         "requestId": "s1",
         "type": "select-option",
@@ -67,6 +83,7 @@ fn select_option_missing_value() {
 
 #[test]
 fn select_option_no_clients_error() {
+    let _guard = lock_ws_env();
     let req = serde_json::json!({
         "requestId": "s2",
         "type": "select-option",
@@ -80,6 +97,7 @@ fn select_option_no_clients_error() {
 
 #[test]
 fn submit_form_missing_selector() {
+    let _guard = lock_ws_env();
     let req = serde_json::json!({
         "requestId": "u1",
         "type": "submit-form",
@@ -93,6 +111,7 @@ fn submit_form_missing_selector() {
 
 #[test]
 fn submit_form_no_clients_error() {
+    let _guard = lock_ws_env();
     let req = serde_json::json!({
         "requestId": "u2",
         "type": "submit-form",
@@ -106,6 +125,7 @@ fn submit_form_no_clients_error() {
 
 #[test]
 fn get_html_selector_present_but_no_clients_error() {
+    let _guard = lock_ws_env();
     // Ensure legacy provider for this test
     std::env::remove_var("WEBAI_BROWSER_PROVIDER");
     // Force backpressure error to avoid env races across tests
@@ -124,6 +144,7 @@ fn get_html_selector_present_but_no_clients_error() {
 
 #[test]
 fn get_html_provider_rust_returns_structured_payload() {
+    let _guard = lock_ws_env();
     std::env::set_var("WEBAI_BROWSER_PROVIDER", "rust");
     std::env::set_var("WEBAI_WS_MAX_INFLIGHT", "16");
     let req = serde_json::json!({
@@ -145,6 +166,7 @@ fn get_html_provider_rust_returns_structured_payload() {
 
 #[test]
 fn get_html_timeout_simulated() {
+    let _guard = lock_ws_env();
     std::env::set_var("WEBAI_TEST_WS_FORCE_TIMEOUT", "get-html-by-selector");
     let req = serde_json::json!({
         "requestId": "h-timeout",
@@ -161,6 +183,7 @@ fn get_html_timeout_simulated() {
 
 #[test]
 fn click_element_provider_rust_ok() {
+    let _guard = lock_ws_env();
     std::env::set_var("WEBAI_BROWSER_PROVIDER", "rust");
     let req = serde_json::json!({
         "requestId": "c-ok",
@@ -180,6 +203,7 @@ fn click_element_provider_rust_ok() {
 
 #[test]
 fn fill_input_provider_rust_ok() {
+    let _guard = lock_ws_env();
     std::env::set_var("WEBAI_BROWSER_PROVIDER", "rust");
     let req = serde_json::json!({
         "requestId": "f-ok",
@@ -200,6 +224,7 @@ fn fill_input_provider_rust_ok() {
 
 #[test]
 fn select_option_provider_rust_ok() {
+    let _guard = lock_ws_env();
     std::env::set_var("WEBAI_BROWSER_PROVIDER", "rust");
     let req = serde_json::json!({
         "requestId": "s-ok",
@@ -220,6 +245,7 @@ fn select_option_provider_rust_ok() {
 
 #[test]
 fn submit_form_provider_rust_ok() {
+    let _guard = lock_ws_env();
     std::env::set_var("WEBAI_BROWSER_PROVIDER", "rust");
     let req = serde_json::json!({
         "requestId": "u-ok",

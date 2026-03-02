@@ -233,3 +233,13 @@ pub async fn session_storage_unavailable() -> (StatusCode, Json<serde_json::Valu
         Json(json!({"error": "No clients connected"})),
     )
 }
+
+pub async fn capture_screenshot_unavailable() -> (StatusCode, Json<serde_json::Value>) {
+    (
+        StatusCode::SERVICE_UNAVAILABLE,
+        Json(json!({
+            "error": "Screenshot capture unavailable in rust provider",
+            "requires_client": false
+        })),
+    )
+}

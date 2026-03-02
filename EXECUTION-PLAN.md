@@ -1,16 +1,21 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-01T23:50:00Z
+Last synchronized: 2026-03-02T09:15:00Z
 Branch context: `main`
-Status: Single-pass cleanup + full review synchronization
+Status: MCP parity implementation + planning alignment
+
+Task status snapshot (this pass):
+- MIG-112: Completed.
+- MIG-122: Completed.
 
 ## 1) Objective
 
-Create one coherent planning source of truth for active and historical work while cleaning historical artifacts into `./legacy`.
+Create one coherent planning source of truth for active and historical work while completing Rust MCP parity dispatch updates in the migration layer and cleaning remaining legacy artifacts into `./legacy`.
 
 This pass implements the discovered cleanup items and closes the targeted backlog findings:
 1. synchronizes `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` with the discovered work state,
-2. performs a full code/docs review for unfinished work markers (TODO/placeholder/stub),
+2. implements MCP parity dispatch at the HTTP bridge level (`initialize`, `list_tools`, `call_tool`) and updates JSON-RPC envelopes,
+3. wires missing Rust server parity route for screenshot capture and keeps audit endpoint responses aligned with explicit provider messaging,
 3. applies the scoped production-facing cleanup fixes (`REV-202`, `REV-203`, `REV-205`, `REV-206`, `REV-207`),
 4. archives old planning artifacts, and
 5. updates active references to moved legacy assets.
@@ -44,7 +49,8 @@ Goal: establish stable input set and scope for this pass.
    - legacy planning artifacts under `.AGENTS/plans` and `docs/archive`,
    - docs references to archived assets.
 3. Publish IDs in `MASTER-CHECKLIST.md` linking planning and execution tasks.
-4. Record baseline findings in `docs/standardization-report.md`.
+4. Publish required MCP parity tasks and acceptance criteria under the same IDs.
+5. Record baseline findings in `docs/standardization-report.md`.
 
 ### Phase 2 — Update canonical planning files
 
@@ -57,6 +63,7 @@ Goal: make `MASTER-CHECKLIST.md` + `EXECUTION-PLAN.md` authoritative.
    - full review findings from this sweep (`REV-*` tasks),
    - definition of done.
 2. Update this file (`EXECUTION-PLAN.md`) with the same IDs and deterministic sequencing.
+3. Keep task IDs aligned to this run’s completed/in-progress state.
 
 ### Phase 3 — Legacy cleanup and migration to `/legacy`
 
@@ -104,5 +111,5 @@ Goal: confirm this planning pass is internally consistent.
 - `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` reflect exactly the same task IDs and sequencing.
 - Legacy artifacts are moved, discoverable, and indexed under `legacy/`.
 - Active documentation references were updated to match moved legacy assets.
-- Working tree diffs are docs-only and include a clear standardization trail.
+- Working tree includes both code-level parity fixes and planning updates required by this pass.
 - No pending unresolved references to moved files in edited docs.

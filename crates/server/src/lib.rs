@@ -60,6 +60,7 @@ pub fn router_with_port(port: u16) -> Router {
         .route("/__ping", get(|| async { "ok" }))
         .route("/.port", get(r::port_num))
         .route("/.identity", get(r::identity))
+        .route("/identity", get(r::identity))
         .route("/console-logs", get(r::console_logs))
         .route("/console-errors", get(r::console_errors))
         .route("/network-errors", get(r::network_errors))
@@ -68,6 +69,10 @@ pub fn router_with_port(port: u16) -> Router {
         .route("/cookies", get(r::cookies_unavailable))
         .route("/local-storage", get(r::local_storage_unavailable))
         .route("/session-storage", get(r::session_storage_unavailable))
+        .route(
+            "/capture-screenshot",
+            post(r::capture_screenshot_unavailable),
+        )
         .route("/selected-element", post(r::set_selected_element))
         .route("/selected-element", get(r::get_selected_element))
         .route("/wipelogs", post(r::wipe_logs))
@@ -76,7 +81,6 @@ pub fn router_with_port(port: u16) -> Router {
         .route("/test-connectivity", post(rp::test_connectivity))
         .route("/capabilities", get(routes_caps::capabilities))
         .route("/extension-ws", get(routes_ws::extension_ws))
-        // Audit endpoints (stubbed under feature gate)
         .route("/accessibility-audit", post(audit::accessibility))
         .route("/performance-audit", post(audit::performance))
         .route("/seo-audit", post(audit::seo))
@@ -110,6 +114,7 @@ pub fn router_from_state(state: AppState) -> Router {
         .route("/__ping", get(|| async { "ok" }))
         .route("/.port", get(r::port_num))
         .route("/.identity", get(r::identity))
+        .route("/identity", get(r::identity))
         .route("/console-logs", get(r::console_logs))
         .route("/console-errors", get(r::console_errors))
         .route("/network-errors", get(r::network_errors))
@@ -118,6 +123,10 @@ pub fn router_from_state(state: AppState) -> Router {
         .route("/cookies", get(r::cookies_unavailable))
         .route("/local-storage", get(r::local_storage_unavailable))
         .route("/session-storage", get(r::session_storage_unavailable))
+        .route(
+            "/capture-screenshot",
+            post(r::capture_screenshot_unavailable),
+        )
         .route("/selected-element", post(r::set_selected_element))
         .route("/selected-element", get(r::get_selected_element))
         .route("/wipelogs", post(r::wipe_logs))
@@ -126,7 +135,6 @@ pub fn router_from_state(state: AppState) -> Router {
         .route("/test-connectivity", post(rp::test_connectivity))
         .route("/capabilities", get(routes_caps::capabilities))
         .route("/extension-ws", get(routes_ws::extension_ws))
-        // Audit endpoints (stubbed under feature gate)
         .route("/accessibility-audit", post(audit::accessibility))
         .route("/performance-audit", post(audit::performance))
         .route("/seo-audit", post(audit::seo))

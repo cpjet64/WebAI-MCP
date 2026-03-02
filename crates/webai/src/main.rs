@@ -1,4 +1,7 @@
-use std::net::SocketAddr;
+use std::net::{SocketAddr, TcpStream, ToSocketAddrs};
+use std::time::Duration;
+
+use serde_json::{json, Value};
 
 #[tokio::main(flavor = "multi_thread")]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
@@ -19,21 +22,41 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 return Ok(());
             }
             if args.get(1).map(|s| s.as_str()) == Some("rpc") {
-                // Usage: webai mcp rpc initialize <id>
-                //     or webai mcp rpc call <tool> <id>
-                match (args.get(2).map(String::as_str), args.get(3), args.get(4)) {
-                    (Some("initialize"), Some(id), _) => {
-                        let v = webai_mcp::initialize_jsonrpc(serde_json::json!(id));
-                        println!("{}", v);
-                        return Ok(());
+                match args.get(2).map(String::as_str) {
+                    Some("initialize") => {
+                        if let Some(id) = args.get(3) {
+                            let v = webai_mcp::initialize_jsonrpc(parse_jsonrpc_id(id));
+                            println!("{}", v);
+                            return Ok(());
+                        }
+                        eprintln!("Usage: webai mcp rpc initialize <id>");
+                        std::process::exit(2);
                     }
-                    (Some("call"), Some(method), Some(id)) => {
-                        let v = webai_mcp::call_tool_jsonrpc(method, serde_json::json!(id));
-                        println!("{}", v);
-                        return Ok(());
+                    Some("call") => {
+                        let tool = args.get(3);
+                        let id = args.get(4);
+                        let payload =
+                            match parse_optional_json_payload(args.get(5).map(String::as_str)) {
+                                Ok(payload) => payload,
+                                Err(err) => {
+                                    eprintln!("Invalid payload: {err}");
+                                    eprintln!(
+                                        "Usage: webai mcp rpc call <tool> <id> [payload-json]"
+                                    );
+                                    std::process::exit(2);
+                                }
+                            };
+                        if let (Some(tool), Some(id)) = (tool, id) {
+                            let v =
+                                webai_mcp::call_tool_jsonrpc(tool, parse_jsonrpc_id(id), payload);
+                            println!("{}", v);
+                            return Ok(());
+                        }
+                        eprintln!("Usage: webai mcp rpc call <tool> <id> [payload-json]");
+                        std::process::exit(2);
                     }
                     _ => {
-                        eprintln!("Usage: webai mcp rpc initialize <id> | call <tool> <id>");
+                        eprintln!("Usage: webai mcp rpc initialize <id> | call <tool> <id> [payload-json]");
                         std::process::exit(2);
                     }
                 }
@@ -58,7 +81,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             if args.get(1).map(|s| s.as_str()) == Some("call") {
                 if let Some(tool) = args.get(2) {
                     print_mcp_call_result(tool);
-                    std::process::exit(1);
+                    return Ok(());
                 } else {
                     eprintln!("Usage: webai mcp call <tool-name>");
                     std::process::exit(2);
@@ -71,6 +94,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         "capabilities" => {
             print_capabilities();
+        }
+        "identity" => {
+            print_mcp_identity();
+        }
+        "health" => {
+            let opts = parse_opts(&args[1..]);
+            print_health(&opts);
         }
         "all" => {
             let opts = parse_opts(&args[1..]);
@@ -90,8 +120,20 @@ fn print_help() {
           server        Run HTTP/WS server (default)\n\
           mcp           Run MCP stdio server\n\
           all           Run server and MCP together\n\
+          identity      Print MCP identity JSON\n\
+          health        Check server reachability (host/port)\n\
+          tools         Print available MCP tools\n\
+          capabilities  Print server capability payload\n\
           help          Show this help\n\
           --version     Print version\n\
+         \n\
+         MCP subcommands:\n\
+          webai mcp rpc initialize <id>\n\
+          webai mcp rpc call <tool> <id> [payload-json]\n\
+          webai mcp --list-tools | webai mcp list\n\
+          webai mcp list-json\n\
+          webai mcp init\n\
+          webai mcp call <tool>\n\
          \n\
          Env:\n\
           HOST          Bind host (default 127.0.0.1)\n\
@@ -190,16 +232,22 @@ fn parse_opts(args: &[String]) -> Opts {
     o
 }
 
-async fn run_server(opts: Opts) -> Result<(), Box<dyn std::error::Error>> {
-    use webai_server::{router_with_port, serve_with_shutdown};
+fn resolve_host_port(opts: &Opts) -> (String, u16) {
     let host = opts
         .host
+        .clone()
         .or_else(|| std::env::var("HOST").ok())
-        .unwrap_or_else(|| "127.0.0.1".into());
-    let port: u16 = opts
+        .unwrap_or_else(|| "127.0.0.1".to_string());
+    let port = opts
         .port
         .or_else(|| std::env::var("PORT").ok().and_then(|v| v.parse().ok()))
         .unwrap_or(3025);
+    (host, port)
+}
+
+async fn run_server(opts: Opts) -> Result<(), Box<dyn std::error::Error>> {
+    use webai_server::{router_with_port, serve_with_shutdown};
+    let (host, port) = resolve_host_port(&opts);
     let router = if let (Some(sl), Some(ql)) = (opts.string_limit, opts.query_limit) {
         let state = webai_server::new_state_with(port, sl, ql);
         webai_server::router_from_state(state)
@@ -269,11 +317,9 @@ async fn run_mcp() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 async fn run_all(opts: Opts) -> Result<(), Box<dyn std::error::Error>> {
-    // Start server in background; attempt MCP in foreground.
     let srv = tokio::spawn(async move {
         let _ = run_server(opts).await;
     });
-    // If MCP fails (e.g., rmcp not enabled), print error and keep server running.
     if let Err(e) = webai_mcp::start_stdio() {
         eprintln!("webai all (mcp): {}", e);
     }
@@ -298,6 +344,45 @@ fn print_mcp_identity() {
     );
 }
 
+fn parse_health_output(host: &str, port: u16, health_ok: bool) -> Value {
+    let mode = match webai_server::provider_mode() {
+        webai_server::ProviderMode::Legacy => "legacy",
+        webai_server::ProviderMode::Rust => "rust",
+    };
+    json!({
+        "status": if health_ok { "ok" } else { "unhealthy" },
+        "provider": mode,
+        "version": env!("CARGO_PKG_VERSION"),
+        "host": host,
+        "port": port,
+    })
+}
+
+fn print_health(opts: &Opts) {
+    let (host, port) = resolve_host_port(opts);
+    let mut addresses = format!("{host}:{port}").to_socket_addrs().ok();
+    let mut health_ok = false;
+    if let Some(addrs) = addresses.as_mut() {
+        health_ok = addrs
+            .find_map(|addr| {
+                TcpStream::connect_timeout(&addr, Duration::from_millis(500))
+                    .ok()
+                    .map(|_| ())
+            })
+            .is_some();
+    }
+    if opts.log_json {
+        println!("{}", parse_health_output(&host, port, health_ok));
+    } else if health_ok {
+        println!("webai service healthy on {host}:{port}");
+    } else {
+        println!("webai service unhealthy on {host}:{port}");
+    }
+    if !health_ok {
+        std::process::exit(1);
+    }
+}
+
 fn print_capabilities() {
     let caps = webai_server::build_capabilities();
     println!("{}", caps);
@@ -310,9 +395,23 @@ fn print_mcp_call_result(tool: &str) {
     }
 }
 
+fn parse_jsonrpc_id(raw: &str) -> Value {
+    serde_json::from_str(raw).unwrap_or_else(|_| Value::String(raw.to_string()))
+}
+
+fn parse_optional_json_payload(raw: Option<&str>) -> Result<Option<Value>, String> {
+    match raw {
+        None => Ok(None),
+        Some(raw) => serde_json::from_str(raw)
+            .map(Some)
+            .map_err(|e| e.to_string()),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
     #[test]
     fn parse_flags_host_port() {
         let args = vec![
@@ -348,5 +447,25 @@ mod tests {
         assert_eq!(o.query_limit, Some(222));
         assert!(o.log_json);
         assert_eq!(o.log_level.as_deref(), Some("debug"));
+    }
+
+    #[test]
+    fn parse_jsonrpc_id_from_json_and_plain() {
+        assert_eq!(parse_jsonrpc_id("42"), json!(42));
+        assert_eq!(parse_jsonrpc_id("abc"), json!("abc"));
+    }
+
+    #[test]
+    fn parse_optional_json_payload_accepts_valid_json_and_missing() {
+        assert!(parse_optional_json_payload(None).is_ok());
+        assert_eq!(
+            parse_optional_json_payload(Some(r#"{"foo": "bar"}"#)).unwrap(),
+            Some(json!({"foo": "bar"}))
+        );
+    }
+
+    #[test]
+    fn parse_optional_json_payload_rejects_invalid_json() {
+        assert!(parse_optional_json_payload(Some("not json")).is_err());
     }
 }

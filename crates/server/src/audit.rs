@@ -3,12 +3,20 @@ use axum::Json;
 
 #[cfg(feature = "audit-lighthouse")]
 fn audit_unavailable_json() -> serde_json::Value {
-    serde_json::json!({"error": "Audit not available"})
+    serde_json::json!({
+        "error": "Audit endpoint unavailable",
+        "reason": "lighthouse feature is enabled but no browser audit provider is currently configured",
+        "requires_client": false
+    })
 }
 
 #[cfg(not(feature = "audit-lighthouse"))]
 fn audit_unavailable_json() -> serde_json::Value {
-    serde_json::json!({"error": "Audit feature disabled"})
+    serde_json::json!({
+        "error": "Audit endpoint unavailable",
+        "reason": "build does not include the 'audit-lighthouse' feature",
+        "requires_client": false
+    })
 }
 
 pub async fn accessibility() -> (StatusCode, Json<serde_json::Value>) {
