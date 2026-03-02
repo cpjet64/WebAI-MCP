@@ -1,6 +1,6 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-02T13:20:00Z
+Last synchronized: 2026-03-02T15:10:00Z
 Branch context: `main`
 Status: MCP parity implementation + planning alignment + post-merge hardening
 
@@ -15,6 +15,10 @@ Task status snapshot (this pass):
 - SEC-300: Completed.
 - SEC-302: Completed.
 - SEC-303: Completed.
+- PERF-401: Completed.
+- PERF-402: Completed.
+- PERF-403: Completed.
+- PERF-404: Completed.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
 
 ## 1) Objective
@@ -32,6 +36,7 @@ This pass implements the discovered cleanup items and closes the targeted backlo
 
 Current residual item to be documented:
 - SEC-302: Track remaining transitive `windows-sys` duplicate as accepted residual (`windows-sys@0.52.0` via `ring`, `windows-sys@0.59.0` via `mio`/`tokio`) until direct source alignment is feasible.
+- PERF-400: Keep `docs/optimization-report.md` aligned with completed optimization findings and full verification evidence (`npm run build:all`, `npm run test`, `just ci-deep`).
 
 ## 2) Inputs and constraints
 
@@ -123,6 +128,7 @@ Goal: confirm this planning pass is internally consistent.
    - Residual status: accepted residual risk for `windows-sys` duplicates only (0.52.0 and 0.59.0); captured for future dependency alignment when upstreams migrate.
 6. Document all residual risks and cleanup status in `docs/standardization-report.md`.
 7. Run `just ci-deep` and block handoff until all quality gates pass.
+8. Refresh `docs/optimization-report.md` with complete verification evidence for `PERF-400`.
 
 ## 4) Exit criteria
 
@@ -131,6 +137,22 @@ Goal: confirm this planning pass is internally consistent.
 - Active documentation references were updated to match moved legacy assets.
 - Working tree includes both code-level parity fixes and planning updates required by this pass.
 - No pending unresolved references to moved files in edited docs.
+
+## 5) PERF-400 Execution Evidence (sync run)
+
+Goal: keep `PERF-400` evidence in-band with this pass.
+
+### 1) Completed findings are recorded in `docs/optimization-report.md`
+- `PERF-401` optimization pass executed.
+- `PERF-402` and `PERF-403` were implemented in `webai-server/browser-connector.ts`.
+
+### 2) Verification matrix captured for this pass
+- `npm run build:all` — PASS
+- `npm run test` — PASS
+- `just ci-deep` — PASS
+
+### 3) Residual acceptance
+- Track transitive duplicate `windows-sys` warning as an accepted residual per `SEC-302` until upstream alignment is possible.
 
 ## 6) Post-merge hardening and residual risk maintenance
 

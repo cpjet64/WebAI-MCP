@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-02T13:20:00Z
+Last synced: 2026-03-02T15:10:00Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -67,6 +67,13 @@ Residual risk:
 - [x] SEC-303b: Run dependency risk checks (`cargo deny check`, `cargo audit`, `python scripts/enforce_advisory_policy.py`) and confirm residual status for `windows-sys`.
 - [x] SEC-303c: Run monthly dependency-visibility checks (`cargo tree -i windows-sys`) and archive the evidence.
 - [x] SEC-303d: Add recurring post-merge hardening cadence (weekly/monthly) to the plan execution context and report it in `docs/standardization-report.md`.
+
+### PERF-400 Browser connector performance optimizer pass
+
+- [x] PERF-401: Execute `s-autonomous-performance-optimizer` and document optimization findings in `docs/optimization-report.md`.
+- [x] PERF-402: Fix request-specific callback routing in `webai-server/browser-connector.ts` to avoid cross-request callback contamination.
+- [x] PERF-403: Convert screenshot persistence path to async filesystem operations in `webai-server/browser-connector.ts`.
+- [x] PERF-404: Execute full local verification after optimization changes (`npm run build:all`, `npm run test`, `just ci-deep`).
 
 ### REV-200 Full-code review findings (sweep complete on 2026-03-01)
 
