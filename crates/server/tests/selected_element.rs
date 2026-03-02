@@ -54,3 +54,24 @@ async fn selected_element_set_and_get_roundtrip() {
     assert_eq!(el.id, "main");
     assert_eq!(el.tag_name, "DIV");
 }
+
+#[tokio::test]
+async fn selected_element_get_when_not_set_returns_message() {
+    let state = new_state(0);
+    let app = router_from_state(state);
+
+    let res = app
+        .oneshot(
+            Request::builder()
+                .uri("/selected-element")
+                .body(Body::empty())
+                .expect("request"),
+        )
+        .await
+        .expect("response");
+    assert_eq!(res.status(), StatusCode::OK);
+
+    let body = body::to_bytes(res.into_body(), 64 * 1024).await.unwrap();
+    let v: serde_json::Value = serde_json::from_slice(&body).unwrap();
+    assert_eq!(v["message"], "No element selected");
+}

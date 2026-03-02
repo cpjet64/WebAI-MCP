@@ -1,0 +1,11 @@
+981d9c7aeb4036af2dfd9d4813dbcdc8f59d9cea
+
+Rollback instructions:
+- To start from this coverage worktree base state:
+  - git switch main
+  - git switch -c restore-coverage-base
+  - git reset --hard 981d9c7aeb4036af2dfd9d4813dbcdc8f59d9cea
+
+Current session:
+- Branch: agent/coverage-max-2026-03-02
+- Start time: 2026-03-02T20:15:00Z

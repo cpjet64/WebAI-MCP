@@ -622,4 +622,43 @@ mod call_tests {
         let no_error = json!({"status": "ok"});
         assert!(extract_error_message(&no_error).is_none());
     }
+
+    #[test]
+    fn call_tool_jsonrpc_returns_error_for_non_success_http() {
+        use std::io::{Read, Write};
+        use std::thread;
+
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        let port_text = port.to_string();
+
+        let handle = thread::spawn(move || {
+            let (mut stream, _) = listener.accept().unwrap();
+            let mut request = [0u8; 1024];
+            let _ = stream.read(&mut request);
+            let body = b"{\"error\":\"service unavailable\"}";
+            let response = format!(
+                "HTTP/1.1 503 Service Unavailable\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{}",
+                body.len(),
+                std::str::from_utf8(body).unwrap()
+            );
+            let _ = stream.write_all(response.as_bytes());
+            stream.flush().unwrap();
+        });
+
+        with_env_vars(
+            &[
+                ("BROWSER_TOOLS_HOST", Some("127.0.0.1")),
+                ("BROWSER_TOOLS_PORT", Some(&port_text)),
+            ],
+            || {
+                let response = call_tool_jsonrpc("getConsoleLogs", json!(1), None);
+                assert_eq!(response["error"]["code"], -32000);
+                let message = response["error"]["message"].as_str().unwrap_or_default();
+                assert!(message.contains("service unavailable"));
+            },
+        );
+
+        handle.join().unwrap();
+    }
 }

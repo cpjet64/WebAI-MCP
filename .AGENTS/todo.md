@@ -23,3 +23,24 @@
 - [x] Re-ran `cargo llvm-cov nextest --all-features --fail-under-regions 73` (74.92%).
 - [x] Re-ran security posture checks: `cargo deny check`, `cargo audit`, and `python scripts/enforce_advisory_policy.py`.
 - [x] Re-ran `cargo tree -i windows-sys` and confirmed residual accepted duplicate path.
+
+## Coverage Maximizer (2026-03-02)
+
+- [x] Create and use dedicated coverage work branch `agent/coverage-max-2026-03-02` (done in isolated worktree).
+- [x] Record rollback hash in `.agent-state/last-head.txt`.
+- [x] Archive prior coverage report into `legacy/coverage/` as `legacy/coverage/coverage-report-2026-03-02-prework.md`.
+- [x] Run full Rust coverage using `cargo nextest --all-features` and `cargo llvm-cov nextest --all-features --fail-under-regions 73 --lcov --output-path lcov.info` in coverage worktree.
+- [x] Generate `docs/coverage-report.md` with before/after line/region/function metrics.
+- [x] Investigate uncovered regions and classify as dead code / coverable / comment-required.
+- [x] Add/extend tests for coverable gaps.
+- [ ] Add strict inline comments for unavoidable uncovered/uncoverable lines.
+- [x] Run post-change `cargo nextest` + `cargo llvm-cov` and capture final report.
+- [x] Commit atomic changes and document removed dead code/test additions in coverage report.
+
+## Review (2026-03-02T20:25:22Z)
+
+- [x] Confirmed all touched coverage-targeted tests are passing and deterministic.
+- [x] Confirmed `cargo nextest run --all-features` pass count: 148 passed.
+- [x] Confirmed `cargo llvm-cov nextest --all-features --fail-under-regions 73 --lcov --output-path lcov.info` passes in coverage worktree.
+- [x] Confirmed end-line metrics for this pass: Regions 78.09%, Functions 81.68%, Lines 75.29% (baseline 74.92 / 80.05 / 71.54 from main branch run).
+- [x] Confirmed prior coverage-report snapshot is archived under `legacy/coverage/`.
