@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-02T08:00:00Z
+Last synced: 2026-03-02T10:00:00Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -59,6 +59,14 @@ Conventions used below:
 Residual risk:
 - `windows-sys` duplicate is transitive via current `ring` and `tokio/mio` stacks in this dependency graph.
 - This is currently non-blocking because it is not exploitable from direct dependency policy and is captured for future dependency alignment work.
+
+### SEC-303 Post-merge hardening and residual monitoring
+
+- [x] SEC-303: Establish and execute the first post-merge hardening cycle on `main` (quality gates, dependency drift, residual monitoring).
+- [x] SEC-303a: Run `just ci-deep` and record pass status with all checks.
+- [x] SEC-303b: Run dependency risk checks (`cargo deny check`, `cargo audit`, `python scripts/enforce_advisory_policy.py`) and confirm residual status for `windows-sys`.
+- [x] SEC-303c: Run monthly dependency-visibility checks (`cargo tree -i windows-sys`) and archive the evidence.
+- [x] SEC-303d: Add recurring post-merge hardening cadence (weekly/monthly) to the plan execution context and report it in `docs/standardization-report.md`.
 
 ### REV-200 Full-code review findings (sweep complete on 2026-03-01)
 

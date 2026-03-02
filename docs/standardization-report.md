@@ -37,7 +37,20 @@
   - `npm run build:all`, `npm run test`, `npm run test:all`: PASS.
   - `cargo deny check` now reports no license policy warnings and no `tower` duplicate; only one remaining duplicate `windows-sys` warning is transitive (`windows-sys@0.52.0` via `ring` and `windows-sys@0.59.0` via `mio`/`tokio`).
   - `rg -n "mutant|mutants|mutator"`: no matches in repository.
-- 2026-03-02T08:00:00Z: closed `SEC-302` as accepted residual dependency risk:
+ - 2026-03-02T08:00:00Z: closed `SEC-302` as accepted residual dependency risk:
   - confirmed via `cargo deny check bans` that `windows-sys` remains dual-pinned transitively (`0.52.0` from `ring` chain and `0.59.0` from `mio`/`tokio` chains),
   - no code-level remediation was available without broader upstream/runtime-version migration,
   - planning artifacts now reflect explicit residual status and closure.
+
+- 2026-03-02T10:00:00Z: ran SEC-303 post-merge hardening checks on `main`:
+  - `just ci-deep`: PASS across full quality stack (`hygiene`, `fmt`, `clippy`, `machete`, `build`, `nextest` default and all-features, `deny check`, `audit`, advisory policy enforcement, `doc`).
+  - `cargo deny check`: PASS with expected residual warning only (`windows-sys` duplicate entries remain in lockfile; no other new policy issues).
+  - `cargo audit`: PASS (`No advisory exceptions` baseline is clean).
+  - `python scripts/enforce_advisory_policy.py`: PASS (`No advisory exceptions` baseline is clean).
+  - `cargo tree -i windows-sys` required explicit version selectors due duplicate lock entries:
+    - `cargo tree -i windows-sys@0.52.0`: no platform-visible dependency path emitted in this environment.
+    - `cargo tree -i windows-sys@0.59.0`: transitive chain via `mio@1.0.4 -> tokio@1.47.1 -> webai-server` confirmed.
+  - `cargo deny check` duplicate graph output remains the canonical residual evidence:
+    `windows-sys@0.52.0 -> ring@0.17.14 -> rustls@0.23.31 -> ...` and
+    `windows-sys@0.59.0 -> mio@1.0.4 -> tokio@1.47.1 -> webai-server`.
+  - Residual status updated as accepted and non-blocking until upstream alignment path is practical.

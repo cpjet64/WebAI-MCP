@@ -1,8 +1,8 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-02T08:00:00Z
+Last synchronized: 2026-03-02T10:00:00Z
 Branch context: `main`
-Status: MCP parity implementation + planning alignment
+Status: MCP parity implementation + planning alignment + post-merge hardening
 
 Task status snapshot (this pass):
 - MIG-112: Completed.
@@ -14,6 +14,7 @@ Task status snapshot (this pass):
 - MIG-142: Completed.
 - SEC-300: Completed.
 - SEC-302: Completed.
+- SEC-303: Completed.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
 
 ## 1) Objective
@@ -130,3 +131,16 @@ Goal: confirm this planning pass is internally consistent.
 - Active documentation references were updated to match moved legacy assets.
 - Working tree includes both code-level parity fixes and planning updates required by this pass.
 - No pending unresolved references to moved files in edited docs.
+
+## 6) Post-merge hardening and residual risk maintenance
+
+Goal: keep quality and dependency posture healthy after completion of the migration and cleanup pass.
+
+- Run `just ci-deep`, `cargo deny check`, `cargo audit`, and `python scripts/enforce_advisory_policy.py` on a recurring weekly cadence.
+- Run `cargo tree -i windows-sys` on a recurring monthly cadence and keep residual risk evidence in this plan/report.
+- Track acceptance state for transitive `windows-sys` duplicates in `MASTER-CHECKLIST.md` as part of `SEC-303`.
+- Expand into code changes only when a recurring check becomes blocking.
+
+### Current residual baseline
+
+- `windows-sys` duplicate remains transitive-only (`0.52.0` via `ring`, `0.59.0` via `mio`/`tokio`) and is accepted until upstream stack alignment is feasible.
