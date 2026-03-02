@@ -1,6 +1,6 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-02T12:10:00Z
+Last synchronized: 2026-03-02T06:14:15Z
 Branch context: `main`
 Status: MCP parity implementation + planning alignment
 
@@ -12,6 +12,8 @@ Task status snapshot (this pass):
 - REV-204: Completed.
 - MIG-141: Completed.
 - MIG-142: Completed.
+- SEC-300: Completed.
+- SEC-302: In progress.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
 
 ## 1) Objective
@@ -23,8 +25,12 @@ This pass implements the discovered cleanup items and closes the targeted backlo
 2. implements MCP parity dispatch at the HTTP bridge level (`initialize`, `list_tools`, `call_tool`) and updates JSON-RPC envelopes,
 3. wires missing Rust server parity route for screenshot capture and keeps audit endpoint responses aligned with explicit provider messaging,
 3. applies the scoped production-facing cleanup fixes (`REV-202`, `REV-203`, `REV-205`, `REV-206`, `REV-207`),
-4. archives old planning artifacts, and
-5. updates active references to moved legacy assets.
+4. completes residual policy and dependency hygiene (`deny.toml`, `tower` version normalization) to reduce `cargo deny` risk,
+5. archives old planning artifacts, and
+6. updates active references to moved legacy assets.
+
+Current residual item to be documented:
+- SEC-302: Assess remaining transitive `windows-sys` duplicate and keep in-plan until direct source alignment is available.
 
 ## 2) Inputs and constraints
 
@@ -110,8 +116,11 @@ Goal: confirm this planning pass is internally consistent.
    - `git status --short`
    - `git diff --check`
 2. Verify no unresolved links to old archive paths remain in edited reference files.
-3. Record the changes in `docs/standardization-report.md`.
-4. Run `just ci-deep` and block handoff until all quality gates pass.
+3. Remove unused license allowlist entries from `deny.toml`.
+4. Align `crates/server/Cargo.toml` tower versions to a single dependency line/version baseline.
+5. Run `cargo deny check` and capture remaining non-blocking duplicate warnings.
+6. Document all residual risks and cleanup status in `docs/standardization-report.md`.
+7. Run `just ci-deep` and block handoff until all quality gates pass.
 
 ## 4) Exit criteria
 

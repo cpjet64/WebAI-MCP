@@ -25,3 +25,15 @@
 - 2026-03-02T12:10:00Z: synchronized `EXECUTION-PLAN.md` with `MASTER-CHECKLIST.md` and corrected stale `.AGENTS`-path references in `legacy/README.md`.
 - 2026-03-02T12:10:00Z: prepared targeted closure for coverage-critical modules (`crates/core/src/error_model.rs`, `crates/mcp/src/lib.rs`, `xtask/src/main.rs`) before final full CI rerun.
 - 2026-03-02T12:55:00Z: executed the final implementation pass for the current plan: re-ran repository-wide sweeps for unfinished-work markers and legacy cleanup markers; confirmed only expected test artifacts (`dom-mutation`/`mutation-tracked`) remain for runtime simulation tests, no unresolved source placeholders/TODOs, synchronized plan/checklist states remained complete, and final `git status` remains clean on `main`.
+
+- 2026-03-02T06:14:15Z: implemented residual dependency/policy cleanup pass on `main`:
+  - Updated `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` with `SEC-300` and `SEC-301` residual dependency hygiene items.
+  - Normalized `crates/server/Cargo.toml` to `tower = "0.5"` for both dependency and dev-dependency entries.
+  - Removed stale allowlist entries from `deny.toml` (`CC0-1.0`, `MPL-2.0`, `OpenSSL`, `Unicode-DFS-2016`) and prepared for a re-run of `cargo deny`.
+  - Re-ran `cargo deny check --show-graph` after lockfile refresh to verify residual risk reduction.
+- 2026-03-02T06:14:15Z: executed full closure validation on `main` after lockfile refresh:
+  - `just ci-deep`: PASS (hygiene, `cargo fmt --check`, `cargo clippy --all-targets --all-features -D warnings`, `cargo machete`, `cargo build --all-targets --all-features --locked`, `cargo nextest run`, `cargo nextest run --all-features`, `cargo deny check`, `cargo audit`, `python scripts/enforce_advisory_policy.py`, `cargo doc --no-deps --all-features`).
+  - `cargo llvm-cov nextest --all-features --fail-under-regions 73`: PASS (total region coverage 74.92%).
+  - `npm run build:all`, `npm run test`, `npm run test:all`: PASS.
+  - `cargo deny check` now reports no license policy warnings and no `tower` duplicate; only one remaining duplicate `windows-sys` warning is transitive (`windows-sys@0.52.0` via `ring` and `windows-sys@0.59.0` via `mio`/`tokio`).
+  - `rg -n "mutant|mutants|mutator"`: no matches in repository.

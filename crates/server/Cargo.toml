@@ -17,7 +17,7 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 thiserror = "1"
-tower = { version = "0.4", features = ["timeout", "util"] }
+tower = { version = "0.5", features = ["timeout", "util"] }
 reqwest = { version = "0.12", default-features = false, features = [
   "rustls-tls", "socks"
 ] }
@@ -29,7 +29,7 @@ windows-native = []
 audit-lighthouse = []
 
 [dev-dependencies]
-tower = { version = "0.4", features = ["util"] }
+tower = { version = "0.5", features = ["util"] }
 http = "1"
 httpmock = "0.8"
 

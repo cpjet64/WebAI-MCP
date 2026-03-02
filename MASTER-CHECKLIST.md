@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-02T12:10:00Z
+Last synced: 2026-03-02T06:14:15Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -49,6 +49,12 @@ Conventions used below:
 
 - [x] MIG-141: Verify code coverage/test status for Rust crates updated by items above before opening the workstream.
 - [x] MIG-142: Keep `todo.md` and `convert-rust.md` headings tracked (not duplicated) and refer to them as backlog context for longer-term work.
+
+### SEC-300 Dependency & policy residuals
+
+- [x] SEC-300: Remove unused license allowlist entries (`CC0-1.0`, `MPL-2.0`, `OpenSSL`, `Unicode-DFS-2016`) from `deny.toml` to satisfy dependency policy checks.
+- [x] SEC-301: Align tower dependency versions in `crates/server/Cargo.toml` to reduce duplicate transitive crate warnings from `cargo deny`.
+- [ ] SEC-302: Track remaining transitive duplicate `windows-sys` (`0.52.0` via `ring` and `0.59.0` via `mio`/`tokio`) as accepted residual risk until direct dependency alignment is feasible.
 
 ### REV-200 Full-code review findings (sweep complete on 2026-03-01)
 
