@@ -22,3 +22,15 @@ fn ws_parse_error() {
     assert_eq!(v["type"], "parse-error");
     assert_eq!(v["status"], "error");
 }
+
+#[test]
+fn ws_heartbeat_roundtrip_without_request_id() {
+    let req = serde_json::json!({
+        "type": "heartbeat"
+    });
+    let out = process_ws_text(&req.to_string());
+    let v: serde_json::Value = serde_json::from_str(&out).unwrap();
+    assert_eq!(v["type"], "heartbeat-response");
+    assert_eq!(v["status"], "ok");
+    assert_eq!(v["requestId"], "");
+}

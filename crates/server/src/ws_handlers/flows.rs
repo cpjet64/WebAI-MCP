@@ -16,7 +16,7 @@ pub fn handle_refresh(req: &WsRequest) -> String {
         None
     };
     to_json(&WsResponse {
-        request_id: req.request_id.clone(),
+        request_id: req.request_id_or_empty(),
         kind: "refresh-browser-response".into(),
         status: "ok".into(),
         payload,
@@ -31,7 +31,7 @@ pub fn handle_get_html(req: &WsRequest) -> String {
     }
     match provider_for_current_mode().get_html(selector.unwrap()) {
         FlowResult::Ok(payload) => to_json(&WsResponse {
-            request_id: req.request_id.clone(),
+            request_id: req.request_id_or_empty(),
             kind: "get-html-by-selector-response".into(),
             status: "ok".into(),
             payload: Some(payload),
@@ -48,7 +48,7 @@ pub fn handle_click(req: &WsRequest) -> String {
     }
     match provider_for_current_mode().click(sel.unwrap()) {
         FlowResult::Ok(payload) => to_json(&WsResponse {
-            request_id: req.request_id.clone(),
+            request_id: req.request_id_or_empty(),
             kind: "click-element-response".into(),
             status: "ok".into(),
             payload: Some(payload),
@@ -69,7 +69,7 @@ pub fn handle_fill(req: &WsRequest) -> String {
     }
     match provider_for_current_mode().fill(sel.unwrap(), text.unwrap()) {
         FlowResult::Ok(payload) => to_json(&WsResponse {
-            request_id: req.request_id.clone(),
+            request_id: req.request_id_or_empty(),
             kind: "fill-input-response".into(),
             status: "ok".into(),
             payload: Some(payload),
@@ -90,7 +90,7 @@ pub fn handle_select(req: &WsRequest) -> String {
     }
     match provider_for_current_mode().select(sel.unwrap(), val.unwrap()) {
         FlowResult::Ok(payload) => to_json(&WsResponse {
-            request_id: req.request_id.clone(),
+            request_id: req.request_id_or_empty(),
             kind: "select-option-response".into(),
             status: "ok".into(),
             payload: Some(payload),
@@ -107,7 +107,7 @@ pub fn handle_submit(req: &WsRequest) -> String {
     }
     match provider_for_current_mode().submit(sel.unwrap()) {
         FlowResult::Ok(payload) => to_json(&WsResponse {
-            request_id: req.request_id.clone(),
+            request_id: req.request_id_or_empty(),
             kind: "submit-form-response".into(),
             status: "ok".into(),
             payload: Some(payload),
@@ -142,7 +142,7 @@ pub fn handle_save_screenshot(req: &WsRequest) -> String {
         Ok(path) => {
             let payload = serde_json::json!({"path": path.to_string_lossy()});
             to_json(&WsResponse {
-                request_id: req.request_id.clone(),
+                request_id: req.request_id_or_empty(),
                 kind: "save-screenshot-response".into(),
                 status: "ok".into(),
                 payload: Some(payload),
@@ -155,7 +155,7 @@ pub fn handle_save_screenshot(req: &WsRequest) -> String {
 
 fn to_error(req: &WsRequest, base: &str, msg: &str) -> String {
     to_json(&WsResponse {
-        request_id: req.request_id.clone(),
+        request_id: req.request_id_or_empty(),
         kind: format!("{}-error", base),
         status: "error".into(),
         payload: None,

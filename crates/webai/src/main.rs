@@ -256,12 +256,7 @@ async fn run_server(opts: Opts) -> Result<(), Box<dyn std::error::Error>> {
     };
     let addr: SocketAddr = format!("{}:{}", host, port).parse()?;
     // Set env flags from CLI (provider + inflight) before serving
-    if let Some(p) = opts.provider.as_deref() {
-        std::env::set_var("WEBAI_BROWSER_PROVIDER", p);
-        if p.eq_ignore_ascii_case("legacy") {
-            std::env::set_var("WEBAI_BROWSER_LEGACY", "1");
-        }
-    }
+    apply_browser_mode_env(opts.provider.as_deref());
     if let Some(n) = opts.ws_max_inflight {
         std::env::set_var("WEBAI_WS_MAX_INFLIGHT", n.to_string());
     }
@@ -303,6 +298,13 @@ async fn run_server(opts: Opts) -> Result<(), Box<dyn std::error::Error>> {
     };
     serve_with_shutdown(router, addr, shutdown).await?;
     Ok(())
+}
+
+fn apply_browser_mode_env(provider: Option<&str>) {
+    std::env::remove_var("WEBAI_BROWSER_LEGACY");
+    if let Some(p) = provider {
+        std::env::set_var("WEBAI_BROWSER_PROVIDER", p);
+    }
 }
 
 async fn run_mcp() -> Result<(), Box<dyn std::error::Error>> {
@@ -453,6 +455,20 @@ mod tests {
     fn parse_jsonrpc_id_from_json_and_plain() {
         assert_eq!(parse_jsonrpc_id("42"), json!(42));
         assert_eq!(parse_jsonrpc_id("abc"), json!("abc"));
+    }
+
+    #[test]
+    fn apply_browser_mode_env_sets_provider_and_clears_legacy() {
+        std::env::set_var("WEBAI_BROWSER_LEGACY", "1");
+        std::env::remove_var("WEBAI_BROWSER_PROVIDER");
+
+        apply_browser_mode_env(Some("legacy"));
+
+        assert_eq!(
+            std::env::var("WEBAI_BROWSER_PROVIDER").ok(),
+            Some("legacy".into())
+        );
+        assert!(std::env::var("WEBAI_BROWSER_LEGACY").is_err());
     }
 
     #[test]

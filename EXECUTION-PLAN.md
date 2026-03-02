@@ -7,6 +7,9 @@ Status: MCP parity implementation + planning alignment
 Task status snapshot (this pass):
 - MIG-112: Completed.
 - MIG-122: Completed.
+- MIG-113: Completed.
+- MIG-123: Completed.
+- REV-204: Completed.
 
 ## 1) Objective
 

@@ -31,13 +31,13 @@ Conventions used below:
 
 - [x] MIG-111: Replace legacy `data-stub` HTML responses in `crates/server/src/flow_adapter.rs` with real Rust-owned path where feasible.
 - [x] MIG-112: Add route-level parity checks for `GET /capabilities`, `/identity`, `/current-url`, and related compatibility endpoints.
-- [ ] MIG-113: Review websocket schema evolution and complete any unimplemented flow messages in `crates/server/src/flow_adapter.rs` and `crates/server/src/routes_ws.rs`.
+- [x] MIG-113: Review websocket schema evolution and complete any unimplemented flow messages in `crates/server/src/ws_schema.rs`, `crates/server/src/ws_handlers` and compatibility flow handling.
 
 ### MIG-120 Rust Migration Parity — CLI / Tooling
 
 - [x] MIG-121: Complete `xtask/src/main.rs` from placeholder to actionable automation command dispatcher.
 - [x] MIG-122: Validate `webai` CLI command matrix against documented behavior (server/mcp/all + health/identity/help).
-- [ ] MIG-123: Align launch behavior with `todo.md` and `convert-rust.md` milestones for launch precedence and deprecation paths.
+- [x] MIG-123: Align launch behavior with `todo.md` and `convert-rust.md` milestones for launch precedence and deprecation paths.
 
 ### MIG-130 Legacy cleanup and documentation accuracy
 
@@ -55,7 +55,7 @@ Conventions used below:
 - [x] REV-201: Complete MCP JSON-RPC parity by replacing remaining placeholder/stub paths in `crates/mcp/src/lib.rs` and `crates/mcp/src/tools.rs` for initialize/list_tools/call_tool behavior.
 - [x] REV-202: Replace placeholder implementation with functional command dispatch in `xtask/src/main.rs`.
 - [x] REV-203: Finalize WebSocket flow compatibility by removing legacy `data-stub` behavior in `crates/server/src/flow_adapter.rs` and reconciling `crates/server/tests/ws_flows.rs`.
-- [ ] REV-204: Expand stubbed audit handling in `crates/server/src/lib.rs` from feature-gated placeholders to production-compatible routes.
+- [x] REV-204: Expand stubbed audit handling in `crates/server/src/audit.rs` from feature-gated placeholders to production-compatible routes.
 - [x] REV-205: Replace placeholder Google Analytics ID `G-XXXXXXXXXX` in `webai-mcp/mcp-server.ts` (or document telemetry removal).
 - [x] REV-206: Replace placeholder MCP version text in `chrome-extension/panel.js` (or document version source explicitly).
 - [x] REV-207: Remove remaining `placeholder`/`data-stub` indicators from production-relevant Rust surface (`crates/core/src/dto.rs`, `crates/server/src/flow_adapter.rs`, `crates/server/tests/ws_flows.rs`) by moving them to explicit feature-gated or migration notes.

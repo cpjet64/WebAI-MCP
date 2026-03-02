@@ -20,7 +20,7 @@ pub fn process_text_message(t: &str) -> String {
         }
     }
 
-    if req.kind != "ping" && try_acquire_inflight().is_none() {
+    if req.kind != "ping" && req.kind != "heartbeat" && try_acquire_inflight().is_none() {
         return too_many_inflight(&req);
     }
 
@@ -38,7 +38,7 @@ pub fn process_text_message(t: &str) -> String {
 
 fn too_many_inflight(req: &WsRequest) -> String {
     let resp = WsResponse {
-        request_id: req.request_id.clone(),
+        request_id: req.request_id_or_empty(),
         kind: format!("{}-error", req.kind),
         status: "error".into(),
         payload: None,
@@ -49,7 +49,7 @@ fn too_many_inflight(req: &WsRequest) -> String {
 
 fn timeout_error(req: &WsRequest) -> String {
     let resp = WsResponse {
-        request_id: req.request_id.clone(),
+        request_id: req.request_id_or_empty(),
         kind: format!("{}-error", req.kind),
         status: "error".into(),
         payload: None,
