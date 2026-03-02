@@ -45,7 +45,6 @@ updates:
     # Allow both direct and indirect dependency updates
     allow:
       - dependency-type: "direct"
-      - dependency-type: "indirect"
 
     # Ignore specific packages if needed (uncomment and modify as required)
     # ignore:
@@ -93,7 +92,6 @@ updates:
     # Allow both direct and indirect dependency updates
     allow:
       - dependency-type: "direct"
-      - dependency-type: "indirect"
 
     # Note: Removed ignore rules for puppeteer-core and lighthouse
     # to allow major updates after successful testing

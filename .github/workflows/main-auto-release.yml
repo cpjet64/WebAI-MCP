@@ -32,15 +32,15 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
 
       - name: 🔧 Install dependencies (workspace setup)
         run: |
-          if [ -f package-lock.json ] || [ -f npm-shrinkwrap.json ]; then
-            npm ci --prefer-offline
+          if [ -f pnpm-lock.yaml ]; then
+            corepack pnpm install --frozen-lockfile --prefer-offline
           else
-            npm install --prefer-offline
+            corepack pnpm install --prefer-offline
           fi
 
       - name: 🏗️ Build packages
