@@ -37,3 +37,7 @@
   - `npm run build:all`, `npm run test`, `npm run test:all`: PASS.
   - `cargo deny check` now reports no license policy warnings and no `tower` duplicate; only one remaining duplicate `windows-sys` warning is transitive (`windows-sys@0.52.0` via `ring` and `windows-sys@0.59.0` via `mio`/`tokio`).
   - `rg -n "mutant|mutants|mutator"`: no matches in repository.
+- 2026-03-02T08:00:00Z: closed `SEC-302` as accepted residual dependency risk:
+  - confirmed via `cargo deny check bans` that `windows-sys` remains dual-pinned transitively (`0.52.0` from `ring` chain and `0.59.0` from `mio`/`tokio` chains),
+  - no code-level remediation was available without broader upstream/runtime-version migration,
+  - planning artifacts now reflect explicit residual status and closure.

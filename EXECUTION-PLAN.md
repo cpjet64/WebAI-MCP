@@ -1,6 +1,6 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-02T06:14:15Z
+Last synchronized: 2026-03-02T08:00:00Z
 Branch context: `main`
 Status: MCP parity implementation + planning alignment
 
@@ -13,7 +13,7 @@ Task status snapshot (this pass):
 - MIG-141: Completed.
 - MIG-142: Completed.
 - SEC-300: Completed.
-- SEC-302: In progress.
+- SEC-302: Completed.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
 
 ## 1) Objective
@@ -30,7 +30,7 @@ This pass implements the discovered cleanup items and closes the targeted backlo
 6. updates active references to moved legacy assets.
 
 Current residual item to be documented:
-- SEC-302: Assess remaining transitive `windows-sys` duplicate and keep in-plan until direct source alignment is available.
+- SEC-302: Track remaining transitive `windows-sys` duplicate as accepted residual (`windows-sys@0.52.0` via `ring`, `windows-sys@0.59.0` via `mio`/`tokio`) until direct source alignment is feasible.
 
 ## 2) Inputs and constraints
 
@@ -119,6 +119,7 @@ Goal: confirm this planning pass is internally consistent.
 3. Remove unused license allowlist entries from `deny.toml`.
 4. Align `crates/server/Cargo.toml` tower versions to a single dependency line/version baseline.
 5. Run `cargo deny check` and capture remaining non-blocking duplicate warnings.
+   - Residual status: accepted residual risk for `windows-sys` duplicates only (0.52.0 and 0.59.0); captured for future dependency alignment when upstreams migrate.
 6. Document all residual risks and cleanup status in `docs/standardization-report.md`.
 7. Run `just ci-deep` and block handoff until all quality gates pass.
 
