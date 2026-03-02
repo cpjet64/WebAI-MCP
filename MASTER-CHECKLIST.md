@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-02T09:12:00Z
+Last synced: 2026-03-02T12:10:00Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -47,8 +47,8 @@ Conventions used below:
 
 ### MIG-140 Test and quality backlog from plan artifacts
 
-- [ ] MIG-141: Verify code coverage/test status for Rust crates updated by items above before opening the workstream.
-- [ ] MIG-142: Keep `todo.md` and `convert-rust.md` headings tracked (not duplicated) and refer to them as backlog context for longer-term work.
+- [x] MIG-141: Verify code coverage/test status for Rust crates updated by items above before opening the workstream.
+- [x] MIG-142: Keep `todo.md` and `convert-rust.md` headings tracked (not duplicated) and refer to them as backlog context for longer-term work.
 
 ### REV-200 Full-code review findings (sweep complete on 2026-03-01)
 

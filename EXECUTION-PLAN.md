@@ -1,6 +1,6 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-02T09:15:00Z
+Last synchronized: 2026-03-02T12:10:00Z
 Branch context: `main`
 Status: MCP parity implementation + planning alignment
 
@@ -10,6 +10,9 @@ Task status snapshot (this pass):
 - MIG-113: Completed.
 - MIG-123: Completed.
 - REV-204: Completed.
+- MIG-141: Completed.
+- MIG-142: Completed.
+- Coverage and cleanup verification updates are now active in this pass and synchronized.
 
 ## 1) Objective
 
@@ -49,7 +52,7 @@ Goal: establish stable input set and scope for this pass.
    - placeholder/stub/TODO footprint in active source and docs,
    - include extension runtime placeholders (`chrome-extension/panel.js`) as deferred backlog actions,
    - absence/presence of temporary legacy markers and historical filenames,
-   - legacy planning artifacts under `.AGENTS/plans` and `docs/archive`,
+   - legacy planning artifacts under `legacy/plans` and `legacy/docs/archive`,
    - docs references to archived assets.
 3. Publish IDs in `MASTER-CHECKLIST.md` linking planning and execution tasks.
 4. Publish required MCP parity tasks and acceptance criteria under the same IDs.
@@ -108,6 +111,7 @@ Goal: confirm this planning pass is internally consistent.
    - `git diff --check`
 2. Verify no unresolved links to old archive paths remain in edited reference files.
 3. Record the changes in `docs/standardization-report.md`.
+4. Run `just ci-deep` and block handoff until all quality gates pass.
 
 ## 4) Exit criteria
 

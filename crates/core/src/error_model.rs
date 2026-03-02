@@ -249,6 +249,17 @@ mod tests {
         }
     }
 
+    fn ctx_with_port(port: u16, host: &str) -> ErrorContext {
+        ErrorContext {
+            operation: "op".into(),
+            host: Some(host.into()),
+            port: Some(port),
+            endpoint: None,
+            http_status: None,
+            tool: None,
+        }
+    }
+
     #[test]
     fn categorizes_connection() {
         let e = analyze_error("connect ECONNREFUSED", ctx());
@@ -261,5 +272,64 @@ mod tests {
         let e = analyze_error("spawn ENOENT", ctx());
         assert!(matches!(e.kind, ErrorType::Platform));
         assert!(e.solutions.iter().any(|s| s.title.contains("Node")));
+    }
+
+    #[test]
+    fn categorizes_server_wrong_signature() {
+        let e = analyze_error("Wrong signature from endpoint", ctx());
+        assert!(matches!(e.kind, ErrorType::Server));
+        assert!(!e.is_retryable);
+        assert!(e.user_message.contains("not WebAI server"));
+        assert!(e.solutions.iter().any(|s| s.title.contains("Restart")));
+    }
+
+    #[test]
+    fn categorizes_configuration() {
+        let e = analyze_error("Cannot find module @cpjet64/webai-core", ctx());
+        assert!(matches!(e.kind, ErrorType::Configuration));
+        assert!(e.user_message.contains("Missing dependencies"));
+        assert!(e.solutions.iter().any(|s| s.title == "Get help"));
+    }
+
+    #[test]
+    fn categorizes_client_chrome_missing() {
+        let e = analyze_error("chrome could not be found", ctx());
+        assert!(matches!(e.kind, ErrorType::Client));
+        assert!(e.user_message.contains("Chrome not found"));
+    }
+
+    #[test]
+    fn categorizes_unknown_defaults_to_user_message() {
+        let e = analyze_error("unexpected panic happened", ctx());
+        assert!(matches!(e.kind, ErrorType::Unknown));
+        assert!(e.user_message.starts_with("Unexpected error"));
+    }
+
+    #[test]
+    fn connection_retryable_timeout_message() {
+        let e = analyze_error("Request timeout", ctx());
+        assert!(e.is_retryable);
+        assert!(e
+            .solutions
+            .iter()
+            .any(|s| s.title.contains("Start WebAI Server")));
+    }
+
+    #[test]
+    fn server_error_is_retryable_when_http_status_only() {
+        let e = analyze_error("Server returned 500", ctx());
+        assert!(e.is_retryable);
+    }
+
+    #[test]
+    fn connection_check_port_advice_requires_non_default_port() {
+        let e = analyze_error("connect ECONNREFUSED", ctx_with_port(4000, "127.0.0.1"));
+        assert!(e.solutions.iter().any(|s| s.title.contains("Check port")));
+    }
+
+    #[test]
+    fn connection_without_check_port_advice_for_default_port() {
+        let e = analyze_error("connect ECONNREFUSED", ctx_with_port(3025, "127.0.0.1"));
+        assert!(!e.solutions.iter().any(|s| s.title.contains("Check port")));
     }
 }

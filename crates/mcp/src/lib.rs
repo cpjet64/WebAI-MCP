@@ -401,6 +401,39 @@ fn body_excerpt(raw: &str) -> String {
 #[cfg(test)]
 mod call_tests {
     use super::*;
+    use std::sync::{Mutex, OnceLock};
+
+    static ENV_LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+
+    fn with_env_vars(vars: &[(&str, Option<&str>)], test: impl FnOnce()) {
+        let lock = ENV_LOCK.get_or_init(|| Mutex::new(()));
+        let _guard = lock.lock().unwrap();
+
+        let keys: [&str; 4] = ["BROWSER_TOOLS_HOST", "BROWSER_TOOLS_PORT", "HOST", "PORT"];
+        let mut backup = Vec::new();
+        for key in &keys {
+            backup.push((
+                *key,
+                env::var_os(key).map(|value| value.to_string_lossy().into_owned()),
+            ));
+            env::remove_var(key);
+        }
+        for (key, value) in vars {
+            if let Some(v) = value {
+                env::set_var(key, v);
+            }
+        }
+
+        test();
+
+        for (key, value) in backup {
+            if let Some(v) = value {
+                env::set_var(key, v);
+            } else {
+                env::remove_var(key);
+            }
+        }
+    }
 
     #[test]
     fn call_unknown_tool_errors() {
@@ -469,5 +502,124 @@ mod call_tests {
         assert_eq!(v["jsonrpc"], "2.0");
         assert_eq!(v["id"], 1);
         assert_eq!(v["error"]["code"], -32000);
+    }
+
+    #[test]
+    fn discover_port_prefers_browser_tools_port() {
+        with_env_vars(
+            &[("BROWSER_TOOLS_PORT", Some("5001")), ("PORT", Some("4001"))],
+            || {
+                assert_eq!(discover_port(), Some(5001));
+            },
+        );
+    }
+
+    #[test]
+    fn discover_port_falls_back_to_port() {
+        with_env_vars(&[("PORT", Some("4002"))], || {
+            assert_eq!(discover_port(), Some(4002));
+        });
+    }
+
+    #[test]
+    fn call_request_url_uses_browser_host_and_port() {
+        with_env_vars(
+            &[
+                ("BROWSER_TOOLS_HOST", Some("127.0.0.22")),
+                ("BROWSER_TOOLS_PORT", Some("1234")),
+            ],
+            || {
+                let (host, port, endpoint) = call_request_url("/status");
+                assert_eq!(host, "127.0.0.22");
+                assert_eq!(port, 1234);
+                assert_eq!(endpoint, "http://127.0.0.22:1234/status");
+            },
+        );
+    }
+
+    #[test]
+    fn call_request_url_falls_back_host_and_port_to_defaults() {
+        with_env_vars(
+            &[("HOST", Some("host.local")), ("PORT", Some("5555"))],
+            || {
+                let (host, port, endpoint) = call_request_url("/status");
+                assert_eq!(host, "host.local");
+                assert_eq!(port, 5555);
+                assert_eq!(endpoint, "http://host.local:5555/status");
+            },
+        );
+    }
+
+    #[test]
+    fn read_port_from_path_with_valid_value() {
+        let path = std::env::temp_dir().join(format!(
+            "webai-mcp-test-port-{}-{}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        let write_result = fs::write(&path, "6789");
+        assert!(write_result.is_ok(), "failed to write temporary port file");
+
+        let port = read_port_from_path(path.clone());
+        assert_eq!(port, Some(6789));
+
+        let _ = fs::remove_file(path);
+    }
+
+    #[test]
+    fn parse_json_body_uses_default_when_empty() {
+        let parsed = parse_json_body("");
+        assert_eq!(parsed["status"], "ok");
+    }
+
+    #[test]
+    fn parse_json_body_falls_back_to_raw_body() {
+        let parsed = parse_json_body("not-json");
+        assert_eq!(parsed["raw"], "not-json");
+    }
+
+    #[test]
+    fn body_excerpt_short_text_is_unchanged() {
+        assert_eq!(body_excerpt("hello"), "hello");
+    }
+
+    #[test]
+    fn body_excerpt_truncates_long_text() {
+        let long = "a".repeat(MAX_ERROR_TEXT + 40);
+        let excerpt = body_excerpt(&long);
+        assert!(excerpt.ends_with("…"));
+        assert!(excerpt.len() > MAX_ERROR_TEXT);
+        assert!(excerpt.len() <= MAX_ERROR_TEXT + 4);
+    }
+
+    #[test]
+    fn endpoint_suffix_maps_known_status_codes() {
+        assert_eq!(endpoint_suffix(503), " - service unavailable");
+        assert_eq!(endpoint_suffix(404), " - endpoint missing");
+        assert_eq!(endpoint_suffix(201), "");
+    }
+
+    #[test]
+    fn extract_error_message_reads_first_matching_field() {
+        let from_error = json!({"error": "explicit"});
+        assert_eq!(extract_error_message(&from_error), Some("explicit".into()));
+
+        let from_message = json!({"message": "message-body"});
+        assert_eq!(
+            extract_error_message(&from_message),
+            Some("message-body".into())
+        );
+
+        let from_status = json!({"status": "error: unavailable"});
+        assert_eq!(
+            extract_error_message(&from_status),
+            Some("error: unavailable".into())
+        );
+
+        let no_error = json!({"status": "ok"});
+        assert!(extract_error_message(&no_error).is_none());
     }
 }
