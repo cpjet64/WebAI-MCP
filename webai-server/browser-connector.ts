@@ -241,6 +241,27 @@ interface SelectorCallback {
 
 const selectorCallbacks = new Map<string, SelectorCallback>();
 
+function popCallbackByRequestId<T>(
+  callbacks: Map<string, T>,
+  requestId?: string | number
+): { requestId: string; callback: T } | undefined {
+  if (requestId) {
+    const key = String(requestId);
+    const callback = callbacks.get(key);
+    if (callback) {
+      callbacks.delete(key);
+      return { requestId: key, callback };
+    }
+  }
+
+  const next = callbacks.entries().next();
+  if (next.done) return undefined;
+
+  const [key, callback] = next.value;
+  callbacks.delete(key);
+  return { requestId: key, callback };
+}
+
 // Function to get available port starting with the given port
 async function getAvailablePort(
   startPort: number,
@@ -951,125 +972,156 @@ export class BrowserConnector {
               currentTabId = data.tabId;
             }
           }
-          // Handle screenshot response
-          if (data.type === "screenshot-data" && data.data) {
-            console.log("Received screenshot data");
-            console.log("Screenshot path from extension:", data.path);
-            console.log("Auto-paste setting from extension:", data.autoPaste);
-            // Get the most recent callback since we're not using requestId anymore
-            const callbacks = Array.from(screenshotCallbacks.values());
-            if (callbacks.length > 0) {
-              const callback = callbacks[0];
-              console.log("Found callback, resolving promise");
-              // Pass all auto-paste settings to the resolver
-              callback.resolve({
-                data: data.data,
-                path: data.path,
-                autoPaste: data.autoPaste,
-                targetIDE: data.targetIDE,
-                customAppName: data.customAppName,
-              });
-              screenshotCallbacks.clear(); // Clear all callbacks
-            } else {
-              console.log("No callbacks found for screenshot");
-            }
-          }
-          // Handle screenshot error
-          else if (data.type === "screenshot-error") {
-            console.log("Received screenshot error:", data.error);
-            const callbacks = Array.from(screenshotCallbacks.values());
-            if (callbacks.length > 0) {
-              const callback = callbacks[0];
-              callback.reject(
-                new Error(data.error || "Screenshot capture failed")
-              );
-              screenshotCallbacks.clear(); // Clear all callbacks
-            } else {
-              console.log("No callbacks found for screenshot");
-            }
-          }
-          // Handle cookies data
-          else if (data.type === "cookies-data" && data.cookies) {
-            console.log("Received cookies data from extension");
-            const callbacks = Array.from(cookiesCallbacks.values());
-            if (callbacks.length > 0) {
-              const callback = callbacks[0];
-              callback.resolve({ cookies: data.cookies });
-              cookiesCallbacks.clear(); // Clear all callbacks
-            }
-          }
-          // Handle cookies error
-          else if (data.type === "cookies-error") {
-            console.log("Received cookies error from extension: ", data.error);
-            const callbacks = Array.from(cookiesCallbacks.values());
-            if (callbacks.length > 0) {
-              const callback = callbacks[0];
-              callback.reject(
-                new Error(data.error || "Cookies request failed")
-              );
-              cookiesCallbacks.clear(); // Clear all callbacks
-            } else {
-              console.log("No callbacks found for cookies");
-            }
-          }
-          // Handle localStorage data
-          else if (data.type === "local-storage-data" && data.storage) {
-            console.log("Received localStorage data from extension");
-            const callbacks = Array.from(localStorageCallbacks.values());
-            if (callbacks.length > 0) {
-              const callback = callbacks[0];
-              callback.resolve({ storage: data.storage });
-              localStorageCallbacks.clear(); // Clear all callbacks
-            } else {
-              console.log("No callbacks found for localStorage");
-            }
-          }
-          // Handle localStorage error
-          else if (data.type === "local-storage-error") {
+        // Handle screenshot response
+        if (data.type === "screenshot-data" && data.data) {
+          console.log("Received screenshot data");
+          console.log("Screenshot path from extension:", data.path);
+          console.log("Auto-paste setting from extension:", data.autoPaste);
+          const callbackMatch = popCallbackByRequestId(
+            screenshotCallbacks,
+            data.requestId
+          );
+          if (callbackMatch) {
             console.log(
-              "Received localStorage error from extension: ",
-              data.error
+              `Found screenshot callback by requestId: ${callbackMatch.requestId}`
             );
-            const callbacks = Array.from(localStorageCallbacks.values());
-            if (callbacks.length > 0) {
-              const callback = callbacks[0];
-              callback.reject(
-                new Error(data.error || "LocalStorage request failed")
-              );
-              localStorageCallbacks.clear(); // Clear all callbacks
-            } else {
-              console.log("No callbacks found for localStorage");
-            }
+            console.log("Found callback, resolving promise");
+            // Pass all auto-paste settings to the resolver
+            callbackMatch.callback.resolve({
+              data: data.data,
+              path: data.path,
+              autoPaste: data.autoPaste,
+              targetIDE: data.targetIDE,
+              customAppName: data.customAppName,
+            });
+          } else {
+            console.log("No callbacks found for screenshot");
           }
-          // Handle sessionStorage data
-          else if (data.type === "session-storage-data" && data.storage) {
-            console.log("Received sessionStorage data from extension");
-            const callbacks = Array.from(sessionStorageCallbacks.values());
-            if (callbacks.length > 0) {
-              const callback = callbacks[0];
-              callback.resolve({ storage: data.storage });
-              sessionStorageCallbacks.clear(); // Clear all callbacks
-            } else {
-              console.log("No callbacks found for sessionStorage");
-            }
-          }
-          // Handle sessionStorage error
-          else if (data.type === "session-storage-error") {
+        }
+        // Handle screenshot error
+        else if (data.type === "screenshot-error") {
+          console.log("Received screenshot error:", data.error);
+          const callbackMatch = popCallbackByRequestId(
+            screenshotCallbacks,
+            data.requestId
+          );
+          if (callbackMatch) {
             console.log(
-              "Received sessionStorage error from extension: ",
-              data.error
+              `Found screenshot callback by requestId: ${callbackMatch.requestId}`
             );
-            const callbacks = Array.from(sessionStorageCallbacks.values());
-            if (callbacks.length > 0) {
-              const callback = callbacks[0];
-              callback.reject(
-                new Error(data.error || "SessionStorage request failed")
-              );
-              sessionStorageCallbacks.clear(); // Clear all callbacks
-            } else {
-              console.log("No callbacks found for sessionStorage");
-            }
+            callbackMatch.callback.reject(
+              new Error(data.error || "Screenshot capture failed")
+            );
+          } else {
+            console.log("No callbacks found for screenshot");
           }
+        }
+        // Handle cookies data
+        else if (data.type === "cookies-data" && data.cookies) {
+          console.log("Received cookies data from extension");
+          const callbackMatch = popCallbackByRequestId(
+            cookiesCallbacks,
+            data.requestId
+          );
+          if (callbackMatch) {
+            console.log(
+              `Found cookies callback by requestId: ${callbackMatch.requestId}`
+            );
+            callbackMatch.callback.resolve({ cookies: data.cookies });
+          }
+        }
+        // Handle cookies error
+        else if (data.type === "cookies-error") {
+          console.log("Received cookies error from extension: ", data.error);
+          const callbackMatch = popCallbackByRequestId(
+            cookiesCallbacks,
+            data.requestId
+          );
+          if (callbackMatch) {
+            console.log(
+              `Found cookies callback by requestId: ${callbackMatch.requestId}`
+            );
+            callbackMatch.callback.reject(
+              new Error(data.error || "Cookies request failed")
+            );
+          } else {
+            console.log("No callbacks found for cookies");
+          }
+        }
+        // Handle localStorage data
+        else if (data.type === "local-storage-data" && data.storage) {
+          console.log("Received localStorage data from extension");
+          const callbackMatch = popCallbackByRequestId(
+            localStorageCallbacks,
+            data.requestId
+          );
+          if (callbackMatch) {
+            console.log(
+              `Found localStorage callback by requestId: ${callbackMatch.requestId}`
+            );
+            callbackMatch.callback.resolve({ storage: data.storage });
+          } else {
+            console.log("No callbacks found for localStorage");
+          }
+        }
+        // Handle localStorage error
+        else if (data.type === "local-storage-error") {
+          console.log(
+            "Received localStorage error from extension: ",
+            data.error
+          );
+          const callbackMatch = popCallbackByRequestId(
+            localStorageCallbacks,
+            data.requestId
+          );
+          if (callbackMatch) {
+            console.log(
+              `Found localStorage callback by requestId: ${callbackMatch.requestId}`
+            );
+            callbackMatch.callback.reject(
+              new Error(data.error || "LocalStorage request failed")
+            );
+          } else {
+            console.log("No callbacks found for localStorage");
+          }
+        }
+        // Handle sessionStorage data
+        else if (data.type === "session-storage-data" && data.storage) {
+          console.log("Received sessionStorage data from extension");
+          const callbackMatch = popCallbackByRequestId(
+            sessionStorageCallbacks,
+            data.requestId
+          );
+          if (callbackMatch) {
+            console.log(
+              `Found sessionStorage callback by requestId: ${callbackMatch.requestId}`
+            );
+            callbackMatch.callback.resolve({ storage: data.storage });
+          } else {
+            console.log("No callbacks found for sessionStorage");
+          }
+        }
+        // Handle sessionStorage error
+        else if (data.type === "session-storage-error") {
+            console.log(
+            "Received sessionStorage error from extension: ",
+            data.error
+          );
+          const callbackMatch = popCallbackByRequestId(
+            sessionStorageCallbacks,
+            data.requestId
+          );
+          if (callbackMatch) {
+            console.log(
+              `Found sessionStorage callback by requestId: ${callbackMatch.requestId}`
+            );
+            callbackMatch.callback.reject(
+              new Error(data.error || "SessionStorage request failed")
+            );
+          } else {
+            console.log("No callbacks found for sessionStorage");
+          }
+        }
           // Handle selector response
           if (data.type === "html-by-selector" && data.requestId) {
             console.log("Received HTML by selector response");
@@ -1232,7 +1284,7 @@ export class BrowserConnector {
     // Add screenshot endpoint
     this.app.post(
       "/screenshot",
-      (req: express.Request, res: express.Response): void => {
+      async (req: express.Request, res: express.Response): Promise<void> => {
         console.log(
           "Browser Connector: Received request to /screenshot endpoint"
         );
@@ -1255,7 +1307,7 @@ export class BrowserConnector {
           const base64Data = data.replace(/^data:image\/png;base64,/, "");
 
           // Create the full directory path if it doesn't exist
-          fs.mkdirSync(targetPath, { recursive: true });
+          await fs.promises.mkdir(targetPath, { recursive: true });
           console.log(`Created/verified directory: ${targetPath}`);
 
           // Generate a unique filename using timestamp
@@ -1265,7 +1317,7 @@ export class BrowserConnector {
           console.log(`Saving screenshot to: ${fullPath}`);
 
           // Write the file
-          fs.writeFileSync(fullPath, base64Data, "base64");
+          await fs.promises.writeFile(fullPath, base64Data, "base64");
           console.log("Screenshot saved successfully");
 
           res.json({
@@ -1292,7 +1344,7 @@ export class BrowserConnector {
     try {
       const result = await new Promise((resolve, reject) => {
         // Set up one-time message handler for this screenshot request
-        const messageHandler = (
+        const messageHandler = async (
           message: string | Buffer | ArrayBuffer | Buffer[]
         ) => {
           try {
@@ -1316,7 +1368,7 @@ export class BrowserConnector {
 
               // Ensure the directory exists
               const dir = path.dirname(response.path);
-              fs.mkdirSync(dir, { recursive: true });
+              await fs.promises.mkdir(dir, { recursive: true });
 
               // Generate a unique filename using timestamp
               const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -1324,7 +1376,7 @@ export class BrowserConnector {
               const fullPath = path.join(response.path, filename);
 
               // Write the file
-              fs.writeFileSync(fullPath, base64Data, "base64");
+              await fs.promises.writeFile(fullPath, base64Data, "base64");
               resolve({
                 path: fullPath,
                 filename: filename,
@@ -1530,7 +1582,7 @@ export class BrowserConnector {
       }
 
       try {
-        fs.mkdirSync(targetPath, { recursive: true });
+        await fs.promises.mkdir(targetPath, { recursive: true });
         console.log(`Browser Connector: Created directory: ${targetPath}`);
       } catch (err) {
         console.error(
@@ -1554,7 +1606,7 @@ export class BrowserConnector {
 
       // Save the file
       try {
-        fs.writeFileSync(fullPath, cleanBase64, "base64");
+        await fs.promises.writeFile(fullPath, cleanBase64, "base64");
         console.log(`Browser Connector: Screenshot saved to: ${fullPath}`);
       } catch (err) {
         console.error(
