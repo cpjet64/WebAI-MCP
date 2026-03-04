@@ -1,5 +1,5 @@
 //! MCP server crate skeleton for WebAI-MCP.
-//! rmcp integration is feature-gated and added later.
+//! rmcp integration is feature-gated and added during migration.
 
 use reqwest::blocking::Client;
 use serde_json::{json, Value};
@@ -29,7 +29,8 @@ struct ToolRequest {
     payload_required: bool,
 }
 
-/// Placeholder to prove the crate links and builds.
+/// Minimal initialization probe used to confirm the crate links and builds in
+/// non-rmcp parity mode.
 pub fn initialized() -> CoreResult<bool> {
     Ok(true)
 }

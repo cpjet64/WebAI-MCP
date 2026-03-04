@@ -1,9 +1,9 @@
 //! Lighthouse shim crate skeleton.
-//! Enables Node-based audits behind a feature flag later.
+//! Enables Node-based audits behind a feature flag during migration.
 
 use webai_core::CoreResult;
 
-/// Placeholder indicates the shim is present.
+/// Lightweight availability check for the shim, used by compatibility tests.
 pub fn audit_available() -> CoreResult<bool> {
     Ok(true)
 }
