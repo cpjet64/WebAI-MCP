@@ -1,8 +1,6 @@
 # WebAI-MCP
 
 > Make your AI tools 10x more aware and capable of interacting with your browser
-<!-- Trigger workflow: 2025-05-27 -->
-
 [![Latest Release](https://img.shields.io/github/v/release/cpjet64/webai-mcp?style=flat-square)](https://github.com/cpjet64/webai-mcp/releases)
 [![NPM MCP Server](https://img.shields.io/npm/v/@cpjet64/webai-mcp?style=flat-square&label=MCP%20Server)](https://www.npmjs.com/package/@cpjet64/webai-mcp)
 [![NPM WebAI Server](https://img.shields.io/npm/v/@cpjet64/webai-server?style=flat-square&label=WebAI%20Server)](https://www.npmjs.com/package/@cpjet64/webai-server)

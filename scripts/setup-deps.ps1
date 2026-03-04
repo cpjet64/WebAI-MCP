@@ -113,5 +113,5 @@ Write-Host "🎉 All dependencies installed and builds verified!" -ForegroundCol
 Write-Host ""
 Write-Host "📋 Next steps:" -ForegroundColor Cyan
 Write-Host "   1. Commit the new package-lock.json files" -ForegroundColor White
-Write-Host "   2. Push to trigger CI workflows" -ForegroundColor White
-Write-Host "   3. Monitor GitHub Actions for successful builds" -ForegroundColor White
+Write-Host "   2. Run your local verification pipeline" -ForegroundColor White
+Write-Host "   3. Publish/release manually as needed" -ForegroundColor White

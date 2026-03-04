@@ -5,7 +5,7 @@ This directory contains comprehensive diagnostic, setup, and platform-specific u
 ## Available Scripts
 
 ### 🔧 `setup-deps.ps1` / `setup-deps.sh` - Dependency Setup (NEW)
-Robust dependency setup scripts with fallback mechanisms for CI/CD reliability.
+Robust dependency setup scripts with fallback mechanisms for local environment reliability.
 
 **Windows PowerShell:**
 ```powershell
@@ -25,7 +25,7 @@ chmod +x scripts/setup-deps.sh
 - Automatic lock file regeneration on corruption
 - Build verification
 - Cross-platform compatibility
-- Same pattern used in GitHub Actions workflows
+- Same pattern used by maintainers for local setup and diagnostics
 
 ### 🔍 `diagnose.js` - Diagnostic Tool
 Comprehensive diagnostic tool to identify and troubleshoot common issues.
@@ -112,7 +112,7 @@ npm run clean:locks
 npm run reset:deps
 ```
 
-These scripts provide the same robust installation patterns used in CI/CD.
+These scripts provide the same robust installation patterns used for local verification.
 
 ## Quick Start
 
@@ -273,6 +273,37 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
 export default ScriptName;
 ```
+
+## Local Release Scripts
+
+GitHub Actions automation is now disabled for release. Use these local scripts when preparing manual releases.
+
+- `scripts/local-release.sh` (Linux/macOS)
+- `scripts/local-release.ps1` (Windows)
+- `scripts/run-local-release.js` (cross-platform dispatcher)
+
+Top-level package scripts:
+
+- `npm run release:local`
+- `npm run release:local:unix`
+- `npm run release:local:win`
+
+Artifact outputs (default `release-artifacts/`):
+
+- `webai-mcp-v<version>.tgz`
+- `webai-server-v<version>.tgz`
+- `webai-chrome-extension-v<version>.zip`
+
+Common options:
+
+- `--version <x>` override release version
+- `--out <dir>` choose output directory
+- `--skip-build` to skip `npm run build:all`
+- `--skip-tests` to skip `npm test`
+- `--publish` to run local `npm publish` after packaging
+- `--tag <value>` npm tag to use when publishing
+
+Publishing remains manual and explicit; no GitHub publish step is triggered automatically.
 
 ## Contributing
 

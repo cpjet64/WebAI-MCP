@@ -64,14 +64,9 @@ webai-mcp/
 │   └── 📄 background.js               # Background service worker
 │
 ├── 📁 .github/                        # GitHub Configuration
-│   ├── 📁 workflows/                  # CI/CD workflows
-│   │   ├── 📄 dev-auto-release.yml    # Development releases
-│   │   ├── 📄 main-auto-release.yml   # Production releases
-│   │   ├── 📄 manual-release.yml      # Manual release trigger
-│   │   └── 📄 test.yml                # Testing workflow
-│   ├── 📄 dependabot.yml              # Dependency updates
 │   ├── 📄 CODEOWNERS                  # Code ownership
-│   └── 📄 WORKFLOW_SUMMARY.md         # Workflow documentation
+│   ├── 📄 WORKFLOW_SUMMARY.md         # Local workflow and release summary
+│   └── 📄 dependabot.yml              # Dependency updates
 │
 ├── 📁 docs/                           # Documentation
 │   ├── 📁 i18n/                       # Internationalization
@@ -180,153 +175,67 @@ npm run format              # Prettier formatting
 
 #### **Main Branch Protection**
 - ✅ **Require pull request reviews**: 1 approval minimum
-- ✅ **Require status checks**: All CI/CD must pass
+- ✅ **Require local verification**: `npm run build:all`, `npm run test`, and key diagnostics must pass
 - ✅ **Require up-to-date branches**: Must rebase before merge
 - ✅ **Restrict pushes**: No direct pushes allowed
 - ✅ **Dismiss stale reviews**: When new commits are pushed
 
 #### **Dev Branch Protection**
-- ✅ **Require status checks**: CI/CD must pass
+- ✅ **Run local verification on each handoff**: `npm run build:all` + `npm run test`
 - ✅ **Allow direct pushes**: For maintainers only
 - ✅ **Allow force pushes**: For rebasing and cleanup
 - ⚠️ **No review requirement**: For faster development iteration
 
-## 🚀 Automated Release System
+## 🚀 Release Process (Local-Only)
 
-### **Overview**
-WebAI-MCP uses a sophisticated automated release system with dual-track releases:
-- **Development Track**: Continuous releases from `dev` branch with `-dev.X` versioning
-- **Production Track**: Stable releases from `main` branch with semantic versioning
+GitHub Actions release automation has been retired. Release artifacts are prepared and uploaded manually.
 
-### **🧪 Development Releases (dev-auto-release.yml)**
+### **Local release entry points**
 
-#### **Triggers**
-- **Workflow Run**: Automatically after tests pass on `dev` branch
-- **Scheduled**: Every 10 minutes (checks for new commits)
-- **Manual Dispatch**: Emergency releases with optional test skipping
+In `package.json`:
 
-#### **Version Strategy**
+- `npm run release:local`
+- `npm run release:local:unix`
+- `npm run release:local:win`
+
+Equivalent script entry points:
+
+- `scripts/local-release.sh` (Unix/macOS)
+- `scripts/local-release.ps1` (Windows)
+- `scripts/run-local-release.js` (cross-platform dispatcher)
+
+### **Local release workflow**
+
 ```bash
-# Current: 1.5.1-dev.2
-# Next:    1.5.1-dev.3 (increments dev number)
+# Build + test + package + optional publish
+npm run release:local
 
-# If no dev version exists:
-# Current: 1.5.1
-# Next:    1.5.1-dev.1 (creates first dev version)
+# Skip tests for emergency builds only
+npm run release:local -- --skip-tests
+
+# Skip build if already prepared
+npm run release:local -- --skip-build
+
+# Publish after local build/packaging
+npm run release:local -- --publish --tag latest
 ```
 
-#### **Automated Steps**
-1. **Commit Detection**: Checks for new commits since last dev release
-2. **Version Increment**: Uses `npm version prerelease --preid=dev`
-3. **Build Process**: Compiles both webai-mcp and webai-server packages
-4. **Package Creation**: Creates .tgz files and Chrome extension .zip
-5. **NPM Publishing**: Publishes with `@dev` tag
-6. **GitHub Release**: Creates prerelease with comprehensive notes
-7. **Changelog Update**: Auto-generates development changelog entries
-8. **Version Commit**: Commits updated package.json and CHANGELOG.md
+### **Outputs**
 
-#### **Development Release Features**
-- **Smart Scheduling**: Only releases if new commits exist
-- **Emergency Override**: Manual dispatch with test skipping
-- **Comprehensive Logging**: Detailed step summaries in GitHub Actions
-- **Asset Packaging**: Chrome extension, MCP server, and WebAI server packages
+- `webai-mcp-v<version>.tgz`
+- `webai-server-v<version>.tgz`
+- `webai-chrome-extension-v<version>.zip`
 
-### **🚀 Production Releases (main-auto-release.yml)**
+### **Manual release steps**
 
-#### **Triggers**
-- **Workflow Run**: After tests pass on `main` branch
-- **Pull Requests**: Creates PR preview releases
-- **Manual Dispatch**: Emergency production releases
+1. Run `npm run release:local` and review generated artifacts.
+2. Upload artifacts to the target GitHub Release.
+3. Add release notes (use changelog output if desired).
 
-#### **Version Strategy**
-```bash
-# Semantic versioning based on conventional commits
-# feat: -> minor version bump
-# fix: -> patch version bump
-# BREAKING CHANGE: -> major version bump
+### **Changelog workflow**
 
-# PR versions: 1.5.1-pr-main.123
-# Production: 1.5.2 (incremented from 1.5.1)
-```
-
-#### **Automated Steps**
-1. **Version Detection**: Checks if current version already has a release
-2. **Smart Increment**: Auto-increments patch if release exists
-3. **Build & Test**: Full compilation and testing
-4. **Documentation Update**: Updates version numbers in README files
-5. **NPM Publishing**: Publishes with `@latest` tag (production)
-6. **GitHub Release**: Creates full production release
-7. **Changelog Generation**: Comprehensive changelog with categorized changes
-8. **Git Tagging**: Creates and pushes version tags
-
-### **📝 Changelog Automation**
-
-#### **Configuration (.auto-changelog)**
-```json
-{
-  "output": "CHANGELOG.md",
-  "template": "keepachangelog",
-  "unreleased": true,
-  "commitLimit": false,
-  "backfillLimit": false,
-  "handlebarsHelpers": {
-    "formatCommitType": "function(type) {
-      const types = {
-        feat: '✨ Added',
-        fix: '🐛 Fixed',
-        docs: '📚 Documentation',
-        style: '💄 Style',
-        refactor: '♻️ Refactor',
-        perf: '⚡ Performance',
-        test: '✅ Tests',
-        chore: '🔧 Chore',
-        ci: '👷 CI/CD',
-        build: '📦 Build'
-      };
-      return types[type] || '🔄 Changed';
-    }"
-  }
-}
-```
-
-#### **Changelog Scripts**
-```bash
-# Generate full changelog
-npm run changelog
-
-# Update unreleased section only
-npm run changelog:update
-
-# Version bump with changelog update
-npm run version:bump
-```
-
-#### **Changelog Features**
-- **Conventional Commits**: Automatically categorizes commits by type
-- **Emoji Formatting**: Visual commit type indicators
-- **Keep a Changelog**: Standard format with sections
-- **Unreleased Section**: Tracks upcoming changes
-- **Release Links**: Automatic GitHub release links
-
-### **Manual Release Process**
-```bash
-# 1. Ensure clean working directory
-git status
-
-# 2. Update version manually (if needed)
-npm version patch|minor|major
-
-# 3. Build and test
-npm run build:all
-npm test
-
-# 4. Publish packages
-cd webai-mcp && npm publish --tag dev
-cd ../webai-server && npm publish --tag dev
-
-# 5. Create GitHub release
-gh release create v1.5.1-dev.3 --title "v1.5.1-dev.3" --notes "Release notes"
-```
+- `npm run changelog` (full changelog refresh)
+- `npm run changelog:update` (unreleased section only)
 
 ## 🏗️ Build System
 
@@ -518,29 +427,13 @@ test -f webai-server/dist/browser-connector.d.ts && echo "Server types OK"
 test -f webai-server/dist/lighthouse/index.js && echo "Lighthouse build OK"
 ```
 
-### **CI/CD Build Integration**
+### **Local Build Verification**
 
-#### **GitHub Actions Build Steps**
-```yaml
-- name: 🏗️ Build packages
-  run: |
-    cd webai-mcp
-    npm run build
-    cd ../webai-server
-    npm run build
+- `npm run build:all`
+- `npm test`
+- `npm run lint`
 
-- name: ✅ Verify build artifacts
-  run: |
-    test -f webai-mcp/dist/mcp-server.js
-    test -f webai-server/dist/browser-connector.js
-    test -f webai-server/dist/lighthouse/index.js
-    echo "Build verification successful"
-```
-
-#### **Build Caching**
-- **Node.js Setup**: Caches npm dependencies
-- **TypeScript Cache**: Incremental compilation cache
-- **Build Artifacts**: Cached between workflow steps
+Use the artifact checks in the normal development section to validate outputs.
 
 ### **Build Troubleshooting**
 
@@ -564,7 +457,7 @@ npm run clean:locks && npm run install:all
 - **Parallel Compilation**: Both packages build simultaneously
 - **Incremental Builds**: Only changed files recompiled
 - **Watch Mode**: Instant rebuilds during development
-- **Memory Usage**: Optimized for CI/CD environments
+- **Memory Usage**: Optimized for local multi-platform development
 
 ## 🔢 Version Management System
 
@@ -623,7 +516,7 @@ All packages maintain identical version numbers:
 
 #### **Version Update Script**
 ```bash
-# Automated in CI/CD
+# Local release helper
 NEW_VERSION="1.5.1-dev.3"
 
 # Update webai-server
@@ -690,9 +583,10 @@ v1.5.1-pr-main.123, v1.5.1-pr-main.124
 
 #### **Automated Tagging**
 ```bash
-# In CI/CD workflows
-git tag "v${{ steps.version.outputs.new_version }}"
-git push origin "v${{ steps.version.outputs.new_version }}"
+# Manual release path
+VERSION="v1.5.1"
+git tag "$VERSION"
+git push origin "$VERSION"
 ```
 
 ### **Version Validation**
@@ -769,182 +663,13 @@ git commit -m "chore: rollback to version $PREVIOUS_VERSION"
 
 ## ⚙️ Workflow Automation
 
-### **GitHub Actions Workflows**
+### **Status**
 
-#### **Available Workflows**
-```
-.github/workflows/
-├── dev-auto-release.yml     # Development releases
-├── main-auto-release.yml    # Production releases
-├── manual-release.yml       # Manual release trigger
-└── test.yml                 # Testing workflow
-```
+Automated GitHub Actions workflows for build/release are currently disabled.
 
-### **Workflow Triggers**
-
-#### **Development Release Triggers**
-```yaml
-on:
-  workflow_run:
-    workflows: ["🧪 Test"]
-    types: [completed]
-    branches: [dev]
-  schedule:
-    - cron: '*/10 * * * *'    # Every 10 minutes
-  workflow_dispatch:
-    inputs:
-      skip_tests:
-        description: 'Skip test requirement'
-        type: boolean
-      force_release:
-        description: 'Force release even if no new commits'
-        type: boolean
-```
-
-#### **Production Release Triggers**
-```yaml
-on:
-  workflow_run:
-    workflows: ["🧪 Test"]
-    types: [completed]
-    branches: [main]
-  pull_request:
-    branches: [main]
-    types: [opened, synchronize, reopened]
-  workflow_dispatch:
-```
-
-### **Smart Release Logic**
-
-#### **Development Release Conditions**
-```bash
-# Only release if:
-# 1. Tests passed (workflow_run)
-# 2. Manual dispatch with skip_tests=true
-# 3. Scheduled run with new commits
-
-# Check for new commits since last dev release
-LATEST_DEV_TAG=$(git tag -l "*-dev.*" --sort=-version:refname | head -1)
-COMMITS_SINCE=$(git rev-list ${LATEST_DEV_TAG}..HEAD --count)
-
-if [ "$COMMITS_SINCE" -gt 0 ]; then
-  echo "🆕 Found $COMMITS_SINCE new commits - releasing"
-  echo "should_release=true" >> $GITHUB_OUTPUT
-else
-  echo "✅ No new commits - skipping release"
-  echo "should_release=false" >> $GITHUB_OUTPUT
-fi
-```
-
-#### **Production Release Logic**
-```bash
-# Check if current version already has a release
-if gh release view "v$CURRENT_VERSION" >/dev/null 2>&1; then
-  echo "Release v$CURRENT_VERSION exists, incrementing patch"
-  npm version patch --no-git-tag-version
-else
-  echo "No existing release for v$CURRENT_VERSION"
-fi
-```
-
-### **Workflow Security**
-
-#### **Permissions**
-```yaml
-permissions:
-  contents: write      # Create releases and push tags
-  packages: write      # Publish to NPM
-  id-token: write      # OIDC token for secure publishing
-```
-
-#### **Secrets Management**
-```bash
-# Required secrets
-GITHUB_TOKEN         # Automatic GitHub token
-NPM_DEPLOY          # NPM publishing token
-
-# Usage in workflows
-env:
-  NODE_AUTH_TOKEN: ${{ secrets.NPM_DEPLOY }}
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-```
-
-### **Self-Hosted Runners**
-
-#### **Runner Configuration**
-```yaml
-runs-on: [self-hosted, webai]
-```
-
-#### **Runner Benefits**
-- **Faster Builds**: Cached dependencies and build artifacts
-- **Consistent Environment**: Same environment for all builds
-- **Resource Control**: Dedicated resources for WebAI-MCP
-- **Security**: Private runner for sensitive operations
-
-### **Workflow Monitoring**
-
-#### **Success Indicators**
-```bash
-# Check workflow status
-gh run list --workflow=dev-auto-release.yml --limit=5
-
-# View specific run
-gh run view <run-id>
-
-# Check release status
-gh release list --limit=10
-```
-
-#### **Failure Handling**
-```bash
-# Common failure points:
-# 1. Test failures → Fix tests before release
-# 2. NPM publish errors → Check NPM_DEPLOY token
-# 3. Version conflicts → Manual version resolution
-# 4. Build failures → Check TypeScript compilation
-
-# Emergency manual release
-gh workflow run manual-release.yml
-```
-
-### **Workflow Customization**
-
-#### **Manual Dispatch Options**
-```yaml
-workflow_dispatch:
-  inputs:
-    skip_tests:
-      description: 'Skip test requirement (emergency only)'
-      required: false
-      default: false
-      type: boolean
-    force_release:
-      description: 'Force release even if no new commits'
-      required: false
-      default: false
-      type: boolean
-    version_type:
-      description: 'Version increment type'
-      required: false
-      default: 'patch'
-      type: choice
-      options:
-        - patch
-        - minor
-        - major
-```
-
-#### **Conditional Steps**
-```yaml
-- name: 📤 Publish to NPM
-  if: ${{ github.event_name != 'pull_request' }}
-  run: npm publish --access public
-
-- name: 🏷️ Create Release
-  if: ${{ needs.check-and-release.outputs.should_release == 'true' }}
-  uses: softprops/action-gh-release@v2
-```
+- `.github/workflows` is not used for CI or release automation.
+- Releases are prepared with local release scripts and published manually.
+- GitHub is used for source hosting and manual release distribution.
 
 ## 🧪 Testing Strategy
 
@@ -985,32 +710,33 @@ tests/
 
 ## 📦 NPM Package Management
 
-### 🚀 Production Releases
-- **Workflow**: `main-auto-release.yml` automates cross-component releases
-- **Changelog**: generated with `auto-changelog` and included in each release
+### 🚀 Release Packaging
+
+- Packaging is produced by `npm run release:local` scripts.
+- Upload all generated artifacts manually to GitHub Releases.
 
 ### 📈 Version Tracking
 - **version.json**: central version configuration
-- **CHANGELOG.md**: auto-generated from conventional commits
-- **GitHub Releases**: published automatically with Chrome extension packages
+- **CHANGELOG.md**: manually curated release notes and history
+- **GitHub Releases**: published manually with packaged artifacts
 
 ### 🏗️ Build Process Documentation
 - **TypeScript Compilation**: `tsc` outputs to the `dist/` directory
-- **Package Publishing**: automated NPM publishing with proper tags
-- **Chrome Extension Packaging**: automated ZIP creation for releases
-- **Documentation Updates**: version references updated automatically
+- **Package publishing**: run locally with `--publish` as needed
+- **Chrome Extension Packaging**: zip generated by local release scripts
+- **Documentation updates**: manual or script-assisted as part of release prep
 
 ### ✅ Testing Integration
 - **Unit Tests**: Jest with TypeScript support
 - **Integration Tests**: cross-component compatibility
-- **Build Verification**: automated artifact validation
+- **Build Verification**: artifact validation and local checks
 - **Cross-Platform Testing**: Windows, macOS, Linux compatibility
 
 ### **Package Configuration**
 
 #### **Robust Installation Pattern**
 ```bash
-# CI/CD installation with fallback
+# Local installation with fallback
 npm ci --prefer-offline || (rm -f package-lock.json && npm install)
 ```
 
@@ -1150,9 +876,9 @@ npm run update:compatible
 5. **Submit pull request** with clear description
 
 ### **Pull Request Requirements**
-- ✅ **All tests pass**: CI/CD must be green
-- ✅ **Code review**: At least one approval required
-- ✅ **Documentation**: Update relevant docs
-- ✅ **Changelog**: Add entry for significant changes
+ - ✅ **All tests pass**: Required checks in local verification pass
+ - ✅ **Code review**: At least one approval required
+ - ✅ **Documentation**: Update relevant docs
+ - ✅ **Changelog**: Add entry for significant changes
 
 This developer guide provides comprehensive information for contributing to and maintaining the WebAI-MCP project.

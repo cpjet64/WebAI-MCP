@@ -1,8 +1,8 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-02T15:10:00Z
+Last synchronized: 2026-03-04T00:00:00Z
 Branch context: `main`
-Status: MCP parity implementation + planning alignment + post-merge hardening
+Status: Local-only release/build model finalized; planning docs aligned
 
 Task status snapshot (this pass):
 - MIG-112: Completed.
@@ -19,6 +19,7 @@ Task status snapshot (this pass):
 - PERF-402: Completed.
 - PERF-403: Completed.
 - PERF-404: Completed.
+- OPS-500: Completed.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
 
 ## 1) Objective
@@ -166,3 +167,15 @@ Goal: keep quality and dependency posture healthy after completion of the migrat
 ### Current residual baseline
 
 - `windows-sys` duplicate remains transitive-only (`0.52.0` via `ring`, `0.59.0` via `mio`/`tokio`) and is accepted until upstream stack alignment is feasible.
+
+## 7) Local-Only Build + Release Migration (Current pass follow-up)
+
+Goal: remove GitHub-based autobuilding and move to explicit local build/release workflows.
+
+### 7.1 Tasks
+
+- [x] OPS-500: Confirm no active GitHub workflow automation is used for build or release in this repository.
+- [x] OPS-501: Update developer and supporting docs to document local-only release/build verification (`DEVELOPER_GUIDE.md`, `README.md`, `scripts/README.md`).
+- [x] OPS-502: Remove GitHub Actions update automation from Dependabot (`.github/dependabot.yml`).
+- [x] OPS-503: Align local dependency/setup scripts with manual release model.
+- [x] OPS-504: Verify `.github/workflows` contains no operational workflow definitions.

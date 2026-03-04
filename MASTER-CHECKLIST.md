@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-02T15:10:00Z
+Last synced: 2026-03-04T00:00:00Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -96,7 +96,14 @@ Residual risk:
 - [x] LEG-007: Move `RUN-THIS-PROMPT.md` into `legacy/notes/run-this-prompt.md`.
 - [x] LEG-008: Move `commands.txt` into `legacy/notes/commands.txt`.
 
-## 4) Definition of Done (for this pass)
+## 4) OPS-500 Local-Only Build + Release Migration
+
+- [x] OPS-501: Finalize local-only build and release posture by removing automation assumptions from contributor documentation (`README.md`, `DEVELOPER_GUIDE.md`, `scripts/README.md`).
+- [x] OPS-502: Remove GitHub Actions update automation from `.github/dependabot.yml`.
+- [x] OPS-503: Align dependency/setup scripts to document local verification and manual publication paths.
+- [x] OPS-504: Confirm `.github/workflows` has no active build/release workflow files and no operational automation in use.
+
+## 5) Definition of Done (for this pass)
 
 - [x] `MASTER-CHECKLIST.md` includes every active task from this implementation run.
 - [x] `EXECUTION-PLAN.md` documents sequencing, outputs, and verification.
