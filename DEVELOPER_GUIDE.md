@@ -159,17 +159,14 @@ npm run format              # Prettier formatting
 ## 🌿 Branch Strategy
 
 ### **Branch Structure**
-- **`main`**: Production-ready code, protected branch
-- **`dev`**: Development integration branch
-- **`feature/*`**: Feature development branches
-- **`hotfix/*`**: Critical bug fixes
-- **`release/*`**: Release preparation branches
+- **`main`**: Canonical production branch.
+- Short-lived feature/hotfix/release branches are optional and used only when a PR workflow requires review.
 
 ### **Workflow**
-1. **Feature Development**: `feature/feature-name` → PR to `dev`
-2. **Release Preparation**: `dev` → PR to `main`
-3. **Hotfixes**: `hotfix/fix-name` → PR to `main`
-4. **Development Fixes**: Direct commits to `dev` (for maintainers)
+1. Checkout `main` and create a short-lived branch for larger changes.
+2. Run local verification before opening the PR.
+3. Open PR to `main`, merge once checks and review are complete.
+4. Delete the short-lived branch after merge.
 
 ### **Branch Protection Rules**
 
@@ -179,12 +176,6 @@ npm run format              # Prettier formatting
 - ✅ **Require up-to-date branches**: Must rebase before merge
 - ✅ **Restrict pushes**: No direct pushes allowed
 - ✅ **Dismiss stale reviews**: When new commits are pushed
-
-#### **Dev Branch Protection**
-- ✅ **Run local verification on each handoff**: `npm run build:all` + `npm run test`
-- ✅ **Allow direct pushes**: For maintainers only
-- ✅ **Allow force pushes**: For rebasing and cleanup
-- ⚠️ **No review requirement**: For faster development iteration
 
 ## 🚀 Release Process (Local-Only)
 
