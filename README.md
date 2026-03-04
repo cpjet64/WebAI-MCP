@@ -626,7 +626,7 @@ WebAI-MCP is actively maintained and welcomes contributions.
 - Provide detailed reproduction steps and environment information
 
 ### **🔄 Development**
-- Fork the repository and create feature branches
+- Fork the repository and prepare changes for PR review on `main`.
 - Follow existing code style and patterns
 - Add tests for new functionality
 - Update documentation as needed

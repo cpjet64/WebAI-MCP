@@ -110,6 +110,10 @@ Residual risk:
   - `git branch -r` and `.github` layout show no stale remotes or workflow automation.
   - planning artifacts record both remote cleanup and local-only verification as complete.
 
+- [x] OPS-507: Remove branch-noise behavior from local verification tooling and docs:
+  - `tests/test-all.js` no longer checks out or depends on legacy feature branches.
+  - contributor docs now describe a `main`-first workflow with no required branch workflow.
+
 ## 6) Definition of Done (for this pass)
 
 - [x] `MASTER-CHECKLIST.md` includes every active task from this implementation run.

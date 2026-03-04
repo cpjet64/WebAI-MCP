@@ -159,20 +159,19 @@ npm run format              # Prettier formatting
 
 ### **Branch Structure**
 - **`main`**: Canonical production branch.
-- Short-lived feature/hotfix/release branches are optional and used only when a PR workflow requires review.
+- Keep active development and validation on `main`; use temporary branches only when required by external review tooling.
 
 ### **Workflow**
-1. Checkout `main` and create a short-lived branch for larger changes.
-2. Run local verification before opening the PR.
-3. Open PR to `main`, merge once checks and review are complete.
-4. Delete the short-lived branch after merge.
+1. Keep the working tree on `main` and run local verification.
+2. Open PR against `main` when review is required.
+3. Merge once checks and review are complete.
 
 ### **Branch Protection Rules**
 
 #### **Main Branch Protection**
 - ✅ **Require pull request reviews**: 1 approval minimum
 - ✅ **Require local verification**: `npm run build:all`, `npm run test`, and key diagnostics must pass
-- ✅ **Require up-to-date branches**: Must rebase before merge
+- ✅ **Require up-to-date review sources**: Merge sources must be current against `main`
 - ✅ **Restrict pushes**: No direct pushes allowed
 - ✅ **Dismiss stale reviews**: When new commits are pushed
 

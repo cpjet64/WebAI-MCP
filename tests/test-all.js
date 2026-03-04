@@ -4,7 +4,7 @@
  * Comprehensive Test Runner for Browser Tools MCP
  *
  * Automates testing of all components including server, MCP, extension,
- * and new diagnostic features across different branches.
+ * and diagnostic features on the active workspace.
  */
 
 import { execSync, spawn } from 'child_process';
@@ -41,7 +41,6 @@ class TestRunner {
       skipBuild: false,
       skipServer: false,
       skipExtension: false,
-      testBranches: false,
       verbose: false,
       ...options
     };
@@ -78,11 +77,6 @@ class TestRunner {
       await this.testServerComponents();
       await this.testChromeExtension();
       await this.testIntegration();
-
-      // Feature branch tests (optional)
-      if (this.options.testBranches) {
-        await this.testFeatureBranches();
-      }
 
       // Cleanup and summary
       await this.cleanup();
@@ -167,7 +161,7 @@ class TestRunner {
         });
         this.recordResult('pass', 'Diagnostic script executed successfully');
       } else {
-        this.recordResult('warn', 'Diagnostic script not found (may be on different branch)');
+        this.recordResult('warn', 'Diagnostic script not found (optional script missing)');
       }
     } catch (error) {
       this.recordResult('fail', `Diagnostic script failed: ${error.message}`);
@@ -180,7 +174,7 @@ class TestRunner {
         // Note: We don't actually run setup to avoid side effects
         this.recordResult('pass', 'Setup script found and appears valid');
       } else {
-        this.recordResult('warn', 'Setup script not found (may be on different branch)');
+        this.recordResult('warn', 'Setup script not found (optional script missing)');
       }
     } catch (error) {
       this.recordResult('fail', `Setup script test failed: ${error.message}`);
@@ -196,7 +190,7 @@ class TestRunner {
         });
         this.recordResult('pass', 'Installation validation completed');
       } else {
-        this.recordResult('warn', 'Validation script not found (may be on different branch)');
+        this.recordResult('warn', 'Validation script not found (optional script missing)');
       }
     } catch (error) {
       this.recordResult('fail', `Validation script failed: ${error.message}`);
@@ -404,80 +398,6 @@ class TestRunner {
     }
   }
 
-  async testFeatureBranches() {
-    this.logSection('Testing Feature Branches');
-
-    const branches = [
-      'feature/automated-diagnostics',
-      'feature/enhanced-error-handling',
-      'feature/proxy-support',
-      'feature/platform-enhancements'
-    ];
-
-    const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
-
-    for (const branch of branches) {
-      try {
-        this.log(`Testing branch: ${branch}`, 'blue', ICONS.test);
-
-        // Switch to branch
-        execSync(`git checkout ${branch}`, { stdio: 'pipe' });
-
-        // Test branch-specific features
-        await this.testBranchFeatures(branch);
-
-        this.recordResult('pass', `Branch ${branch} tested successfully`);
-
-      } catch (error) {
-        this.recordResult('fail', `Branch ${branch} test failed: ${error.message}`);
-      }
-    }
-
-    // Switch back to original branch
-    try {
-      execSync(`git checkout ${currentBranch}`, { stdio: 'pipe' });
-    } catch (error) {
-      this.log(`Could not switch back to ${currentBranch}`, 'yellow', ICONS.warning);
-    }
-  }
-
-  async testBranchFeatures(branch) {
-    switch (branch) {
-      case 'feature/automated-diagnostics':
-        if (fs.existsSync('scripts/diagnose.js')) {
-          execSync('node scripts/diagnose.js', { stdio: 'pipe' });
-        }
-        break;
-
-      case 'feature/enhanced-error-handling':
-        // Test enhanced error handling by building MCP server
-        if (fs.existsSync('webai-mcp/error-handler.ts')) {
-          execSync('npm run build', {
-            cwd: 'webai-mcp',
-            stdio: 'pipe'
-          });
-        }
-        break;
-
-      case 'feature/proxy-support':
-        // Test proxy configuration by building server
-        if (fs.existsSync('webai-server/proxy-config.ts')) {
-          execSync('npm run build', {
-            cwd: 'webai-server',
-            stdio: 'pipe'
-          });
-        }
-        break;
-
-      case 'feature/platform-enhancements':
-        if (fs.existsSync('scripts/platform-setup.js')) {
-          // Just validate the script exists and is syntactically correct
-          execSync('node -c scripts/platform-setup.js', { stdio: 'pipe' });
-        }
-        break;
-    }
-  }
-
   async waitForServer(url, timeout = 10000) {
     const start = Date.now();
 
@@ -555,13 +475,12 @@ class TestRunner {
 }
 
 // CLI interface
-if (import.meta.url === `file://${process.argv[1]}`) {
+  if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   const options = {
     skipBuild: args.includes('--skip-build'),
     skipServer: args.includes('--skip-server'),
     skipExtension: args.includes('--skip-extension'),
-    testBranches: args.includes('--test-branches'),
     verbose: args.includes('--verbose') || args.includes('-v')
   };
 
@@ -575,14 +494,12 @@ Options:
   --skip-build        Skip build process tests
   --skip-server       Skip server component tests
   --skip-extension    Skip Chrome extension tests
-  --test-branches     Test all feature branches
   --verbose, -v       Show detailed output
   --help, -h          Show this help message
 
 Examples:
   node scripts/test-all.js                    # Run all tests
   node scripts/test-all.js --verbose          # Run with detailed output
-  node scripts/test-all.js --test-branches    # Test all feature branches
   node scripts/test-all.js --skip-build       # Skip build tests
 `);
     process.exit(0);

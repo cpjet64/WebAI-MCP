@@ -22,6 +22,7 @@ Task status snapshot (this pass):
 - OPS-500: Completed.
 - OPS-505: Completed.
 - OPS-506: Completed.
+- OPS-507: Completed.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
 
 ## 1) Objective
@@ -35,7 +36,8 @@ This pass implements the discovered cleanup items and closes the targeted backlo
 3. applies the scoped production-facing cleanup fixes (`REV-202`, `REV-203`, `REV-205`, `REV-206`, `REV-207`),
 4. completes residual policy and dependency hygiene (`deny.toml`, `tower` version normalization) to reduce `cargo deny` risk,
 5. archives old planning artifacts, and
-6. updates active references to moved legacy assets.
+6. updates active references to moved legacy assets,
+7. removes branch-noise assumptions from local verification flow and aligns branch posture wording in contributor docs.
 
 Current residual item to be documented:
 - SEC-302: Track remaining transitive `windows-sys` duplicate as accepted residual (`windows-sys@0.52.0` via `ring`, `windows-sys@0.59.0` via `mio`/`tokio`) until direct source alignment is feasible.
@@ -115,6 +117,7 @@ Goal: avoid stale references after archive migration.
 4. Run targeted verification queries and record outputs in `docs/standardization-report.md`:
    - `rg -n "RUN-THIS-PROMPT.md"`
    - `rg -n "data-stub|placeholder|TODO|stub"` crates webai-mcp xtask chrome-extension
+   - `rg -n "feature/" tests/test-all.js DEVELOPER_GUIDE.md README.md`
 
 ### Phase 5 — Verification and handoff
 
@@ -183,3 +186,4 @@ Goal: remove GitHub-based autobuilding and move to explicit local build/release 
 - [x] OPS-504: Verify `.github/workflows` contains no operational workflow definitions.
 - [x] OPS-505: Remove stale origin remotes (`origin/dev`, `origin/feature/3tier-conversion`) and keep only `origin/main`.
 - [x] OPS-506: Verify branch and reference posture from `git branch -r` and update references in planning docs.
+- [x] OPS-507: Remove branch-noise assumptions from `tests/test-all.js` and update docs (`README.md`, `DEVELOPER_GUIDE.md`) for `main`-first workflow posture.
