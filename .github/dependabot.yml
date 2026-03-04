@@ -96,40 +96,6 @@ updates:
     # Note: Removed ignore rules for puppeteer-core and lighthouse
     # to allow major updates after successful testing
 
-  # ===================================================================
-  # GITHUB ACTIONS ECOSYSTEM (prepared for future workflows)
-  # ===================================================================
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "10:00"
-      timezone: "UTC"
-
-    # Assignee configuration (reviewers moved to CODEOWNERS)
-    assignees:
-      - "cpjet64"
-
-    # Commit message configuration
-    commit-message:
-      prefix: "ci"
-      include: "scope"
-
-    # Labels for GitHub Actions updates (will be created if they don't exist)
-    labels:
-      - "github-actions"
-      - "ci-cd"
-
-    # Limit open pull requests
-    open-pull-requests-limit: 3
-
-    # Group all GitHub Actions updates together
-    groups:
-      github-actions:
-        patterns:
-          - "*"
-
 # ===================================================================
 # SECURITY CONFIGURATION NOTES
 # ===================================================================
