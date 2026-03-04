@@ -858,7 +858,7 @@ npm run update:compatible
 4. **Check existing issues** to avoid duplicates
 
 ### **Contribution Process**
-1. **Fork repository** and create feature branch
+1. **Fork repository** and prepare a focused PR against `main`.
 2. **Make changes** following code quality standards
 3. **Add tests** for new functionality
 4. **Update documentation** as needed
