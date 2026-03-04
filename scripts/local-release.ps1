@@ -3,6 +3,7 @@ param(
     [string]$Version = "",
     [switch]$SkipBuild,
     [switch]$SkipTests,
+    [switch]$SkipHealth,
     [switch]$Publish,
     [string]$Tag = "latest",
     [Parameter(ValueFromRemainingArguments = $true)]
@@ -38,6 +39,9 @@ if ($RemainingArguments) {
             "--skip-tests" {
                 $SkipTests = $true
             }
+            "--skip-health" {
+                $SkipHealth = $true
+            }
             "--publish" {
                 $Publish = $true
             }
@@ -49,7 +53,7 @@ if ($RemainingArguments) {
                 $i++
             }
             "--help" {
-                Write-Host "Usage:`n  .\scripts\local-release.ps1 [options]`n`nOptions:`n  --out <dir>            Output directory for release assets (default: ./release-artifacts)`n  --version <value>      Override package version used for filenames`n  --skip-tests           Skip npm test`n  --skip-build           Skip npm run build:all`n  --publish              Publish packages after packaging`n  --tag <value>          NPM publish tag (default: latest)"
+                Write-Host "Usage:`n  .\scripts\local-release.ps1 [options]`n`nOptions:`n  --out <dir>            Output directory for release assets (default: ./release-artifacts)`n  --version <value>      Override package version used for filenames`n  --skip-tests           Skip npm test`n  --skip-build           Skip npm run build:all`n  --skip-health          Skip repository health preflight (npm run health:check)`n  --publish              Publish packages after packaging`n  --tag <value>          NPM publish tag (default: latest)"
                 exit 0
             }
             "-out" {
@@ -71,6 +75,9 @@ if ($RemainingArguments) {
             }
             "-skip-tests" {
                 $SkipTests = $true
+            }
+            "-skip-health" {
+                $SkipHealth = $true
             }
             "-publish" {
                 $Publish = $true
@@ -119,6 +126,10 @@ if ([string]::IsNullOrWhiteSpace($Version)) {
     $versionPath = Join-Path $RootDir "webai-server/package.json"
     $versionJson = Get-Content $versionPath -Raw | ConvertFrom-Json
     $Version = $versionJson.version
+}
+
+if (-not $SkipHealth.IsPresent) {
+    Invoke-BuildCommand "npm run health:check -- --strict"
 }
 
 if (-not $SkipBuild.IsPresent) {

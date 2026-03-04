@@ -1,6 +1,6 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-04T18:00:00Z
+Last synchronized: 2026-03-05T03:00:00Z
 Branch context: `main`
 Status: Local-only release/build model finalized; planning docs aligned
 
@@ -23,7 +23,23 @@ Task status snapshot (this pass):
 - OPS-505: Completed.
 - OPS-506: Completed.
 - OPS-507: Completed.
+- OPS-508: Completed.
+- OPS-509: Completed.
+- OPS-510: Completed.
+- OPS-511: Completed.
+- OPS-512: Completed.
+- OPS-513: Completed.
+- OPS-514: Completed.
+- OPS-515: Completed.
+- OPS-516: Completed.
+- OPS-517: Completed.
+- OPS-518: Completed.
+- OPS-519: Completed.
+- OPS-520: Completed.
+- OPS-521: Completed.
+- OPS-522: Completed.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
+- OPS-523: Completed.
 
 ## 1) Objective
 
@@ -33,11 +49,12 @@ This pass implements the discovered cleanup items and closes the targeted backlo
 1. synchronizes `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` with the discovered work state,
 2. implements MCP parity dispatch at the HTTP bridge level (`initialize`, `list_tools`, `call_tool`) and updates JSON-RPC envelopes,
 3. wires missing Rust server parity route for screenshot capture and keeps audit endpoint responses aligned with explicit provider messaging,
-3. applies the scoped production-facing cleanup fixes (`REV-202`, `REV-203`, `REV-205`, `REV-206`, `REV-207`),
-4. completes residual policy and dependency hygiene (`deny.toml`, `tower` version normalization) to reduce `cargo deny` risk,
-5. archives old planning artifacts, and
-6. updates active references to moved legacy assets,
-7. removes branch-noise assumptions from local verification flow and aligns branch posture wording in contributor docs.
+  4. applies the scoped production-facing cleanup fixes (`REV-202`, `REV-203`, `REV-205`, `REV-206`, `REV-207`),
+  5. completes residual policy and dependency hygiene (`deny.toml`, `tower` version normalization) to reduce `cargo deny` risk,
+  6. archives old planning artifacts, and
+  7. updates active references to moved legacy assets,
+  8. removes branch-noise assumptions from local verification flow and aligns branch posture wording in contributor docs.
+  9. adds a reusable repository health-check preflight for branch posture, unresolved marker debt, and legacy index consistency.
 
 Current residual item to be documented:
 - SEC-302: Track remaining transitive `windows-sys` duplicate as accepted residual (`windows-sys@0.52.0` via `ring`, `windows-sys@0.59.0` via `mio`/`tokio`) until direct source alignment is feasible.
@@ -95,6 +112,10 @@ Goal: remove active root clutter from historical planning artifacts.
 1. Move historical planning outputs to:
    - `legacy/plans/autonomous-full-development-pipeline-2026-02-26.md`
    - `legacy/plans/s-project-standardizer-2026-03-01.md`
+   - `legacy/plans/coverage-uncoverable-notes-2026-03-04.md`
+   - `legacy/plans/test-all-docs-sync-2026-03-04.md`
+   - `legacy/plans/test-all-skip-install-2026-03-04.md`
+   - `legacy/plans/unfinished-marker-hygiene-2026-03-04.md`
 2. Move historical docs to:
    - `legacy/docs/archive/3tierconversion.md`
    - `legacy/docs/archive/mcp-ts-sdk.md`
@@ -103,8 +124,10 @@ Goal: remove active root clutter from historical planning artifacts.
 4. Archive orphaned verification prompt and legacy command notes:
    - `legacy/notes/run-this-prompt.md`
    - `legacy/notes/commands.txt`
-5. Update `docs/ARCHIVE.md` so it accurately lists only currently retained legacy artifacts.
-6. Ensure `legacy/README.md` inventory reflects the moved items.
+5. Archive legacy CI-review summary:
+   - `legacy/notes/gh-review-summary-2026-03-04.md`
+6. Update `docs/ARCHIVE.md` so it accurately lists only currently retained legacy artifacts.
+7. Ensure `legacy/README.md` inventory reflects the moved items.
 
 ### Phase 4 — Reference alignment and drift closeout
 
@@ -113,7 +136,8 @@ Goal: avoid stale references after archive migration.
 1. Update `README.md` and `DEVELOPER_GUIDE.md` MCP protocol reference links to legacy doc path.
 2. Update `docs/ARCHIVE.md` to match the new legacy storage paths.
 3. Log completion in this plan and ensure checklist entry `No unresolved references ...` is validated.
-   - Recorded archival of `RUN-THIS-PROMPT.md` and `commands.txt` to `legacy/notes/`.
+   - Recorded archival of `RUN-THIS-PROMPT.md`, `commands.txt`, and `GH-REVIEW-SUMMARY.md` to `legacy/notes/`.
+   - Recorded completion archive of `.AGENTS/plans/*-2026-03-04.md` into `legacy/plans/`.
 4. Run targeted verification queries and record outputs in `docs/standardization-report.md`:
    - `rg -n "RUN-THIS-PROMPT.md"`
    - `rg -n "data-stub|placeholder|TODO|stub"` crates webai-mcp xtask chrome-extension
@@ -187,3 +211,144 @@ Goal: remove GitHub-based autobuilding and move to explicit local build/release 
 - [x] OPS-505: Remove stale origin remotes (`origin/dev`, `origin/feature/3tier-conversion`) and keep only `origin/main`.
 - [x] OPS-506: Verify branch and reference posture from `git branch -r` and update references in planning docs.
 - [x] OPS-507: Remove branch-noise assumptions from `tests/test-all.js` and update docs (`README.md`, `DEVELOPER_GUIDE.md`) for `main`-first workflow posture.
+- [x] OPS-508: Add explicit `--skip-install` support to `tests/test-all.js` without changing default dependency/build behavior:
+  - `--skip-install` gates `npm install` only.
+  - `--skip-build` remains the exclusive test-step short-circuit.
+  - Usage/help text documents the new flag.
+- [x] OPS-509: Synchronize `tests/test-all.js` usage and behavior documentation across `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `tests/README.md`:
+  - Document `--skip-install` and `--skip-build` semantics consistently.
+  - Document direct invocation and `npm run test:all -- <flags>` patterns.
+
+### 7.2 Tasks
+
+- [x] OPS-510: Marker and wording hygiene for active runtime surfaces:
+  - Remove confusing placeholder/stub language from active runtime comments and docs (`crates/server/src/os_paste.rs`, `README.md`).
+  - Add traceability in this plan and `MASTER-CHECKLIST.md`.
+
+- [x] OPS-511: Archive stale operational and planning artifacts into `legacy/`:
+  - Move `GH-REVIEW-SUMMARY.md` to `legacy/notes/gh-review-summary-2026-03-04.md`.
+  - Move `.AGENTS/plans/coverage-uncoverable-notes-2026-03-04.md`, `.AGENTS/plans/test-all-docs-sync-2026-03-04.md`,
+    `.AGENTS/plans/test-all-skip-install-2026-03-04.md`, and `.AGENTS/plans/unfinished-marker-hygiene-2026-03-04.md` to `legacy/plans/`.
+  - Update `docs/ARCHIVE.md` and `legacy/README.md` to keep all retained legacy artifacts indexed.
+
+- [x] OPS-512: Consolidate residual historical planning artifacts:
+  - Move `coverage-maximizer-2026-03-02.md` from `.AGENTS/plans/` to `legacy/plans/`.
+  - Move `legacy-cleanup-2026-03-04.md` from `.AGENTS/plans/` to `legacy/plans/`.
+  - Update plan/task source-of-truth references for consolidated index and archival rationale.
+
+### 7.3 Tasks
+
+- [x] OPS-513: Final source-of-truth freeze and legacy index consistency:
+  - Validate `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` use aligned completion status for `OPS-511` and `OPS-512`.
+  - Validate `docs/ARCHIVE.md` and `legacy/README.md` include all legacy artifacts now present in:
+    - `legacy/plans/`
+    - `legacy/docs/archive/`
+    - `legacy/notes/`
+  - Re-run reference and marker scans across planning/docs/legacy files to confirm no active stale path references remain:
+    - `rg -n "legacy/(plans|docs/archive|notes)|MASTER-CHECKLIST|EXECUTION-PLAN|RUN-THIS-PROMPT" README.md DEVELOPER_GUIDE.md docs/ARCHIVE.md .AGENTS/todo.md`
+    - `rg -n "(?i)todo|placeholder|stub|fixme|mutant|mutators|data-stub" --glob '!target' --glob '!.git' --glob '!legacy/**' .`
+  - Append completion closure to `docs/standardization-report.md`.
+
+### 7.4 Tasks
+
+- [x] OPS-514: Legacy coverage archive inventory cleanup:
+  - Add `legacy/coverage/coverage-report-2026-03-02-prework.md` to all active source-of-truth legacy indexes.
+  - Record closeout evidence in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+  - Confirm the working docs inventory matches the actual retained legacy coverage report.
+
+### 7.5 Tasks
+
+- [x] OPS-515: Repository health-check preflight and governance automation:
+  - Add `scripts/repository-health.mjs` with checks for:
+    - branch/remotes posture (`main` + `origin` and stale remotes warning),
+    - unresolved debt patterns in active source directories (`TODO`, `FIXME`, `mutant`, `mutators`, `data-stub`, `placeholder`),
+    - legacy index consistency against `docs/ARCHIVE.md` and `legacy/README.md`,
+    - minimum tooling requirements (`node`, `npm`) and baseline report output.
+  - Add `npm run health:check` to root `package.json`.
+  - Document command invocation and meaning in `DEVELOPER_GUIDE.md` and `scripts/README.md`.
+  - Add detailed plan/review traceability in `.AGENTS/todo.md` and `.AGENTS/plans/repository-health-check-2026-03-04.md`.
+  - Record completion evidence in `docs/standardization-report.md`.
+
+### 7.6 Tasks
+
+- [x] OPS-516: Legacy index closure for repository health-check planning artifact:
+  - Move `.AGENTS/plans/repository-health-check-2026-03-04.md` to `legacy/plans/repository-health-check-2026-03-04.md`.
+  - Add `legacy/plans/repository-health-check-2026-03-04.md` to `docs/ARCHIVE.md` with short retention rationale.
+  - Add the same entry to `legacy/README.md`.
+  - Re-run `npm run health:check` after archival updates and confirm PASS.
+
+### 7.7 Tasks
+
+- [x] OPS-517: Local-only automation posture hardening for repository health:
+  - [x] Extend `scripts/repository-health.mjs` to fail hard when `.github/workflows` contains YAML workflow files.
+  - [x] Document the invariant in `DEVELOPER_GUIDE.md` and `scripts/README.md` under repository health checks.
+  - [x] Add execution closeout evidence in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+
+### 7.8 Tasks
+
+- [x] OPS-518: Local release preflight hardening for local packaging:
+  - [x] Ensure `scripts/local-release.sh` and `scripts/local-release.ps1` enforce `npm run health:check` before build/test in the default run path.
+  - [x] Add `--skip-health`/`-skip-health` handling as an explicit emergency bypass on both scripts.
+  - [x] Document local-release preflight behavior and bypass option in:
+    - `DEVELOPER_GUIDE.md`
+    - `scripts/README.md`
+    - `.github/WORKFLOW_SUMMARY.md`
+  - [x] Record task closure in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+
+### 7.9 Tasks
+
+- [x] OPS-519: Enforce strict local-release posture:
+  - [x] Add `--strict` mode to `scripts/repository-health.mjs` with optional strict warning-to-error behavior.
+  - [x] Extend branch posture checks to include extra-local-branch detection outside `main`.
+  - [x] Update `scripts/local-release.sh` and `scripts/local-release.ps1` to invoke `npm run health:check -- --strict` by default.
+  - [x] Document strict-mode behavior in `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `.github/WORKFLOW_SUMMARY.md`.
+  - [x] Record task closure in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+
+### 7.10 Tasks
+
+- [x] OPS-520: Source-of-truth and legacy-index synchronization:
+  - [x] Remove the duplicated `OPS-519` status line and keep completion markers in order.
+  - [x] Add `OPS-520` closure evidence entry to `.AGENTS/todo.md`.
+  - [x] Add `OPS-520` completion evidence to `docs/standardization-report.md`.
+  - [x] Index `legacy/plans/ops-520-source-of-truth-closeout-2026-03-05.md` in both `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Archive `.AGENTS/plans/ops-520-source-of-truth-closeout-2026-03-05.md` to `legacy/plans/`.
+  - [x] Keep source-of-truth docs synchronized after this archival move.
+
+### 7.11 Tasks
+
+- [x] OPS-521: Final convergence closeout:
+  - [x] Add dedicated closure plan under `legacy/plans/ops-521-working-tree-convergence-closeout-2026-03-05.md`.
+  - [x] Confirm `MASTER-CHECKLIST.md`, `EXECUTION-PLAN.md`, and `docs/standardization-report.md` now include this completion entry.
+  - [x] Confirm all legacy artifacts in `legacy/plans`, `legacy/docs/archive`, and `legacy/notes` are indexed in both `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Record `OPS-521` completion evidence in this pass plan.
+
+### 7.12 Tasks
+
+- [x] OPS-522: Mainline posture reconciliation:
+  - [x] Reconfirm branch and remote posture:
+    - `git branch`
+    - `git branch -r`
+  - [x] Verify `origin` remote remains canonical and active only.
+  - [x] Re-run legacy inventory consistency checks for:
+    - `legacy/plans`
+    - `legacy/docs/archive`
+    - `legacy/notes`
+    - `legacy/coverage`
+  - [x] Confirm all four legacy locations are represented in `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Record all `OPS-522` completion evidence in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+  - [x] Archive this closeout via `.AGENTS/plans/ops-522-mainline-posture-and-closeout-2026-03-05.md`.
+
+### 7.13 Tasks
+
+- [x] OPS-523: Final planning artifact and legacy-tracking reconciliation:
+  - [x] Move the closeout planning artifact `ops-522-mainline-posture-and-closeout-2026-03-05.md` to `legacy/plans/`.
+  - [x] Validate that every file under `legacy/plans`, `legacy/docs/archive`, `legacy/notes`, and `legacy/coverage` exists and is listed in `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Ensure all newly untracked planning artifacts (`coverage-uncoverable-notes-2026-03-04.md`, `legacy-cleanup-2026-03-04.md`, `test-all-docs-sync-2026-03-04.md`, `test-all-skip-install-2026-03-04.md`, `unfinished-marker-hygiene-2026-03-04.md`, `repository-health-check-2026-03-04.md`) are tracked in git.
+  - [x] Add `OPS-523` closeout evidence to `.AGENTS/todo.md` and `docs/standardization-report.md`.
+
+### 7.14 Tasks
+
+- [x] OPS-523 verification:
+  - `git status --short`: confirm no untracked `legacy/` planning or notes artifacts remain.
+  - `rg -n "legacy/(plans|notes|docs/archive)|legacy/coverage/|OPS-523|ops-522-mainline-posture-and-closeout-2026-03-05|coverage-report-2026-03-02-prework" docs/ARCHIVE.md legacy/README.md .AGENTS/todo.md`: confirm source-of-truth index references exist for each legacy artifact.
+  - `rg -n "mutant|mutators|mutator"`: confirm no active "mutant" debt is present in tracked sources.

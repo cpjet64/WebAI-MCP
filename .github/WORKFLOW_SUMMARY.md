@@ -16,6 +16,8 @@ Use the local release scripts in `scripts/`:
 - `npm run release:local:unix`
 - `npm run release:local:win`
 
+The local release scripts now run a strict repository health preflight (`npm run health:check -- --strict`) before packaging, with `--skip-health` available for emergency bypass.
+
 The local release output (default: `release-artifacts/`) includes:
 
 - `webai-mcp-v<version>.tgz`

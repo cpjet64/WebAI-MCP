@@ -165,7 +165,7 @@ cargo run -p webai -- mcp identity
 # Show effective capabilities (respects WEBAI_BROWSER_PROVIDER)
 cargo run -p webai -- capabilities
 
-# JSON-RPC stubs (no rmcp required)
+# JSON-RPC compatibility commands (no rmcp required)
 cargo run -p webai -- mcp rpc initialize 1
 cargo run -p webai -- mcp rpc call getConsoleLogs 2
 

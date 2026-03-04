@@ -104,11 +104,16 @@ pub fn run_windows_paste(image_path: &str, app_name: &str) -> Result<String, Pas
 }
 
 #[cfg(all(feature = "windows-native", target_os = "windows"))]
+/// Coverage note: native Windows paste is intentionally deferred until the native dependency
+/// stack is migrated and validated on a Windows runner.
+/// The non-native path remains the active runtime contract and is covered by tests.
 pub fn run_windows_paste_native(_image_path: &str, _app_name: &str) -> Result<String, PasteError> {
     Err(PasteError::NotEnabled("windows-native impl pending"))
 }
 
 #[cfg(not(all(feature = "windows-native", target_os = "windows")))]
+/// Coverage note (intentional fallback): this branch is intentionally compiled whenever native
+/// Windows paste is unavailable, which covers all non-native CI environments this project runs.
 pub fn run_windows_paste_native(_image_path: &str, _app_name: &str) -> Result<String, PasteError> {
     Err(PasteError::NotEnabled("windows-native"))
 }
@@ -173,11 +178,16 @@ pub fn run_linux_paste(image_path: &str, app_name: &str) -> Result<String, Paste
 /// Native macOS paste path (feature-gated). When the `macos-native` feature
 /// is not enabled or not on macOS, returns a NotEnabled/Unsupported error.
 #[cfg(all(feature = "macos-native", target_os = "macos"))]
+/// Coverage note: native macOS paste is intentionally deferred while keeping a stable
+/// feature-gated API surface for downstream integrations.
+/// CI currently validates the fallback and cross-platform behavior.
 pub fn run_macos_paste_native(_image_path: &str, _app_name: &str) -> Result<String, PasteError> {
     Err(PasteError::NotEnabled("macos-native impl pending"))
 }
 
 #[cfg(not(all(feature = "macos-native", target_os = "macos")))]
+/// Coverage note (intentional fallback): this branch is the active coverage path for non-native
+/// macOS targets and is the expected runtime behavior in the default CI matrix.
 pub fn run_macos_paste_native(_image_path: &str, _app_name: &str) -> Result<String, PasteError> {
     Err(PasteError::NotEnabled("macos-native"))
 }

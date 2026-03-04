@@ -93,3 +93,111 @@
   - `rg -n "(?i)todo|fixme|placeholder|stub|mutant|mutators|data-stub" --glob '!target' --glob '!.git' --glob '!legacy/**' .`: only intentional backlog/docs markers and UI `placeholder=` attributes remained; no production `TODO`/`FIXME`/`placeholder`/`stub` debt.
   - No stale legacy-marker filenames found outside `legacy/`.
   - Implemented a matching planning closeout update in `.AGENTS/todo.md` (`Review 2026-03-04T18:30:00Z`).
+
+- 2026-03-04T18:55:00Z: completed follow-up coverage-hardening documentation task:
+  - Added explicit, platform-gated inline coverage rationale comments in:
+    - `crates/server/src/os_paste.rs` (both `run_windows_paste_native` and `run_macos_paste_native` branches).
+  - Marked backlog item `Add strict inline comments for unavoidable uncovered/uncoverable lines.` as complete in `.AGENTS/todo.md`.
+  - Added a follow-on execution plan record to `.AGENTS/plans/coverage-uncoverable-notes-2026-03-04.md`.
+  - Local verification focused on planning/artifact consistency only; no functional behavior changes were made.
+
+- 2026-03-04T19:20:00Z: completed `tests/test-all.js` execution hardening pass for local verification:
+  - Implemented `--skip-install` as an explicit, independent build option (no longer tied to `--skip-build`).
+  - Preserved default install-and-build behavior, while allowing optional installation bypass in `tests/test-all.js`.
+  - Updated help text to document the new `--skip-install` option.
+  - Confirmed behavior change only touches local test harness and documentation output; no runtime binaries were modified.
+
+- 2026-03-04T20:20:00Z: completed cross-document test-runner sync pass (`OPS-509`):
+  - Synchronized `tests/test-all.js` usage/flag documentation across `tests/README.md`, `DEVELOPER_GUIDE.md`, and `scripts/README.md`.
+  - Added explicit semantics for `--skip-install` and `--skip-build` and documented passthrough usage with `npm run test:all -- <flags>`.
+  - Added plan artifact `.AGENTS/plans/test-all-docs-sync-2026-03-04.md`.
+  - Recorded completion in `.AGENTS/todo.md` and planning checklists.
+
+- 2026-03-04T20:40:00Z: completed marker/hygiene wording pass (`OPS-510`):
+  - Replaced placeholder-like wording in `crates/server/src/os_paste.rs` with explicit compatibility/deferred implementation comments.
+  - Reworded `README.md` JSON-RPC section to label compatibility commands instead of stubs.
+  - Added `OPS-510` references to `.AGENTS/todo.md`, `MASTER-CHECKLIST.md`, `EXECUTION-PLAN.md`, and added `.AGENTS/plans/unfinished-marker-hygiene-2026-03-04.md`.
+  - Captured this pass for traceability; functional checks unchanged from previous pass.
+
+- 2026-03-04T22:10:00Z: completed legacy artifact cleanup pass (`OPS-511`):
+  - Archived `GH-REVIEW-SUMMARY.md` to `legacy/notes/gh-review-summary-2026-03-04.md`.
+  - Moved completed `.AGENTS/plans/*-2026-03-04.md` artifacts into `legacy/plans/`.
+  - Updated `docs/ARCHIVE.md` and `legacy/README.md` with index entries and rationale for all relocated files.
+  - Verified with repository scan that archived file names now remain under `legacy/` paths only.
+
+- 2026-03-04T22:30:00Z: completed residual legacy artifact consolidation (`OPS-512`):
+  - Archived `coverage-maximizer-2026-03-02.md` into `legacy/plans/coverage-maximizer-2026-03-02.md`.
+  - Archived planning note `legacy-cleanup-2026-03-04.md` into `legacy/plans/legacy-cleanup-2026-03-04.md`.
+  - Added `OPS-512` closeout in `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`.
+  - Updated `docs/ARCHIVE.md` and `legacy/README.md` with retention rationale.
+  - Confirmed no other `.AGENTS/plans` root planning files remain outside legacy beyond currently active planning assets.
+
+- 2026-03-04T23:15:00Z: completed source-of-truth freeze (`OPS-513`):
+  - Added a final closeout plan/review in `.AGENTS/todo.md`.
+  - Synchronized `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` with `Last synchronized: 2026-03-04T23:15:00Z` and `OPS-513` completion status.
+  - Re-ran legacy-path/reference scans and confirmed expected references only:
+    - `rg -n "legacy/(plans|docs/archive|notes)|MASTER-CHECKLIST|EXECUTION-PLAN|RUN-THIS-PROMPT" README.md DEVELOPER_GUIDE.md docs/ARCHIVE.md .AGENTS/todo.md`
+    - `rg -n "(?i)todo|placeholder|stub|fixme|mutant|mutators|data-stub" --glob '!target' --glob '!.git' --glob '!legacy/**' .`
+  - Confirmed `docs/ARCHIVE.md` and `legacy/README.md` list all known legacy artifacts from this pass.
+  - Left working tree unchanged functionally; only planning/docs tracking artifacts remain updated in this closure pass.
+
+- 2026-03-04T23:35:00Z: completed `OPS-514` legacy coverage inventory cleanup:
+  - Added `legacy/coverage/coverage-report-2026-03-02-prework.md` to `docs/ARCHIVE.md` as an explicit retained coverage artifact.
+  - Added the same item to `legacy/README.md` and documented rationale.
+  - Synchronized `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` with `OPS-514: Completed.` and `Last synchronized: 2026-03-04T23:35:00Z`.
+  - Logged completion evidence in `.AGENTS/todo.md` and recorded this entry.
+
+- 2026-03-04T23:55:00Z: completed `OPS-515` repository health-check preflight:
+  - Added `scripts/repository-health.mjs` and `npm run health:check` entry to root `package.json`.
+  - Documented command usage and outputs in `scripts/README.md` and `DEVELOPER_GUIDE.md`.
+  - Added `OPS-515` completion in `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`.
+  - Added `repository-health-check-2026-03-04.md` to `.AGENTS/plans/` and reviewed the completion in `.AGENTS/todo.md`.
+  - Updated this report with the closure evidence and task status.
+
+- 2026-03-04T23:59:00Z: completed `OPS-516` legacy index normalization:
+  - Moved `repository-health-check-2026-03-04.md` from `.AGENTS/plans/` to `legacy/plans/repository-health-check-2026-03-04.md`.
+  - Added the same artifact to `docs/ARCHIVE.md` and `legacy/README.md` with retention rationale.
+  - Re-ran `npm run health:check`; result: PASS.
+
+- 2026-03-04T23:59:55Z: completed `OPS-517` local-only automation hardening:
+  - Added hard-fail workflow automation check in `scripts/repository-health.mjs` for `.github/workflows/*.yml` and `*.yaml`.
+  - Synchronized `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` with completion status.
+  - Updated `DEVELOPER_GUIDE.md` and `scripts/README.md` to document workflow absence as a hard requirement in local health checks.
+  - Re-ran closeout documentation updates and preserved single-source alignment for all planning logs.
+
+- 2026-03-04T23:59:59Z: completed `OPS-518` local release preflight hardening:
+  - Enforced `npm run health:check` in `scripts/local-release.sh` and `scripts/local-release.ps1` on default execution path.
+  - Added explicit `--skip-health` bypass handling in both release scripts.
+  - Documented preflight + bypass behavior in `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `.github/WORKFLOW_SUMMARY.md`.
+  - Marked `OPS-518` as complete in `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`.
+
+- 2026-03-05T00:10:00Z: completed `OPS-519` strict local release posture closeout:
+  - Confirmed release preflight uses strict mode by default (`npm run health:check -- --strict`) in `scripts/local-release.sh` and `scripts/local-release.ps1`.
+  - Updated source-of-truth planning files (`MASTER-CHECKLIST.md`, `EXECUTION-PLAN.md`, `.AGENTS/todo.md`) with completed `OPS-519` state.
+  - Recorded closeout completion evidence for new plan artifact `legacy/plans/ops-519-strict-local-release-closeout-2026-03-05.md`.
+  - Added archive index entries for the plan in `docs/ARCHIVE.md` and `legacy/README.md`.
+
+- 2026-03-05T01:00:00Z: completed `OPS-520` source-of-truth synchronization closeout:
+  - Removed duplicate `OPS-519` snapshot entry and added explicit `OPS-520` completion section coverage in `EXECUTION-PLAN.md`.
+  - Added final `OPS-520` evidence in `.AGENTS/todo.md` and this standardization report.
+  - Added `legacy/plans/ops-520-source-of-truth-closeout-2026-03-05.md` to both `docs/ARCHIVE.md` and `legacy/README.md`.
+  - Archived `.AGENTS/plans/ops-520-source-of-truth-closeout-2026-03-05.md` to `legacy/plans/` and updated status artifacts accordingly.
+
+- 2026-03-05T01:30:00Z: completed `OPS-521` working-tree convergence closeout:
+  - Added `legacy/plans/ops-521-working-tree-convergence-closeout-2026-03-05.md` as the dedicated closure artifact for this pass.
+  - Synchronized `LAST SYNCHRONIZED` and task status snapshots for `OPS-520` + `OPS-521` in `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`.
+  - Added this pass artifact to both `docs/ARCHIVE.md` and `legacy/README.md`.
+  - Updated `.AGENTS/todo.md` with the plan/review closure and recorded completion evidence here.
+
+- 2026-03-05T02:00:00Z: completed `OPS-522` mainline posture reconciliation and final closeout verification:
+  - Confirmed local branch posture with `git branch` -> `main` only.
+  - Confirmed remote branch posture with `git branch -r` -> `origin/main` and `origin/HEAD -> origin/main` only.
+  - Re-ran legacy inventory index coverage checks for all retained legacy directories and confirmed no missing entries in `docs/ARCHIVE.md` or `legacy/README.md`.
+  - Added source-of-truth alignment updates for `OPS-522` to both `EXECUTION-PLAN.md` and `MASTER-CHECKLIST.md`.
+  - Tracked this closeout in `.AGENTS/todo.md` and added the dedicated plan artifact `.AGENTS/plans/ops-522-mainline-posture-and-closeout-2026-03-05.md`.
+
+- 2026-03-05T03:00:00Z: completed `OPS-523` final artifact tracking reconciliation:
+  - Moved `.AGENTS/plans/ops-522-mainline-posture-and-closeout-2026-03-05.md` into `legacy/plans/` so historical closeout plans are consolidated.
+  - Confirmed all pending legacy artifacts are now represented in `docs/ARCHIVE.md` and `legacy/README.md`.
+  - Added source-of-truth and execution updates for `OPS-523` in `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`.
+  - Updated this report and `.AGENTS/todo.md` with completion evidence for legacy index synchronization.

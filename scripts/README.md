@@ -146,6 +146,53 @@ npm run platform-setup
 npm run validate
 ```
 
+### Test Runner (`tests/test-all.js`)
+
+Run the full local verification sequence with a single command:
+
+```bash
+npm run test:all
+```
+
+Pass-through options:
+
+- `--skip-build`: Skip build step execution.
+- `--skip-install`: Skip dependency installation during build tests.
+- `--skip-server`: Skip server startup checks.
+- `--skip-extension`: Skip Chrome extension file checks.
+- `--verbose` or `-v`: Display verbose output.
+
+Examples:
+
+```bash
+npm run test:all -- --skip-build
+npm run test:all -- --skip-install
+npm run test:all -- --skip-build --skip-install
+node tests/test-all.js --help
+```
+
+## Maintenance Checks
+
+### Repository Health Check
+
+Run a repeatable local preflight before large cleanup or release preparation:
+
+```bash
+npm run health:check
+node scripts/repository-health.mjs
+```
+
+The script reports:
+
+- branch and remote posture (`main` + `origin` requirements),
+- unresolved marker/debt scan results in active source directories,
+- legacy artifact index consistency (`legacy/` files in `docs/ARCHIVE.md` and `legacy/README.md`),
+- required tooling availability (`node`, `npm`) and baseline version output.
+- workflow automation posture (hard failure if any `.github/workflows` YAML files are present).
+- strict mode is available (`npm run health:check -- --strict`) to fail on branch/posture warnings.
+
+Pass/fail behavior is exit-code aware, so it can be used in local shell prechecks and gated release scripts.
+
 ## Platform-Specific Files
 
 ### Windows
@@ -300,8 +347,20 @@ Common options:
 - `--out <dir>` choose output directory
 - `--skip-build` to skip `npm run build:all`
 - `--skip-tests` to skip `npm test`
+- `--skip-health` to skip repository preflight (`npm run health:check -- --strict`)
 - `--publish` to run local `npm publish` after packaging
 - `--tag <value>` npm tag to use when publishing
+
+Preflight behavior:
+
+- By default, local release runs `npm run health:check -- --strict` before build and test steps to enforce repository-health checks.
+- For emergency release paths, use `--skip-health` to bypass this preflight.
+
+Examples:
+
+```bash
+npm run release:local -- --skip-health
+```
 
 Publishing remains manual and explicit; no GitHub publish step is triggered automatically.
 

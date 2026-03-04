@@ -199,11 +199,16 @@ Equivalent script entry points:
 # Build + test + package + optional publish
 npm run release:local
 
+# By default, this runs npm run health:check -- --strict before build and test.
+
 # Skip tests for emergency builds only
 npm run release:local -- --skip-tests
 
 # Skip build if already prepared
 npm run release:local -- --skip-build
+
+# Skip repository health preflight if explicitly requested
+npm run release:local -- --skip-health
 
 # Publish after local build/packaging
 npm run release:local -- --publish --tag latest
@@ -419,10 +424,38 @@ test -f webai-server/dist/lighthouse/index.js && echo "Lighthouse build OK"
 ### **Local Build Verification**
 
 - `npm run build:all`
+- `npm run health:check`
 - `npm test`
 - `npm run lint`
 
 Use the artifact checks in the normal development section to validate outputs.
+
+### **End-to-End Test Runner (`tests/test-all.js`)**
+
+- `npm run test:all`
+- `npm run test:all -- --skip-build`
+- `npm run test:all -- --skip-install`
+- `npm run test:all -- --skip-build --skip-install`
+- `node tests/test-all.js --help`
+
+`--skip-install` skips dependency installation during package builds while preserving build execution unless combined with `--skip-build`.
+
+### **Repository Health Check**
+
+Run a local preflight to confirm maintenance posture before large cleanup or release prep:
+
+- `npm run health:check` (standard posture check)
+- `npm run health:check -- --strict` (strict release posture)
+- `node scripts/repository-health.mjs`
+
+The check validates:
+- branch posture (`main` + origin expectations),
+- unresolved marker/debt patterns in active source directories,
+- legacy index consistency for files stored under `legacy/`,
+- required local tooling (`node`, `npm`) and version presence.
+- repository automation posture (no `.github/workflows` YAML files for build/release).
+- exit status (non-zero for blocking issues).
+- use `--strict` for release posture so warnings also fail.
 
 ### **Build Troubleshooting**
 
@@ -657,6 +690,7 @@ git commit -m "chore: rollback to version $PREVIOUS_VERSION"
 Automated GitHub Actions workflows for build/release are currently disabled.
 
 - `.github/workflows` is not used for CI or release automation.
+- `npm run health:check` enforces this as a hard gate by failing if any `.github/workflows/*.yml` or `*.yaml` files exist.
 - Releases are prepared with local release scripts and published manually.
 - GitHub is used for source hosting and manual release distribution.
 

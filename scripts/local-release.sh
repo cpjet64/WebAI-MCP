@@ -6,6 +6,7 @@ OUT_DIR="$ROOT_DIR/release-artifacts"
 VERSION_OVERRIDE=""
 RUN_TESTS=1
 RUN_BUILD=1
+RUN_HEALTH=1
 PUBLISH=0
 NPM_TAG="latest"
 
@@ -19,6 +20,7 @@ Options:
   --version <value>      Override package version used for filenames
   --skip-tests           Skip npm test
   --skip-build           Skip npm run build:all
+  --skip-health          Skip repository health preflight (npm run health:check)
   --publish              Publish packages after packaging
   --tag <value>          NPM publish tag (default: latest)
   --help                 Show this help message
@@ -78,6 +80,10 @@ while [[ $# -gt 0 ]]; do
       RUN_BUILD=0
       shift
       ;;
+    --skip-health)
+      RUN_HEALTH=0
+      shift
+      ;;
     --publish)
       PUBLISH=1
       shift
@@ -105,6 +111,10 @@ if [ -z "$VERSION" ]; then
 fi
 
 mkdir -p "$OUT_DIR"
+
+if [ "$RUN_HEALTH" -eq 1 ]; then
+  run npm run health:check -- --strict
+fi
 
 if [ "$RUN_BUILD" -eq 1 ]; then
   run npm run build:all

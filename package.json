@@ -4,6 +4,7 @@
   "private": true,
   "description": "WebAI-MCP workspace for automated changelog and release management - v1.5.1-dev.3",
   "scripts": {
+    "health:check": "node scripts/repository-health.mjs",
     "changelog": "auto-changelog --config .auto-changelog",
     "changelog:update": "auto-changelog --config .auto-changelog --unreleased",
     "version:bump": "npm run changelog && git add CHANGELOG.md",

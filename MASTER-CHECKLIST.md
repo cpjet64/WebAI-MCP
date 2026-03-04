@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-04T18:00:00Z
+Last synced: 2026-03-05T03:00:00Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -113,6 +113,146 @@ Residual risk:
 - [x] OPS-507: Remove branch-noise behavior from local verification tooling and docs:
   - `tests/test-all.js` no longer checks out or depends on legacy feature branches.
   - contributor docs now describe a `main`-first workflow with no required branch workflow.
+
+- [x] OPS-508: Add explicit `--skip-install` handling to `tests/test-all.js` while preserving `--skip-build` behavior:
+  - `--skip-install` now independently controls dependency installation.
+  - `--skip-build` remains the exclusive gate for skipping build tests.
+  - Usage output in `tests/test-all.js` documents the new flag.
+
+- [x] OPS-509: Synchronize test-runner documentation across `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `tests/README.md`:
+  - Document `--skip-install` and `--skip-build` semantics consistently.
+  - Document direct invocation (`node tests/test-all.js ...`) and `npm run test:all -- ...` passthrough patterns.
+
+### 5.1) OPS-510 Marker and wording hygiene
+
+- [x] OPS-510: Remove placeholder-like language from active runtime surfaces and user-facing docs:
+  - `crates/server/src/os_paste.rs` comments now describe explicit compatibility/deferred behavior for native features.
+  - `README.md` CLI examples now label JSON-RPC compatibility commands (not stubs).
+
+### 5.2) OPS-511 Legacy artifact cleanup and index consolidation
+
+- [x] OPS-511: Archive stale operational and planning artifacts after local-only transition:
+  - `GH-REVIEW-SUMMARY.md` moved to `legacy/notes/gh-review-summary-2026-03-04.md`.
+  - `.AGENTS/plans/*-2026-03-04.md` cleanup artifacts moved to `legacy/plans/`.
+  - `docs/ARCHIVE.md` and `legacy/README.md` updated with retained-location rationale.
+
+### 5.3) OPS-512 Final historical plan artifact consolidation
+
+- [x] OPS-512: Consolidate residual historical planning artifacts into legacy storage:
+  - `coverage-maximizer-2026-03-02.md` moved from `.AGENTS/plans/` to `legacy/plans/`.
+  - `legacy-cleanup-2026-03-04.md` moved from `.AGENTS/plans/` to `legacy/plans/`.
+  - `docs/ARCHIVE.md` and `legacy/README.md` updated to reflect both moved artifacts.
+
+### 5.4) OPS-513 Source-of-truth freeze and final index check
+
+- [x] OPS-513: Run final source-of-truth and artifact-index freeze:
+  - Reconfirm checklist alignment across `MASTER-CHECKLIST.md`, `EXECUTION-PLAN.md`, and `.AGENTS/todo.md`.
+  - Verify `docs/ARCHIVE.md` and `legacy/README.md` list all legacy assets now present in:
+    - `legacy/plans/`
+    - `legacy/docs/archive/`
+    - `legacy/notes/`
+  - Perform cross-document reference checks to confirm stale references are absent outside indexed locations.
+  - Record closure evidence in `docs/standardization-report.md`.
+
+### 5.5) OPS-514 Legacy coverage archive inventory cleanup
+
+- [x] OPS-514: Add `legacy/coverage/coverage-report-2026-03-02-prework.md` to:
+  - `docs/ARCHIVE.md`
+  - `legacy/README.md`
+- [x] Record completion in `.AGENTS/todo.md`, `EXECUTION-PLAN.md`, and `docs/standardization-report.md`.
+- [x] Re-run final legacy inventory scan to confirm `legacy/coverage` is represented in source-of-truth indexes.
+
+### 5.6) OPS-515 Repository health check automation
+
+- [x] OPS-515: Add a maintainable local repository preflight command:
+  - Add `scripts/repository-health.mjs` checks for branch/posture, marker debt, legacy index consistency, and minimum tooling.
+  - Add `npm run health:check` to root scripts for repeatable execution.
+  - Document usage in `DEVELOPER_GUIDE.md` and `scripts/README.md`.
+  - Keep plan/review evidence in `.AGENTS/todo.md`.
+  - Record completion evidence in `docs/standardization-report.md`.
+
+### 5.7) OPS-516 Legacy index closure for repository-health-check plan
+
+- [x] OPS-516: Finalize legacy index closure for repository health-check planning artifacts:
+  - [x] Add `legacy/plans/repository-health-check-2026-03-04.md` to `docs/ARCHIVE.md` with retention rationale.
+  - [x] Add `legacy/plans/repository-health-check-2026-03-04.md` to `legacy/README.md`.
+  - [x] Move `.AGENTS/plans/repository-health-check-2026-03-04.md` to `legacy/plans/repository-health-check-2026-03-04.md`.
+  - [x] Re-run `npm run health:check` after archival closure.
+
+### 5.8) OPS-517 Local-only automation hardening
+
+- [x] OPS-517: Add hard guard for local-only automation posture in repository health checks:
+  - [x] `scripts/repository-health.mjs` fails when YAML files are present in `.github/workflows`.
+  - [x] `DEVELOPER_GUIDE.md` and `scripts/README.md` document the invariant that workflow automation files must be absent.
+  - [x] `docs/standardization-report.md` captures evidence of completed enforcement.
+
+### 5.9) OPS-518 Local release preflight hardening
+
+- [x] OPS-518: Enforce repository health preflight in local release scripts:
+  - [x] `scripts/local-release.sh` and `scripts/local-release.ps1` run `npm run health:check` before build/test.
+  - [x] Add `--skip-health` as an explicit emergency bypass on both scripts.
+  - [x] Document behavior and fallback in `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `.github/WORKFLOW_SUMMARY.md`.
+
+### 5.10) OPS-519 Strict local-release health mode
+
+- [x] OPS-519: Convert local release preflight to strict mode by default:
+  - [x] Add strict mode to `scripts/repository-health.mjs` (`--strict`) so warning-only posture issues become hard failures.
+  - [x] Extend branch checks to detect extra local branches outside `main` and gate release behavior accordingly.
+  - [x] Update local release scripts to call `npm run health:check -- --strict` by default.
+  - [x] Update health check and release docs in `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `.github/WORKFLOW_SUMMARY.md` with strict-mode semantics.
+
+### 5.11) OPS-520 Source-of-truth and index closeout
+
+- [x] OPS-520: Finalize final planning/source-of-truth coherence:
+  - [x] Remove duplicate `OPS-519` status entries in `EXECUTION-PLAN.md`.
+  - [x] Update task status snapshots in `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` to include `OPS-520`.
+  - [x] Record this closure in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+  - [x] Index `legacy/plans/ops-520-source-of-truth-closeout-2026-03-05.md` in `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Archive the plan artifact in `legacy/plans/`.
+
+### 5.12) OPS-521 Final working-tree convergence closeout
+
+- [x] OPS-521: Finalize a clean closeout state for all planning and legacy cleanup artifacts:
+  - [x] Keep this checklist synchronized with `EXECUTION-PLAN.md` and this run's completion evidence.
+  - [x] Add `legacy/plans/ops-521-working-tree-convergence-closeout-2026-03-05.md` to both legacy indexes:
+    - `docs/ARCHIVE.md`
+    - `legacy/README.md`
+  - [x] Capture closure evidence in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+  - [x] Confirm no legacy artifact references are expected outside `legacy/plans`, `legacy/docs/archive`, `legacy/notes`, and `legacy/coverage`.
+
+### 5.13) OPS-522 Mainline posture reconciliation
+
+- [x] OPS-522: Confirm final branch posture and source-of-truth alignment:
+  - [x] Reconfirm `git branch` and `git branch -r` show only the `main` local branch and `origin/main` remote branch.
+  - [x] Verify remote target remains canonical (`origin`) and no extra remotes are active.
+  - [x] Re-run legacy inventory inclusion checks across `legacy/plans`, `legacy/docs/archive`, `legacy/notes`, and `legacy/coverage`.
+  - [x] Confirm all retained legacy artifacts are indexed in both `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Record this closeout in `.AGENTS/todo.md`, `EXECUTION-PLAN.md`, and `docs/standardization-report.md`.
+  - [x] Archive this closeout via `.AGENTS/plans/ops-522-mainline-posture-and-closeout-2026-03-05.md`.
+
+### 5.14) OPS-523 Final legacy-tracking reconciliation
+
+- [x] OPS-523: Keep planning and artifact records fully trackable and synchronized:
+  - [x] Move `.AGENTS/plans/ops-522-mainline-posture-and-closeout-2026-03-05.md` into `legacy/plans/`.
+  - [x] Confirm that every file under `legacy/plans`, `legacy/docs/archive`, `legacy/notes`, and `legacy/coverage` is added to git and listed in both `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Ensure `docs/ARCHIVE.md` contains a retention entry for `legacy/plans/ops-522-mainline-posture-and-closeout-2026-03-05.md`.
+  - [x] Record execution evidence in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+
+## Task status snapshot (this pass)
+
+- OPS-511: Completed.
+- OPS-512: Completed.
+- OPS-513: Completed.
+- OPS-514: Completed.
+- OPS-515: Completed.
+- OPS-516: Completed.
+- OPS-517: Completed.
+- OPS-518: Completed.
+- OPS-519: Completed.
+- OPS-520: Completed.
+- OPS-521: Completed.
+- OPS-522: Completed.
+- OPS-523: Completed.
 
 ## 6) Definition of Done (for this pass)
 

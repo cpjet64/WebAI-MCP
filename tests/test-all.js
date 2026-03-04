@@ -39,6 +39,7 @@ class TestRunner {
   constructor(options = {}) {
     this.options = {
       skipBuild: false,
+      skipInstall: false,
       skipServer: false,
       skipExtension: false,
       verbose: false,
@@ -201,7 +202,7 @@ class TestRunner {
     this.logSection('Testing Build Process');
 
     if (this.options.skipBuild) {
-      this.log('Skipping build tests (--skip-build)', 'yellow', ICONS.warning);
+      this.recordResult('warn', 'Skipping build tests (--skip-build)');
       return;
     }
 
@@ -217,10 +218,14 @@ class TestRunner {
         const packagePath = path.join(process.cwd(), pkg.path);
 
         // Install dependencies
-        execSync('npm install', {
-          cwd: packagePath,
-          stdio: this.options.verbose ? 'inherit' : 'pipe'
-        });
+        if (!this.options.skipInstall) {
+          execSync('npm install', {
+            cwd: packagePath,
+            stdio: this.options.verbose ? 'inherit' : 'pipe'
+          });
+        } else {
+          this.recordResult('warn', `Skipping dependency install for ${pkg.name} (--skip-install)`);
+        }
 
         // Build package
         execSync('npm run build', {
@@ -475,10 +480,11 @@ class TestRunner {
 }
 
 // CLI interface
-  if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const args = process.argv.slice(2);
   const options = {
     skipBuild: args.includes('--skip-build'),
+    skipInstall: args.includes('--skip-install'),
     skipServer: args.includes('--skip-server'),
     skipExtension: args.includes('--skip-extension'),
     verbose: args.includes('--verbose') || args.includes('-v')
@@ -488,19 +494,22 @@ class TestRunner {
     console.log(`
 WebAI MCP Test Runner
 
-Usage: node scripts/test-all.js [options]
+Usage: node tests/test-all.js [options]
 
 Options:
   --skip-build        Skip build process tests
+  --skip-install      Skip dependency install during build process tests
   --skip-server       Skip server component tests
   --skip-extension    Skip Chrome extension tests
   --verbose, -v       Show detailed output
   --help, -h          Show this help message
 
 Examples:
-  node scripts/test-all.js                    # Run all tests
-  node scripts/test-all.js --verbose          # Run with detailed output
-  node scripts/test-all.js --skip-build       # Skip build tests
+  node tests/test-all.js                    # Run all tests
+  node tests/test-all.js --verbose          # Run with detailed output
+  node tests/test-all.js --skip-build       # Skip build tests
+  node tests/test-all.js --skip-install     # Skip dependency install, keep build tests
+  node tests/test-all.js --skip-build --skip-install # Skip build and install checks
 `);
     process.exit(0);
   }

@@ -17,6 +17,21 @@ This directory contains all test files and testing resources for the WebAI-MCP p
 **Usage**:
 ```bash
 npm run test:all
+node tests/test-all.js [--skip-build] [--skip-install] [--skip-server] [--skip-extension] [--verbose | -v]
+```
+
+**Flags**:
+- `--skip-build`: Skip build tests only.
+- `--skip-install`: Skip `npm install` during build tests.
+- `--skip-server`: Skip MCP/WebAI server startup checks.
+- `--skip-extension`: Skip Chrome extension file checks.
+- `--verbose`, `-v`: Show full command output.
+
+**Examples**:
+```bash
+npm run test:all -- --skip-build
+npm run test:all -- --skip-install
+npm run test:all -- --skip-build --skip-install
 ```
 
 ### **🌐 `test-element-interaction.html`**
@@ -64,6 +79,8 @@ Copy and paste the prompts from this file to systematically test all WebAI-MCP f
 ```bash
 # Run all automated tests (JS runner)
 npm run test:all
+npm run test:all -- --skip-install
+node tests/test-all.js --skip-build --skip-install
 
 # Check system compatibility
 npm run diagnose
