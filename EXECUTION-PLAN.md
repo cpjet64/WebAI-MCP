@@ -1,6 +1,6 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-04T00:00:00Z
+Last synchronized: 2026-03-04T18:00:00Z
 Branch context: `main`
 Status: Local-only release/build model finalized; planning docs aligned
 
@@ -20,6 +20,8 @@ Task status snapshot (this pass):
 - PERF-403: Completed.
 - PERF-404: Completed.
 - OPS-500: Completed.
+- OPS-505: Completed.
+- OPS-506: Completed.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
 
 ## 1) Objective
@@ -179,3 +181,5 @@ Goal: remove GitHub-based autobuilding and move to explicit local build/release 
 - [x] OPS-502: Remove GitHub Actions update automation from Dependabot (`.github/dependabot.yml`).
 - [x] OPS-503: Align local dependency/setup scripts with manual release model.
 - [x] OPS-504: Verify `.github/workflows` contains no operational workflow definitions.
+- [x] OPS-505: Remove stale origin remotes (`origin/dev`, `origin/feature/3tier-conversion`) and keep only `origin/main`.
+- [x] OPS-506: Verify branch and reference posture from `git branch -r` and update references in planning docs.

@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-04T00:00:00Z
+Last synced: 2026-03-04T18:00:00Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -102,8 +102,15 @@ Residual risk:
 - [x] OPS-502: Remove GitHub Actions update automation from `.github/dependabot.yml`.
 - [x] OPS-503: Align dependency/setup scripts to document local verification and manual publication paths.
 - [x] OPS-504: Confirm `.github/workflows` has no active build/release workflow files and no operational automation in use.
+- [x] OPS-505: Remove stale remote branch refs from origin (`origin/dev`, `origin/feature/3tier-conversion`) so only `origin/main` remains.
 
-## 5) Definition of Done (for this pass)
+## 5) OPS-506 Reference and branch posture verification
+
+- [x] OPS-506: Verify branch topology and doc references are consistent with local-only posture:
+  - `git branch -r` and `.github` layout show no stale remotes or workflow automation.
+  - planning artifacts record both remote cleanup and local-only verification as complete.
+
+## 6) Definition of Done (for this pass)
 
 - [x] `MASTER-CHECKLIST.md` includes every active task from this implementation run.
 - [x] `EXECUTION-PLAN.md` documents sequencing, outputs, and verification.
