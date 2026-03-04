@@ -5,16 +5,8 @@
 # Global fallback - cpjet64 owns everything by default
 * @cpjet64
 
-# Dependabot dependency updates
-# These patterns will automatically request cpjet64 as reviewer for Dependabot PRs
-package.json @cpjet64
-package-lock.json @cpjet64
-*/package.json @cpjet64
-*/package-lock.json @cpjet64
-
 # GitHub configuration files
 .github/ @cpjet64
-.github/dependabot.yml @cpjet64
 .github/CODEOWNERS @cpjet64
 
 # Documentation

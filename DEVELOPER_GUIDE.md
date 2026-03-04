@@ -65,8 +65,7 @@ webai-mcp/
 │
 ├── 📁 .github/                        # GitHub Configuration
 │   ├── 📄 CODEOWNERS                  # Code ownership
-│   ├── 📄 WORKFLOW_SUMMARY.md         # Local workflow and release summary
-│   └── 📄 dependabot.yml              # Dependency updates
+│   └── 📄 WORKFLOW_SUMMARY.md         # Local workflow and release summary
 │
 ├── 📁 docs/                           # Documentation
 │   ├── 📁 i18n/                       # Internationalization
