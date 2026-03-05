@@ -1,6 +1,6 @@
 # Master Checklist (Source-of-Truth)
 
-Last synced: 2026-03-05T03:00:00Z
+Last synced: 2026-03-05T05:15:00Z
 Status: Active
 Scope: Source-of-truth planning updates plus targeted cleanup and compatibility behavior fixes for discovered placeholder/stub items.
 
@@ -191,7 +191,7 @@ Residual risk:
 - [x] OPS-518: Enforce repository health preflight in local release scripts:
   - [x] `scripts/local-release.sh` and `scripts/local-release.ps1` run `npm run health:check` before build/test.
   - [x] Add `--skip-health` as an explicit emergency bypass on both scripts.
-  - [x] Document behavior and fallback in `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `.github/WORKFLOW_SUMMARY.md`.
+  - [x] Document behavior and fallback in `DEVELOPER_GUIDE.md` and `scripts/README.md`.
 
 ### 5.10) OPS-519 Strict local-release health mode
 
@@ -199,7 +199,7 @@ Residual risk:
   - [x] Add strict mode to `scripts/repository-health.mjs` (`--strict`) so warning-only posture issues become hard failures.
   - [x] Extend branch checks to detect extra local branches outside `main` and gate release behavior accordingly.
   - [x] Update local release scripts to call `npm run health:check -- --strict` by default.
-  - [x] Update health check and release docs in `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `.github/WORKFLOW_SUMMARY.md` with strict-mode semantics.
+  - [x] Update health check and release docs in `DEVELOPER_GUIDE.md` and `scripts/README.md` with strict-mode semantics.
 
 ### 5.11) OPS-520 Source-of-truth and index closeout
 
@@ -238,6 +238,44 @@ Residual risk:
   - [x] Ensure `docs/ARCHIVE.md` contains a retention entry for `legacy/plans/ops-522-mainline-posture-and-closeout-2026-03-05.md`.
   - [x] Record execution evidence in `.AGENTS/todo.md` and `docs/standardization-report.md`.
 
+### 5.15) OPS-524 Reliability hardening and worktree posture sweep
+
+- [x] OPS-524: Finalize active reliability posture for local verification:
+  - [x] Add dependency-install fallback resilience in `tests/test-all.js`.
+  - [x] Add git worktree count posture check in `scripts/repository-health.mjs`.
+  - [x] Record `OPS-524` execution evidence in source-of-truth tracking files.
+  - [x] Add this closeout to `docs/standardization-report.md`.
+
+### 5.16) OPS-525 Single-branch + workflow queue readiness closeout
+
+- [x] OPS-525: Confirm local branch/worktree/run-posture alignment after single-branch migration:
+  - [x] Re-run `git branch`, `git branch -r`, and `git worktree list` and verify single-main-posture expectations.
+  - [x] Re-run `gh run list` checks for queued and in-progress runs for this repository and verify no active CI is queued.
+  - [x] Run `node scripts/repository-health.mjs --strict`.
+  - [x] Record completion evidence in `docs/standardization-report.md`, `.AGENTS/todo.md`, and source-of-truth status snapshots.
+
+### 5.17) OPS-526 Source-of-truth and stale workflow summary cleanup
+
+- [x] OPS-526: Clean up stale local-only workflow documentation artifacts and keep source-of-truth alignment:
+  - [x] Archive `.github/WORKFLOW_SUMMARY.md` to `legacy/notes/workflow-summary-2026-03-04.md`.
+  - [x] Remove `.github/WORKFLOW_SUMMARY.md` references from active source-of-truth and development docs.
+  - [x] Index `legacy/notes/workflow-summary-2026-03-04.md` in `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Archive `.AGENTS/plans/ops-526-doc-hygiene-closeout-2026-03-05.md` under `legacy/plans/` and index it in legacy inventories.
+
+### 5.18) OPS-527 Final cleanup and posture audit
+
+- [x] OPS-527: Final cleanup and posture audit for unresolved debt and operational posture:
+  - [x] Re-run repository-wide marker debt checks for `TODO`, `FIXME`, `placeholder`, `stub`, `mutant`, `mutators`, and `XXX` in active source and documentation.
+  - [x] Reconfirm branch/remotes/worktree and run-queue posture:
+    - `git branch`
+    - `git branch -r`
+    - `git worktree list`
+    - `gh run list --status queued`
+    - `gh run list --status in_progress`
+  - [x] Confirm no stale references to stale workflow-summary artifacts remain in source-of-truth and active docs.
+  - [x] Keep formatting and index consistency for all legacy records.
+  - [x] Record closure evidence in `.AGENTS/todo.md`, `EXECUTION-PLAN.md`, and `docs/standardization-report.md`.
+
 ## Task status snapshot (this pass)
 
 - OPS-511: Completed.
@@ -253,6 +291,10 @@ Residual risk:
 - OPS-521: Completed.
 - OPS-522: Completed.
 - OPS-523: Completed.
+- OPS-524: Completed.
+- OPS-525: Completed.
+- OPS-526: Completed.
+- OPS-527: Completed.
 
 ## 6) Definition of Done (for this pass)
 

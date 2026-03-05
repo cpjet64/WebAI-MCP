@@ -11,6 +11,7 @@ import { execSync, spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { fileURLToPath } from 'url';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -217,12 +218,8 @@ class TestRunner {
 
         const packagePath = path.join(process.cwd(), pkg.path);
 
-        // Install dependencies
         if (!this.options.skipInstall) {
-          execSync('npm install', {
-            cwd: packagePath,
-            stdio: this.options.verbose ? 'inherit' : 'pipe'
-          });
+          this.ensureDependencies(pkg.name, packagePath);
         } else {
           this.recordResult('warn', `Skipping dependency install for ${pkg.name} (--skip-install)`);
         }
@@ -245,6 +242,45 @@ class TestRunner {
         this.recordResult('fail', `${pkg.name} build failed: ${error.message}`);
       }
     }
+  }
+
+  ensureDependencies(packageName, packagePath) {
+    const installCommands = [
+      {
+        label: 'npm ci',
+        command: 'npm ci --no-audit --no-fund'
+      },
+      {
+        label: 'npm install',
+        command: 'npm install --no-audit --no-fund'
+      }
+    ];
+
+    for (const commandSpec of installCommands) {
+      try {
+        this.log(`Installing dependencies for ${packageName} with ${commandSpec.label}...`, 'blue', ICONS.test);
+        execSync(commandSpec.command, {
+          cwd: packagePath,
+          stdio: this.options.verbose ? 'inherit' : 'pipe'
+        });
+        return;
+      } catch (error) {
+        this.log(
+          `Dependency install command failed for ${packageName} (${commandSpec.label}): ${error.message}`,
+          'yellow',
+          ICONS.warning
+        );
+
+        if (commandSpec.label === 'npm ci') {
+          this.recordResult('warn', `${packageName}: npm ci failed; falling back to npm install.`);
+          continue;
+        }
+
+        throw error;
+      }
+    }
+
+    throw new Error(`Dependency install failed for ${packageName} with all supported install commands.`);
   }
 
   async testServerComponents() {
@@ -480,7 +516,8 @@ class TestRunner {
 }
 
 // CLI interface
-if (import.meta.url === `file://${process.argv[1]}`) {
+const scriptPath = path.resolve(fileURLToPath(import.meta.url));
+if (scriptPath === path.resolve(process.argv[1] ?? '')) {
   const args = process.argv.slice(2);
   const options = {
     skipBuild: args.includes('--skip-build'),

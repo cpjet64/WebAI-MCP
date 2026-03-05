@@ -168,7 +168,7 @@
 - 2026-03-04T23:59:59Z: completed `OPS-518` local release preflight hardening:
   - Enforced `npm run health:check` in `scripts/local-release.sh` and `scripts/local-release.ps1` on default execution path.
   - Added explicit `--skip-health` bypass handling in both release scripts.
-  - Documented preflight + bypass behavior in `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `.github/WORKFLOW_SUMMARY.md`.
+  - Documented preflight + bypass behavior in `DEVELOPER_GUIDE.md` and `scripts/README.md`.
   - Marked `OPS-518` as complete in `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`.
 
 - 2026-03-05T00:10:00Z: completed `OPS-519` strict local release posture closeout:
@@ -201,3 +201,42 @@
   - Confirmed all pending legacy artifacts are now represented in `docs/ARCHIVE.md` and `legacy/README.md`.
   - Added source-of-truth and execution updates for `OPS-523` in `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md`.
   - Updated this report and `.AGENTS/todo.md` with completion evidence for legacy index synchronization.
+
+- 2026-03-05T04:00:00Z: completed `OPS-524` reliability hardening and tooling posture sweep:
+  - `tests/test-all.js` now includes resilient dependency installation for each package via:
+    - `npm ci --no-audit --no-fund`, with automatic fallback to `npm install --no-audit --no-fund` on lockfile failures.
+  - `scripts/repository-health.mjs` now reports additional worktrees discovered from `git worktree list` as a warning and retains strict posture for repository integrity checks.
+  - `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` updated to include `OPS-524: Completed` and synchronization timestamp `2026-03-05T04:00:00Z`.
+  - Added plan artifact `legacy/plans/ops-524-reliability-hardening-2026-03-05.md` as closeout evidence.
+  - Recorded this execution evidence in `.AGENTS/todo.md`.
+
+- 2026-03-05T04:20:00Z: closed `OPS-524` artifact retention:
+  - Archived `ops-524-reliability-hardening-2026-03-05.md` to `legacy/plans/ops-524-reliability-hardening-2026-03-05.md`.
+  - Added legacy index retention entries to `docs/ARCHIVE.md` and `legacy/README.md`.
+  - Updated `.AGENTS/todo.md` to record archive closeout evidence alongside `OPS-524`.
+
+- 2026-03-05T04:45:00Z: completed `OPS-525` single-branch + queue posture closeout:
+  - Re-validated `git branch`, `git branch -r`, and `git worktree list` to confirm single-main local posture after cleanup.
+  - Re-checked queued/in-progress GitHub run posture via `gh run list --status queued` and `gh run list --status in_progress`; no matches were found.
+  - Re-ran `node scripts/repository-health.mjs --strict`; strict posture checks passed with zero blocking issues.
+  - Updated `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` status snapshots to include `OPS-525: Completed`.
+  - Recorded this closeout in `.AGENTS/todo.md`.
+
+- 2026-03-05T05:00:00Z: completed `OPS-526` documentation hygiene and stale artifact migration:
+  - Archived `.github/WORKFLOW_SUMMARY.md` to `legacy/notes/workflow-summary-2026-03-04.md`.
+  - Removed `.github/WORKFLOW_SUMMARY.md` references from `DEVELOPER_GUIDE.md`, `MASTER-CHECKLIST.md`, `EXECUTION-PLAN.md`, and `.AGENTS/todo.md`.
+  - Moved `.AGENTS/plans/ops-526-doc-hygiene-closeout-2026-03-05.md` to `legacy/plans/` and indexed it in `docs/ARCHIVE.md` and `legacy/README.md`.
+  - Indexed `legacy/notes/workflow-summary-2026-03-04.md` in `docs/ARCHIVE.md` and `legacy/README.md`.
+  - Updated `docs/ARCHIVE.md` and `legacy/README.md` with retention rationale for both archival outputs.
+
+- 2026-03-05T05:15:00Z: completed `OPS-527` final cleanup and posture audit:
+  - Re-ran repository-wide debt scans for unfinished-work markers and confirmed only intentional backlog markers/doc strings remain.
+  - Revalidated branch/worktree and workflow queue posture:
+    - `git branch`
+    - `git branch -r`
+    - `git worktree list`
+    - `gh run list --status queued`
+    - `gh run list --status in_progress`
+  - Confirmed no stale `.github/WORKFLOW_SUMMARY.md` references remain in active source-of-truth artifacts.
+  - Verified `MASTER-CHECKLIST.md` and `EXECUTION-PLAN.md` now include `OPS-527: Completed` and updated synchronization metadata.
+  - Moved `.AGENTS/plans/ops-527-final-cleanup-posture-audit-2026-03-05.md` to `legacy/plans/` and added corresponding entries to `docs/ARCHIVE.md` and `legacy/README.md`.

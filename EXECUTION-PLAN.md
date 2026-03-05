@@ -1,6 +1,6 @@
 # EXECUTION PLAN (authoritative workflow for this pass)
 
-Last synchronized: 2026-03-05T03:00:00Z
+Last synchronized: 2026-03-05T05:15:00Z
 Branch context: `main`
 Status: Local-only release/build model finalized; planning docs aligned
 
@@ -40,6 +40,10 @@ Task status snapshot (this pass):
 - OPS-522: Completed.
 - Coverage and cleanup verification updates are now active in this pass and synchronized.
 - OPS-523: Completed.
+- OPS-525: Completed.
+- OPS-524: Completed.
+- OPS-526: Completed.
+- OPS-527: Completed.
 
 ## 1) Objective
 
@@ -292,7 +296,6 @@ Goal: remove GitHub-based autobuilding and move to explicit local build/release 
   - [x] Document local-release preflight behavior and bypass option in:
     - `DEVELOPER_GUIDE.md`
     - `scripts/README.md`
-    - `.github/WORKFLOW_SUMMARY.md`
   - [x] Record task closure in `.AGENTS/todo.md` and `docs/standardization-report.md`.
 
 ### 7.9 Tasks
@@ -301,7 +304,7 @@ Goal: remove GitHub-based autobuilding and move to explicit local build/release 
   - [x] Add `--strict` mode to `scripts/repository-health.mjs` with optional strict warning-to-error behavior.
   - [x] Extend branch posture checks to include extra-local-branch detection outside `main`.
   - [x] Update `scripts/local-release.sh` and `scripts/local-release.ps1` to invoke `npm run health:check -- --strict` by default.
-  - [x] Document strict-mode behavior in `DEVELOPER_GUIDE.md`, `scripts/README.md`, and `.github/WORKFLOW_SUMMARY.md`.
+  - [x] Document strict-mode behavior in `DEVELOPER_GUIDE.md` and `scripts/README.md`.
   - [x] Record task closure in `.AGENTS/todo.md` and `docs/standardization-report.md`.
 
 ### 7.10 Tasks
@@ -352,3 +355,44 @@ Goal: remove GitHub-based autobuilding and move to explicit local build/release 
   - `git status --short`: confirm no untracked `legacy/` planning or notes artifacts remain.
   - `rg -n "legacy/(plans|notes|docs/archive)|legacy/coverage/|OPS-523|ops-522-mainline-posture-and-closeout-2026-03-05|coverage-report-2026-03-02-prework" docs/ARCHIVE.md legacy/README.md .AGENTS/todo.md`: confirm source-of-truth index references exist for each legacy artifact.
   - `rg -n "mutant|mutators|mutator"`: confirm no active "mutant" debt is present in tracked sources.
+
+### 7.15 Tasks
+
+- [x] OPS-524: Reliability hardening and tooling posture sweep:
+  - [x] Add resilient dependency installation fallback in `tests/test-all.js`:
+    - `npm ci --no-audit --no-fund` first, then fallback to `npm install --no-audit --no-fund`.
+  - [x] Add `git worktree list`-based worktree posture check to `scripts/repository-health.mjs`.
+  - [x] Verify `scripts/repository-health.mjs` now reports extra local worktrees as warnings and no worktree path for main.
+  - [x] Update `.AGENTS/todo.md`, `MASTER-CHECKLIST.md`, and `docs/standardization-report.md` with completion evidence.
+  - [x] Archive `legacy/plans/ops-524-reliability-hardening-2026-03-05.md` and index it.
+
+### 7.16 Tasks
+
+- [x] OPS-525: Single-branch readiness and workflow-queue hardening closeout:
+  - [x] Re-run `git branch`, `git branch -r`, and `git worktree list` and confirm branch/worktree posture.
+  - [x] Re-run `gh run list --status queued` and `gh run list --status in_progress` for repository run posture.
+  - [x] Re-run `node scripts/repository-health.mjs --strict` and confirm no hard failures.
+  - [x] Update source-of-truth status snapshots and this plan with closeout evidence.
+
+### 7.17 Tasks
+
+- [x] OPS-526: Documentation cleanup and stale artifact migration:
+  - [x] Archive `.github/WORKFLOW_SUMMARY.md` to `legacy/notes/workflow-summary-2026-03-04.md`.
+  - [x] Remove `.github/WORKFLOW_SUMMARY.md` references from active planning and development docs.
+  - [x] Archive `ops-526-doc-hygiene-closeout-2026-03-05.md` from `.AGENTS/plans/` to `legacy/plans/`.
+  - [x] Index `legacy/notes/workflow-summary-2026-03-04.md` and `legacy/plans/ops-526-doc-hygiene-closeout-2026-03-05.md` in both `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Record completion evidence in `.AGENTS/todo.md` and `docs/standardization-report.md`.
+
+### 7.18 Tasks
+
+- [x] OPS-527: Final cleanup and posture audit:
+  - [x] Re-run debt/declaration scans for unfinished-work markers in active source and docs.
+  - [x] Verify branch/worktree posture and workflow queue health:
+    - `git branch`
+    - `git branch -r`
+    - `git worktree list`
+    - `gh run list --status queued`
+    - `gh run list --status in_progress`
+  - [x] Reconfirm `.AGENTS/plans` archival artifact moves are indexed by `docs/ARCHIVE.md` and `legacy/README.md`.
+  - [x] Confirm formatting consistency in archive indices and remove remaining drift.
+  - [x] Record completion evidence in `.AGENTS/todo.md` and `docs/standardization-report.md`.

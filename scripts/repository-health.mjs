@@ -202,6 +202,40 @@ function checkBranchRemotes() {
   addPass('branch', 'Remote branch tracking is aligned with main as the canonical remote branch.');
 }
 
+function checkWorktrees() {
+  const worktreeOutput = runCommand('git worktree list');
+  if (!worktreeOutput) {
+    addWarn('branch', 'Unable to inspect git worktrees from the current environment.');
+    return;
+  }
+
+  const worktreeLines = worktreeOutput
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const paths = worktreeLines.map((line) => line.split(/\s+/, 1)[0]).filter(Boolean);
+  if (paths.length <= 1) {
+    addPass('branch', 'No additional git worktrees detected.');
+    return;
+  }
+
+  const normalizedRoot = path.resolve(ROOT);
+  const extraWorktrees = paths
+    .filter((worktreePath) => path.resolve(worktreePath) !== normalizedRoot)
+    .map((worktreePath) => path.resolve(worktreePath));
+
+  if (extraWorktrees.length === 0) {
+    addPass('branch', 'Only the primary worktree is actively checked.');
+    return;
+  }
+
+  addWarn(
+    'branch',
+    `Additional git worktrees detected: ${extraWorktrees.join(', ')}. Keep only main worktree if strict local-only posture requires it.`,
+  );
+}
+
 function findDebtMarkers() {
   const scanRoots = ['crates', 'webai-mcp', 'webai-server', 'chrome-extension', 'scripts', 'tests'];
   const checkExts = new Set(['.ts', '.js', '.tsx', '.jsx', '.rs', '.sh', '.ps1', '.toml', '.yml', '.yaml', '.json']);
@@ -379,6 +413,7 @@ function main() {
   checkMinimumTooling();
   checkBranchRemotes();
   checkWorkflowAutomation();
+  checkWorktrees();
   findDebtMarkers();
   checkLegacyInventory();
   printResults();

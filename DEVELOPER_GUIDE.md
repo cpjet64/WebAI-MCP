@@ -64,8 +64,7 @@ webai-mcp/
 │   └── 📄 background.js               # Background service worker
 │
 ├── 📁 .github/                        # GitHub Configuration
-│   ├── 📄 CODEOWNERS                  # Code ownership
-│   └── 📄 WORKFLOW_SUMMARY.md         # Local workflow and release summary
+│   └── 📄 CODEOWNERS                  # GitHub ownership and policy
 │
 ├── 📁 docs/                           # Documentation
 │   ├── 📁 i18n/                       # Internationalization

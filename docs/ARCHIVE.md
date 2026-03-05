@@ -50,6 +50,15 @@ Items
 - legacy/plans/ops-522-mainline-posture-and-closeout-2026-03-05.md
   - Reason: Consolidated mainline posture and legacy inventory closeout for the final planning pass.
   - See: OPS-522 and OPS-523 in MASTER-CHECKLIST.md and EXECUTION-PLAN.md.
+- legacy/plans/ops-524-reliability-hardening-2026-03-05.md
+  - Reason: Completed reliability hardening sweep for test-all dependency install fallback and worktree posture checks.
+  - See: OPS-524 in MASTER-CHECKLIST.md and EXECUTION-PLAN.md.
+- legacy/plans/ops-526-doc-hygiene-closeout-2026-03-05.md
+  - Reason: Completed source-of-truth cleanup and stale workflow-summary references from active planning/developer docs.
+  - See: OPS-526 in MASTER-CHECKLIST.md and EXECUTION-PLAN.md.
+- legacy/plans/ops-527-final-cleanup-posture-audit-2026-03-05.md
+  - Reason: Completed final operational and debt-posture audit, including branch/worktree/run-queue checks and legacy index verification.
+  - See: OPS-527 in MASTER-CHECKLIST.md and EXECUTION-PLAN.md.
 - legacy/plans/coverage-maximizer-2026-03-02.md
   - Reason: Completed historical coverage maximizer runbook after legacy-coverage work.
   - See: completed coverage sweep artifacts and `MASTER-CHECKLIST.md` / `EXECUTION-PLAN.md` closure context.
@@ -68,8 +77,11 @@ Items
 - legacy/notes/commands.txt
   - Reason: command-and-workflow notes that were superseded by the standardized CI/checklist flow.
   - See: moved into legacy for historical context.
+- legacy/notes/workflow-summary-2026-03-04.md
+  - Reason: Archived workflow summary that is no longer an active source-of-truth artifact.
+  - See: .github/WORKFLOW_SUMMARY.md (retired).
 
- - legacy/coverage/coverage-report-2026-03-02-prework.md
+- legacy/coverage/coverage-report-2026-03-02-prework.md
   - Reason: historical baseline coverage report from the 2026-03-02 coverage-maximizer pass.
   - See: this historical coverage artifact is retained for review reference.
 
