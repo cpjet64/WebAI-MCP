@@ -11,8 +11,8 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { pathToFileURL } from 'url';
 import DiagnosticTool from './diagnose.js';
-import { VersionChecker } from '../webai-mcp/version-checker.js';
 
 const COLORS = {
   reset: '\x1b[0m',
@@ -326,6 +326,45 @@ class InstallationValidator {
     }
   }
 
+  async checkVersionCompatibility() {
+    const distVersionCheckerPath = path.join(process.cwd(), 'webai-mcp', 'dist', 'version-checker.js');
+
+    if (fs.existsSync(distVersionCheckerPath)) {
+      try {
+        const checkerModule = await import(pathToFileURL(distVersionCheckerPath).href);
+        const checker = checkerModule?.VersionChecker;
+
+        if (checker && typeof checker.checkVersionCompatibility === 'function') {
+          return await checker.checkVersionCompatibility();
+        }
+      } catch (error) {
+        return {
+          isCompatible: null,
+          error: `Could not load dist version checker: ${error.message}`
+        };
+      }
+    }
+
+    try {
+      const mcpPackage = JSON.parse(
+        fs.readFileSync(path.join(process.cwd(), 'webai-mcp', 'package.json'), 'utf8')
+      );
+      const serverPackage = JSON.parse(
+        fs.readFileSync(path.join(process.cwd(), 'webai-server', 'package.json'), 'utf8')
+      );
+
+      return {
+        isCompatible: mcpPackage.version === serverPackage.version,
+        source: 'package-version-fallback'
+      };
+    } catch (error) {
+      return {
+        isCompatible: null,
+        error: `Could not perform fallback version compatibility check: ${error.message}`
+      };
+    }
+  }
+
   async validateConfiguration() {
     this.logSection('Configuration Validation');
 
@@ -358,16 +397,15 @@ class InstallationValidator {
     }
 
     // Check version compatibility
-    try {
-      const versionResult = await VersionChecker.checkVersionCompatibility();
-      if (versionResult.isCompatible) {
-        this.recordResult('configuration', 'pass', 'All component versions are compatible');
-      } else {
-        this.recordResult('configuration', 'fail', 'Version compatibility issues detected');
-        this.recommendations.push('Run version compatibility check for details');
-      }
-    } catch (error) {
-      this.recordResult('configuration', 'warn', 'Could not check version compatibility');
+    const versionResult = await this.checkVersionCompatibility();
+    if (versionResult?.isCompatible === true) {
+      this.recordResult('configuration', 'pass', 'All component versions are compatible');
+    } else if (versionResult?.isCompatible === false) {
+      this.recordResult('configuration', 'fail', 'Version compatibility issues detected');
+      this.recommendations.push('Run version compatibility check for details');
+    } else {
+      const details = versionResult?.error ? ` (${versionResult.error})` : '';
+      this.recordResult('configuration', 'warn', `Could not check version compatibility${details}`);
     }
   }
 

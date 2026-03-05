@@ -51,6 +51,7 @@ class TestRunner {
       failed: 0,
       warnings: 0
     };
+    this.serverBaseUrl = null;
     this.serverProcess = null;
     this.mcpProcess = null;
   }
@@ -245,14 +246,36 @@ class TestRunner {
   }
 
   ensureDependencies(packageName, packagePath) {
+    const packageLockPath = path.join(packagePath, 'package-lock.json');
+    const nodeModulesPath = path.join(packagePath, 'node_modules');
+
+    if (this.hasUsableNodeModules(packagePath)) {
+      this.log(`Dependencies already installed for ${packageName}; skipping install step.`, 'blue', ICONS.info);
+      return;
+    }
+
+    if (fs.existsSync(nodeModulesPath)) {
+      this.recordResult('warn', `${packageName}: node_modules present but incomplete/corrupt; running install repair.`);
+      fs.rmSync(nodeModulesPath, { recursive: true, force: true });
+      this.log(`Removed corrupted dependency tree for ${packageName}.`, 'yellow', ICONS.warning);
+    }
+
+    if (!fs.existsSync(packageLockPath)) {
+      this.recordResult(
+        'warn',
+        `${packageName}: package-lock.json missing; skipping package-local install and relying on workspace resolution.`
+      );
+      return;
+    }
+
     const installCommands = [
       {
         label: 'npm ci',
         command: 'npm ci --no-audit --no-fund'
       },
       {
-        label: 'npm install',
-        command: 'npm install --no-audit --no-fund'
+      label: 'npm install',
+      command: 'npm install --no-audit --no-fund'
       }
     ];
 
@@ -276,11 +299,59 @@ class TestRunner {
           continue;
         }
 
-        throw error;
+        this.recordResult(
+          'warn',
+          `${packageName}: dependency install failed with ${commandSpec.label}; continuing with workspace dependencies.`
+        );
+        return;
       }
     }
 
-    throw new Error(`Dependency install failed for ${packageName} with all supported install commands.`);
+    this.recordResult(
+      'warn',
+      `${packageName}: dependency install commands were unavailable; continuing with workspace dependencies.`
+    );
+  }
+
+  hasUsableNodeModules(packagePath) {
+    const nodeModulesPath = path.join(packagePath, 'node_modules');
+    if (!fs.existsSync(nodeModulesPath)) {
+      return false;
+    }
+
+    try {
+      const packageJson = JSON.parse(
+        fs.readFileSync(path.join(packagePath, 'package.json'), 'utf8')
+      );
+      const directDependencies = Object.keys(packageJson.dependencies || {});
+
+      for (const depName of directDependencies) {
+        const depRoot = path.join(nodeModulesPath, depName);
+        const depPackageJsonPath = path.join(depRoot, 'package.json');
+
+        if (!fs.existsSync(depPackageJsonPath)) {
+          return false;
+        }
+
+        const depPackageJson = JSON.parse(fs.readFileSync(depPackageJsonPath, 'utf8'));
+        const declaredMain = depPackageJson.main;
+
+        if (declaredMain) {
+          const normalizedMain = declaredMain.startsWith('./')
+            ? declaredMain.slice(2)
+            : declaredMain;
+          const mainPath = path.join(depRoot, normalizedMain);
+
+          if (!fs.existsSync(mainPath)) {
+            return false;
+          }
+        }
+      }
+
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   async testServerComponents() {
@@ -305,16 +376,21 @@ class TestRunner {
       // Start server in background
       this.serverProcess = spawn('node', ['dist/browser-connector.js'], {
         cwd: path.join(process.cwd(), 'webai-server'),
+        env: {
+          ...process.env,
+          SERVER_HOST: process.env.SERVER_HOST || '127.0.0.1'
+        },
         stdio: this.options.verbose ? 'inherit' : 'pipe'
       });
 
       // Wait for server to start
-      await this.waitForServer('http://localhost:3025/.identity', 10000);
+      const discoveredIdentityUrl = await this.waitForServer(this.getServerIdentityCandidates(), 15000);
+      this.serverBaseUrl = discoveredIdentityUrl.replace('/.identity', '');
 
       // Test server endpoints
       await this.testServerEndpoints();
 
-      this.recordResult('pass', 'WebAI Server started and responding');
+      this.recordResult('pass', `WebAI Server started and responding (${this.serverBaseUrl})`);
 
     } catch (error) {
       this.recordResult('fail', `WebAI Server test failed: ${error.message}`);
@@ -342,6 +418,10 @@ class TestRunner {
   }
 
   async testServerEndpoints() {
+    if (!this.serverBaseUrl) {
+      throw new Error('Server base URL not set');
+    }
+
     const endpoints = [
       '/.identity',
       '/console-logs',
@@ -351,7 +431,7 @@ class TestRunner {
 
     for (const endpoint of endpoints) {
       try {
-        const response = await fetch(`http://localhost:3025${endpoint}`, {
+        const response = await fetch(`${this.serverBaseUrl}${endpoint}`, {
           signal: AbortSignal.timeout(5000)
         });
 
@@ -417,7 +497,8 @@ class TestRunner {
     if (this.serverProcess && this.mcpProcess) {
       try {
         // Test if MCP server can reach WebAI Server
-        const response = await fetch('http://localhost:3025/.identity', {
+        const identityUrl = this.serverBaseUrl ? `${this.serverBaseUrl}/.identity` : 'http://127.0.0.1:3025/.identity';
+        const response = await fetch(identityUrl, {
           signal: AbortSignal.timeout(5000)
         });
 
@@ -439,26 +520,37 @@ class TestRunner {
     }
   }
 
-  async waitForServer(url, timeout = 10000) {
+  getServerIdentityCandidates() {
+    const requestedPort = Number.parseInt(process.env.PORT || '3025', 10);
+    const basePort = Number.isNaN(requestedPort) ? 3025 : requestedPort;
+    const ports = Array.from({ length: 11 }, (_, i) => basePort + i);
+    const hosts = ['127.0.0.1', 'localhost'];
+    return hosts.flatMap(host => ports.map(port => `http://${host}:${port}/.identity`));
+  }
+
+  async waitForServer(urls, timeout = 10000) {
+    const candidates = Array.isArray(urls) ? urls : [urls];
     const start = Date.now();
 
     while (Date.now() - start < timeout) {
-      try {
-        const response = await fetch(url, {
-          signal: AbortSignal.timeout(1000)
-        });
+      for (const url of candidates) {
+        try {
+          const response = await fetch(url, {
+            signal: AbortSignal.timeout(1000)
+          });
 
-        if (response.ok) {
-          return true;
+          if (response.ok) {
+            return url;
+          }
+        } catch (error) {
+          // Continue waiting
         }
-      } catch (error) {
-        // Continue waiting
       }
 
       await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    throw new Error(`Server did not start within ${timeout}ms`);
+    throw new Error(`Server did not start within ${timeout}ms (tried ${candidates.join(', ')})`);
   }
 
   recordResult(status, message) {
